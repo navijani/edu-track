@@ -1,0 +1,20 @@
+package com.edutrack;
+import com.sun.net.httpserver.HttpServer;
+import java.net.InetSocketAddress;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        // Create server on port 8080
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        
+        // Route for adding subjects
+        server.createContext("/api/subjects", new SubjectHandler());
+        
+        // Route for adding users
+        server.createContext("/api/users/register", new UserHandler());
+        
+        server.setExecutor(null);
+        System.out.println("EduTrack Backend started on port 8080...");
+        server.start();
+    }
+}
