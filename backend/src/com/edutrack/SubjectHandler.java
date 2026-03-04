@@ -24,13 +24,13 @@ public class SubjectHandler implements HttpHandler {
             return;
         }
 
-        // --- GET: Fetch all subjects ---
+        //  GET: Fetch all subjects 
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             String jsonResponse = subjectDAO.getAllSubjectsJson();
             sendResponse(exchange, 200, jsonResponse, "application/json");
         }
 
-        // --- POST: Save a new subject ---
+        //  POST: Save a new subject 
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
             try {
                 InputStream is = exchange.getRequestBody();

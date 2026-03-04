@@ -2,18 +2,18 @@ package com.edutrack;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.edutrack.dao.VideoDAO;
-import com.edutrack.models.VideoContent;
-import com.edutrack.models.VideoQuestion;
+import com.edutrack.dao.QuizDAO;
+import com.edutrack.models.QuizContent;
+import com.edutrack.models.QuizQuestion;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VideoHandler implements HttpHandler {
+public class QuizHandler implements HttpHandler {
 
-    private VideoDAO videoDAO = new VideoDAO();
+    private QuizDAO quizDAO = new QuizDAO();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -26,12 +26,13 @@ public class VideoHandler implements HttpHandler {
             return;
         }
 
+        //  Handle GET request to fetch quizzes 
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-            String query = exchange.getRequestURI().getQuery(); // looks like "teacherId=t01"
+            String query = exchange.getRequestURI().getQuery();
             if (query != null && query.startsWith("teacherId=")) {
                 String teacherId = query.split("=")[1];
                 
-                String jsonResponse = videoDAO.getVideosByTeacherJson(teacherId);
+                String jsonResponse = quizDAO.getQuizzesByTeacherJson(teacherId);
                 sendResponse(exchange, 200, jsonResponse);
             } else {
                 sendResponse(exchange, 400, "[]");
@@ -39,13 +40,13 @@ public class VideoHandler implements HttpHandler {
             return;
         }
 
-        //  NEW: Handle DELETE request 
+        //  Handle DELETE request 
         if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
             String query = exchange.getRequestURI().getQuery(); // looks like "id=5"
             if (query != null && query.startsWith("id=")) {
                 String id = query.split("=")[1];
                 
-                if (videoDAO.deleteVideo(id)) { // Change this line in Quiz/Doc handlers!
+                if (quizDAO.deleteQuiz(id)) { // Change this line in Quiz/Doc handlers!
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
                     sendResponse(exchange, 500, "{\"success\":false}");
@@ -59,36 +60,45 @@ public class VideoHandler implements HttpHandler {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 
-                // Extract basic video details
+                // Extract Quiz Settings
                 String teacherId = body.split("\"teacherId\":\"")[1].split("\"")[0];
                 String subject = body.split("\"subject\":\"")[1].split("\"")[0];
                 String title = body.split("\"title\":\"")[1].split("\"")[0];
-                String videoUrl = body.split("\"videoUrl\":\"")[1].split("\"")[0];
+                
+                // Numbers and Dates
+                int duration = Integer.parseInt(body.split("\"duration\":")[1].split(",")[0].trim());
+                int totalMarks = Integer.parseInt(body.split("\"totalMarks\":")[1].split(",")[0].trim());
+                String scheduledDate = body.split("\"scheduledDate\":\"")[1].split("\"")[0];
 
-                // Extract the Questions Array manually
-                List<VideoQuestion> questionList = new ArrayList<>();
+                // Parse the array of questions
+                List<QuizQuestion> questionList = new ArrayList<>();
                 if (body.contains("\"questions\":[{")) {
                     String questionsPart = body.substring(body.indexOf("\"questions\":[{") + 13);
                     questionsPart = questionsPart.substring(0, questionsPart.lastIndexOf("]"));
                     
-                    // Split the array into individual question blocks
                     String[] qBlocks = questionsPart.split("},\\{");
                     for (String block : qBlocks) {
                         String q = block.split("\"question\":\"")[1].split("\"")[0];
-                        String a = block.split("\"answer\":\"")[1].split("\"")[0];
-                        questionList.add(new VideoQuestion(q, a));
+                        
+                        // Handle optional image
+                        String imgUrl = block.contains("\"imageUrl\":\"") ? block.split("\"imageUrl\":\"")[1].split("\"")[0] : "";
+                        
+                        // Extract the options array as a raw string to save in the DB
+                        String optionsStr = "[" + block.split("\"options\":\\[")[1].split("\\]")[0] + "]";
+                        
+                        String correct = block.split("\"correctAnswer\":\"")[1].split("\"")[0];
+                        
+                        questionList.add(new QuizQuestion(q, imgUrl, optionsStr, correct));
                     }
                 }
 
-                // Create the Model and send to DAO
-                VideoContent newVideo = new VideoContent(teacherId, subject, title, videoUrl, questionList);
+                QuizContent newQuiz = new QuizContent(teacherId, subject, title, duration, scheduledDate, totalMarks, questionList);
                 
-                if (videoDAO.saveVideoAndQuestions(newVideo)) {
+                if (quizDAO.saveQuizAndQuestions(newQuiz)) {
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
                     sendResponse(exchange, 500, "{\"success\":false}");
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
                 sendResponse(exchange, 500, "{\"success\":false}");

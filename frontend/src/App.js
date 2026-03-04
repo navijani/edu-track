@@ -4,7 +4,7 @@ import RoleSelection from './components/RoleSelection';
 import LoginCredentials from './components/LoginCredentials';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './admin/AdminDashboard'; 
-import TeacherDashboard from './teacher/TeacherDashboard'; // Imported!
+import TeacherDashboard from './teacher/TeacherDashboard';
 
 import './App.css';
 
@@ -67,7 +67,7 @@ function App() {
         />
       )}
 
-      {/* --- DASHBOARD ROUTING --- */}
+      {/*  DASHBOARD ROUTING  */}
       {screen === 'dashboard' && (
         <>
           {/* If Teacher, show the dedicated Teacher Dashboard */}

@@ -16,6 +16,10 @@ public class Main {
         server.createContext("/api/users/login", new LoginHandler());
 
         server.createContext("/api/contents/video", new VideoHandler());
+
+        server.createContext("/api/contents/quiz", new QuizHandler());
+
+        server.createContext("/api/contents/document", new DocumentHandler());
         
         server.setExecutor(null);
         System.out.println("EduTrack Backend started on port 8080...");

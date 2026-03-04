@@ -25,13 +25,13 @@ public class UserHandler implements HttpHandler {
             return;
         }
 
-        // --- GET: Fetch all users ---
+        // GET: Fetch all users
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             String jsonResponse = userDAO.getAllUsersJson();
             sendResponse(exchange, 200, jsonResponse);
         }
 
-        // --- DELETE: Remove a user ---
+        // DELETE: Remove a user
         if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
             String query = exchange.getRequestURI().getQuery();
             if (query != null && query.startsWith("id=")) {
@@ -44,7 +44,7 @@ public class UserHandler implements HttpHandler {
             }
         }
 
-        // --- POST: Register a user ---
+        // POST: Register a user 
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
             try {
                 InputStream is = exchange.getRequestBody();
@@ -78,7 +78,7 @@ public class UserHandler implements HttpHandler {
         }
     }
 
-    // Helper method to keep code DRY (Don't Repeat Yourself)
+    
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         exchange.sendResponseHeaders(statusCode, bytes.length);
