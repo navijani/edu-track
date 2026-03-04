@@ -5,7 +5,7 @@ import java.net.InetSocketAddress;
 public class Main {
     public static void main(String[] args) throws Exception {
         // Create server on port 8080
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
         
         // Route for adding subjects
         server.createContext("/api/subjects", new SubjectHandler());
