@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        // Create server on port 8080
+        // Create server on port 8081
         HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
         
         // Route for adding subjects
@@ -22,7 +22,7 @@ public class Main {
         server.createContext("/api/contents/document", new DocumentHandler());
         
         server.setExecutor(null);
-        System.out.println("EduTrack Backend started on port 8080...");
+        System.out.println("EduTrack Backend started on port 8081...");
         server.start();
     }
 }
