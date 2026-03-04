@@ -1,11 +1,10 @@
 package com.edutrack;
 
+import com.edutrack.dao.UserDAO;
+import com.edutrack.models.Teacher;
+import com.edutrack.models.User;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.edutrack.models.User;
-import com.edutrack.models.Teacher;
-import com.edutrack.dao.UserDAO;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -37,9 +36,9 @@ public class UserHandler implements HttpHandler {
             if (query != null && query.startsWith("id=")) {
                 String userId = query.split("=")[1];
                 if (userDAO.deleteUser(userId)) {
-                    sendResponse(exchange, 200, "User deleted successfully.");
+                    sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
-                    sendResponse(exchange, 500, "Failed to delete user.");
+                    sendResponse(exchange, 500, "{\"success\":false}");
                 }
             }
         }
@@ -49,13 +48,18 @@ public class UserHandler implements HttpHandler {
             try {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                
+                // Print the incoming data to the terminal for debugging!
+                System.out.println("--- NEW REGISTRATION ATTEMPT ---");
+                System.out.println("Received Payload: " + body);
 
-                String id = body.split("\"id\":\"")[1].split("\"")[0];
-                String name = body.split("\"name\":\"")[1].split("\"")[0];
-                String email = body.split("\"email\":\"")[1].split("\"")[0];
-                String password = body.split("\"password\":\"")[1].split("\"")[0];
-                String role = body.split("\"role\":\"")[1].split("\"")[0];
-                String subject = body.contains("\"subject\":\"") ? body.split("\"subject\":\"")[1].split("\"")[0] : "";
+                // Use our new safe extraction method
+                String id = extractValue(body, "id");
+                String name = extractValue(body, "name");
+                String email = extractValue(body, "email");
+                String password = extractValue(body, "password");
+                String role = extractValue(body, "role");
+                String subject = extractValue(body, "subject");
 
                 // Instantiating the correct Model based on the role
                 User newUser;
@@ -67,20 +71,39 @@ public class UserHandler implements HttpHandler {
 
                 // Saving via the DAO
                 if (userDAO.saveUser(newUser)) {
-                    sendResponse(exchange, 200, "User registered successfully!");
+                    System.out.println("SUCCESS: User " + name + " added to database.");
+                    sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
-                    sendResponse(exchange, 500, "Database error.");
+                    System.out.println("FAIL: userDAO.saveUser returned false. Check database constraints (e.g., duplicate ID).");
+                    sendResponse(exchange, 500, "{\"success\":false}");
                 }
             } catch (Exception e) {
+                System.out.println("CRASH: Server threw an error during registration.");
                 e.printStackTrace();
-                sendResponse(exchange, 500, "Server error.");
+                sendResponse(exchange, 500, "{\"success\":false}");
             }
         }
     }
 
+    // --- NEW HELPER METHOD ---
+    // This safely extracts values from JSON without crashing if formatting is slightly off
+    private String extractValue(String json, String key) {
+        try {
+            String searchKey = "\"" + key + "\":\"";
+            if (!json.contains(searchKey)) {
+                // Try looking for it with a space after the colon, just in case
+                searchKey = "\"" + key + "\": \"";
+                if (!json.contains(searchKey)) return "";
+            }
+            return json.split(searchKey)[1].split("\"")[0];
+        } catch (Exception e) {
+            return "";
+        }
+    }
     
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+        exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, bytes.length);
         OutputStream os = exchange.getResponseBody();
         os.write(bytes);
