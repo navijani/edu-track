@@ -89,13 +89,12 @@ public class UserHandler implements HttpHandler {
     // This safely extracts values from JSON without crashing if formatting is slightly off
     private String extractValue(String json, String key) {
         try {
-            String searchKey = "\"" + key + "\":\"";
-            if (!json.contains(searchKey)) {
-                // Try looking for it with a space after the colon, just in case
-                searchKey = "\"" + key + "\": \"";
-                if (!json.contains(searchKey)) return "";
+            // This safely splits the JSON regardless of spaces before or after the colon
+            String[] parts = json.split("\"" + key + "\"\\s*:\\s*\"");
+            if (parts.length > 1) {
+                return parts[1].split("\"")[0];
             }
-            return json.split(searchKey)[1].split("\"")[0];
+            return ""; // Return empty if the key isn't found
         } catch (Exception e) {
             return "";
         }
