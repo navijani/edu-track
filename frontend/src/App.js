@@ -19,7 +19,7 @@ function App() {
     const email = prompt("Enter Admin Email:");
     const password = prompt("Enter Admin Password:");
 
-    if (email === "navindujanith2004@gmail.com" && password === "123456") {
+    if ((email === "s@gmail.com" && password === "123456")|| (email === "navindujanith2004@gmail.com" && password === "123456")) {
       setScreen('admin-dashboard'); 
     } else {
       alert("Unauthorized Access!");
