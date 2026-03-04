@@ -17,7 +17,7 @@ public class DBConnection {
             Connection conn = DriverManager.getConnection(url, "root", "");
             return conn;
         } catch (Exception e) {
-            System.out.println("❌ DATABASE CONNECTION FAILED: " + e.getMessage());
+            System.out.println("[ERROR] DATABASE CONNECTION FAILED: " + e.getMessage());
             throw e; // Rethrow the error so we can see it
         }
     }
