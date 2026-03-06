@@ -12,7 +12,8 @@ import java.sql.Statement;
 public class QuizDAO {
 
     public boolean saveQuizAndQuestions(QuizContent quiz) {
-        String quizSql = "INSERT INTO quizzes (teacher_id, subject, title, duration_minutes, scheduled_date, total_marks) VALUES (?, ?, ?, ?, ?, ?)";
+        // 1. NEW: Added deadline to the INSERT statement
+        String quizSql = "INSERT INTO quizzes (teacher_id, subject, title, duration_minutes, scheduled_date, deadline, total_marks) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String questionSql = "INSERT INTO quiz_questions (quiz_id, question, image_url, options_json, correct_answer) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection()) {
@@ -23,7 +24,8 @@ public class QuizDAO {
             quizStmt.setString(3, quiz.getTitle());
             quizStmt.setInt(4, quiz.getDurationMinutes());
             quizStmt.setString(5, quiz.getScheduledDate());
-            quizStmt.setInt(6, quiz.getTotalMarks());
+            quizStmt.setString(6, quiz.getDeadline()); // <-- NEW: Insert deadline
+            quizStmt.setInt(7, quiz.getTotalMarks());
             quizStmt.executeUpdate();
 
             ResultSet rs = quizStmt.getGeneratedKeys();
@@ -54,8 +56,8 @@ public class QuizDAO {
     // Abstraction: Fetching quizzes AND their associated questions
     public String getQuizzesByTeacherJson(String teacherId) {
         StringBuilder json = new StringBuilder("[");
-        // We use ORDER BY id DESC to put the newest quizzes at the top!
-        String quizSql = "SELECT id, title, subject, duration_minutes, scheduled_date, total_marks FROM quizzes WHERE teacher_id = ? ORDER BY id DESC";
+        // NEW: Added deadline to SELECT
+        String quizSql = "SELECT id, title, subject, duration_minutes, scheduled_date, deadline, total_marks FROM quizzes WHERE teacher_id = ? ORDER BY id DESC";
         String questionSql = "SELECT question, image_url, options_json, correct_answer FROM quiz_questions WHERE quiz_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -77,6 +79,7 @@ public class QuizDAO {
                     .append("\"duration\":").append(rsQuiz.getInt("duration_minutes")).append(",")
                     .append("\"marks\":").append(rsQuiz.getInt("total_marks")).append(",")
                     .append("\"scheduledDate\":\"").append(escapeJson(rsQuiz.getString("scheduled_date"))).append("\",")
+                    .append("\"deadline\":\"").append(escapeJson(rsQuiz.getString("deadline"))).append("\",") // <-- NEW: Append deadline to JSON
                     .append("\"questions\":[");
 
                 pstmtQuestion.setInt(1, quizId);
@@ -85,7 +88,61 @@ public class QuizDAO {
                 while (rsQuestion.next()) {
                     if (!firstQuestion) json.append(",");
                     
-                    // Notice how options_json is appended directly without quotes because it's already an array like ["A", "B"]
+                    json.append("{")
+                        .append("\"question\":\"").append(escapeJson(rsQuestion.getString("question"))).append("\",")
+                        .append("\"imageUrl\":\"").append(escapeJson(rsQuestion.getString("image_url"))).append("\",")
+                        .append("\"options\":").append(rsQuestion.getString("options_json") != null ? rsQuestion.getString("options_json") : "[]").append(",")
+                        .append("\"correctAnswer\":\"").append(escapeJson(rsQuestion.getString("correct_answer"))).append("\"")
+                        .append("}");
+                    firstQuestion = false;
+                }
+                
+                json.append("]"); 
+                json.append("}"); 
+                firstQuiz = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        json.append("]");
+        return json.toString();
+    }
+
+    // Fetch Quizzes by Subject for the Student Dashboard ---
+    public String getQuizzesBySubjectJson(String subject) {
+        StringBuilder json = new StringBuilder("[");
+        // NEW: Added deadline to SELECT
+        String quizSql = "SELECT id, title, subject, duration_minutes, scheduled_date, deadline, total_marks FROM quizzes WHERE subject = ? ORDER BY id DESC";
+        String questionSql = "SELECT question, image_url, options_json, correct_answer FROM quiz_questions WHERE quiz_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmtQuiz = conn.prepareStatement(quizSql);
+             PreparedStatement pstmtQuestion = conn.prepareStatement(questionSql)) {
+            
+            pstmtQuiz.setString(1, subject);
+            ResultSet rsQuiz = pstmtQuiz.executeQuery();
+            
+            boolean firstQuiz = true;
+            while (rsQuiz.next()) {
+                if (!firstQuiz) json.append(",");
+                int quizId = rsQuiz.getInt("id");
+
+                json.append("{")
+                    .append("\"id\":").append(quizId).append(",")
+                    .append("\"title\":\"").append(escapeJson(rsQuiz.getString("title"))).append("\",")
+                    .append("\"subject\":\"").append(escapeJson(rsQuiz.getString("subject"))).append("\",")
+                    .append("\"duration\":").append(rsQuiz.getInt("duration_minutes")).append(",")
+                    .append("\"marks\":").append(rsQuiz.getInt("total_marks")).append(",")
+                    .append("\"scheduledDate\":\"").append(escapeJson(rsQuiz.getString("scheduled_date"))).append("\",")
+                    .append("\"deadline\":\"").append(escapeJson(rsQuiz.getString("deadline"))).append("\",") // <-- NEW: Append deadline to JSON
+                    .append("\"questions\":[");
+
+                pstmtQuestion.setInt(1, quizId);
+                ResultSet rsQuestion = pstmtQuestion.executeQuery();
+                boolean firstQuestion = true;
+                while (rsQuestion.next()) {
+                    if (!firstQuestion) json.append(",");
+                    
                     json.append("{")
                         .append("\"question\":\"").append(escapeJson(rsQuestion.getString("question"))).append("\",")
                         .append("\"imageUrl\":\"").append(escapeJson(rsQuestion.getString("image_url"))).append("\",")

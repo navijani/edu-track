@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.edutrack.dao.VideoDAO;
 import com.edutrack.models.VideoContent;
 import com.edutrack.models.VideoQuestion;
+import java.net.URLDecoder;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -26,20 +27,33 @@ public class VideoHandler implements HttpHandler {
             return;
         }
 
+        // Handle GET request 
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-            String query = exchange.getRequestURI().getQuery(); // looks like "teacherId=t01"
+            String query = exchange.getRequestURI().getQuery();
+            
+            // 1. Teacher Dashboard Request
             if (query != null && query.startsWith("teacherId=")) {
                 String teacherId = query.split("=")[1];
-                
                 String jsonResponse = videoDAO.getVideosByTeacherJson(teacherId);
                 sendResponse(exchange, 200, jsonResponse);
-            } else {
+            } 
+            // 2.Student Dashboard Request
+            else if (query != null && query.startsWith("subject=")) {
+                String subject = query.split("=")[1];
+                
+                // Decode the URL safely! (Converts "Data%20Structures" back to "Data Structures")
+                subject = URLDecoder.decode(subject, StandardCharsets.UTF_8);
+                
+                String jsonResponse = videoDAO.getVideosBySubjectJson(subject);
+                sendResponse(exchange, 200, jsonResponse);
+            } 
+            else {
                 sendResponse(exchange, 400, "[]");
             }
             return;
         }
 
-        //  NEW: Handle DELETE request 
+        //  Handle DELETE request 
         if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
             String query = exchange.getRequestURI().getQuery(); // looks like "id=5"
             if (query != null && query.startsWith("id=")) {

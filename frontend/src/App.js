@@ -5,6 +5,7 @@ import LoginCredentials from './components/LoginCredentials';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './admin/AdminDashboard'; 
 import TeacherDashboard from './teacher/TeacherDashboard';
+import StudentDashboard from './student/StudentDashboard';
 
 import './App.css';
 
@@ -19,7 +20,7 @@ function App() {
     const email = prompt("Enter Admin Email:");
     const password = prompt("Enter Admin Password:");
 
-    if (email === "navindujanith2004@gmail.com" && password === "123456") {
+    if (email === "2004@gmail.com" && password === "123") {
       setScreen('admin-dashboard'); 
     } else {
       alert("Unauthorized Access!");
@@ -68,13 +69,16 @@ function App() {
       )}
 
       {/*  DASHBOARD ROUTING  */}
+      {/* --- DASHBOARD ROUTING --- */}
       {screen === 'dashboard' && (
         <>
-          {/* If Teacher, show the dedicated Teacher Dashboard */}
           {userRole.toUpperCase() === 'TEACHER' ? (
             <TeacherDashboard user={currentUser} onLogout={handleLogout} />
+          ) : userRole.toUpperCase() === 'STUDENT' ? (
+            /* NEW: Show the Student Dashboard if the role is STUDENT */
+            <StudentDashboard user={currentUser} onLogout={handleLogout} />
           ) : (
-            /* Otherwise, show the generic Dashboard for Students/Parents */
+            /* Otherwise, show the generic Dashboard (e.g., for Parents) */
             <Dashboard role={userRole} user={currentUser} onLogout={handleLogout} />
           )}
         </>
