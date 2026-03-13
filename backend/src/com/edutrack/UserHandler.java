@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 
 public class UserHandler implements HttpHandler {
 
-    // Instantiate the DAO
     private UserDAO userDAO = new UserDAO();
 
     @Override
@@ -19,18 +18,18 @@ public class UserHandler implements HttpHandler {
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
 
+        // FIX: Added exchange.close() so the browser doesn't freeze and block React!
         if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
             exchange.sendResponseHeaders(204, -1);
+            exchange.close(); 
             return;
         }
 
-        // GET: Fetch all users
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             String jsonResponse = userDAO.getAllUsersJson();
             sendResponse(exchange, 200, jsonResponse);
         }
 
-        // DELETE: Remove a user
         if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
             String query = exchange.getRequestURI().getQuery();
             if (query != null && query.startsWith("id=")) {
@@ -43,17 +42,14 @@ public class UserHandler implements HttpHandler {
             }
         }
 
-        // POST: Register a user 
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
             try {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
                 
-                // Print the incoming data to the terminal for debugging!
-                System.out.println("--- NEW REGISTRATION ATTEMPT ---");
+                System.out.println("\n--- NEW REGISTRATION ATTEMPT ---");
                 System.out.println("Received Payload: " + body);
 
-                // Use our new safe extraction method
                 String id = extractValue(body, "id");
                 String name = extractValue(body, "name");
                 String email = extractValue(body, "email");
@@ -61,7 +57,6 @@ public class UserHandler implements HttpHandler {
                 String role = extractValue(body, "role");
                 String subject = extractValue(body, "subject");
 
-                // Instantiating the correct Model based on the role
                 User newUser;
                 if (role.equalsIgnoreCase("TEACHER")) {
                     newUser = new Teacher(id, name, email, password, role, subject);
@@ -69,32 +64,28 @@ public class UserHandler implements HttpHandler {
                     newUser = new User(id, name, email, password, role);
                 }
 
-                // Saving via the DAO
                 if (userDAO.saveUser(newUser)) {
-                    System.out.println("SUCCESS: User " + name + " added to database.");
+                    System.out.println("SUCCESS: User " + name + " added to database.\n");
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
-                    System.out.println("FAIL: userDAO.saveUser returned false. Check database constraints (e.g., duplicate ID).");
+                    System.out.println("FAIL: Database rejected it. Check for duplicate ID!\n");
                     sendResponse(exchange, 500, "{\"success\":false}");
                 }
             } catch (Exception e) {
-                System.out.println("CRASH: Server threw an error during registration.");
+                System.out.println("CRASH: Server threw an error during registration.\n");
                 e.printStackTrace();
                 sendResponse(exchange, 500, "{\"success\":false}");
             }
         }
     }
 
-    // --- NEW HELPER METHOD ---
-    // This safely extracts values from JSON without crashing if formatting is slightly off
     private String extractValue(String json, String key) {
         try {
-            // This safely splits the JSON regardless of spaces before or after the colon
             String[] parts = json.split("\"" + key + "\"\\s*:\\s*\"");
             if (parts.length > 1) {
                 return parts[1].split("\"")[0];
             }
-            return ""; // Return empty if the key isn't found
+            return ""; 
         } catch (Exception e) {
             return "";
         }

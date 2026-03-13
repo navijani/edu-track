@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import StudentSubjects from './StudentSubjects';
 import StudentSubjectContent from './StudentSubjectContent';
+import StudentProgress from './StudentProgress';
 
 // Notice we accept the 'onLogout' prop here!
 const StudentDashboard = ({ user, onLogout }) => {
@@ -108,11 +109,7 @@ const StudentDashboard = ({ user, onLogout }) => {
                 )}
 
                 {activeTab === 'progress' && (
-                    <div>
-                        <h2>My Progress & Grades</h2>
-                        <p style={{ color: '#7f8c8d' }}>Track your quiz scores and overall performance.</p>
-                        {/* We will build the Charts/Tables here later */}
-                    </div>
+                    <StudentProgress user={user} />
                 )}
 
                 {activeTab === 'messages' && (

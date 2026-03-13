@@ -11,7 +11,7 @@ public class Main {
         server.createContext("/api/subjects", new SubjectHandler());
         
         // Route for adding users
-        server.createContext("/api/users/register", new UserHandler());
+        server.createContext("/api/users", new UserHandler());
 
         server.createContext("/api/users/login", new LoginHandler());
 
@@ -30,6 +30,8 @@ public class Main {
         server.createContext("/api/answers/document", new DocumentAnswerHandler());
 
         server.createContext("/api/progress/document", new DocumentProgressHandler());
+
+        server.createContext("/api/progress/summary", new ProgressSummaryHandler());
         
         server.setExecutor(null);
         System.out.println("EduTrack Backend started on port 8080...");

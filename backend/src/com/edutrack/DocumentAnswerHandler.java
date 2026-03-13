@@ -27,22 +27,44 @@ public class DocumentAnswerHandler implements HttpHandler {
                 String studentId = extractQueryParam(query, "studentId");
                 int docId = Integer.parseInt(extractQueryParam(query, "documentId"));
                 sendResponse(exchange, 200, answerDAO.getDocumentAnswersJson(studentId, docId));
-            } else sendResponse(exchange, 400, "{}");
+            } else {
+                sendResponse(exchange, 400, "{}");
+            }
         }
 
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
             try {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                
+                System.out.println("\n--- [DEBUG] INCOMING DOCUMENT ANSWER ---");
+                System.out.println("RAW JSON: " + body);
+
+                // Safely extract values
                 String studentId = extractJsonString(body, "studentId");
+                if (studentId.isEmpty()) studentId = extractJsonNumber(body, "studentId");
+                
                 int docId = Integer.parseInt(extractJsonNumber(body, "documentId"));
                 int qIndex = Integer.parseInt(extractJsonNumber(body, "questionIndex"));
                 String answer = extractJsonString(body, "answer");
 
+                System.out.println("Parsed Student ID: " + studentId);
+                System.out.println("Parsed Document ID: " + docId);
+                System.out.println("Parsed Q Index: " + qIndex);
+                System.out.println("Parsed Answer: " + answer);
+
                 if (answerDAO.saveDocumentAnswer(studentId, docId, qIndex, answer)) {
+                    System.out.println("STATUS: Successfully saved to database!\n");
                     sendResponse(exchange, 200, "{\"success\":true}");
-                } else sendResponse(exchange, 500, "{\"success\":false}");
-            } catch (Exception e) { sendResponse(exchange, 500, "{\"success\":false}"); }
+                } else {
+                    System.out.println("STATUS: Database rejected the save. Check your SQL tables!\n");
+                    sendResponse(exchange, 500, "{\"success\":false}");
+                }
+            } catch (Exception e) { 
+                System.out.println("STATUS: Server crashed while parsing JSON!");
+                e.printStackTrace();
+                sendResponse(exchange, 500, "{\"success\":false}"); 
+            }
         }
     }
 

@@ -34,13 +34,17 @@ public class DocumentAnswerDAO {
     }
 
     public boolean saveDocumentAnswer(String studentId, int documentId, int questionIndex, String answer) {
-        String sql = "INSERT INTO student_document_answers (student_id, document_id, question_index, student_answer) VALUES (?, ?, ?, ?)";
+        // FIX: Added ON DUPLICATE KEY UPDATE to prevent crashes during testing
+        String sql = "INSERT INTO student_document_answers (student_id, document_id, question_index, student_answer) " +
+                     "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE student_answer = ?";
+                     
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, studentId);
             pstmt.setInt(2, documentId);
             pstmt.setInt(3, questionIndex);
             pstmt.setString(4, answer);
+            pstmt.setString(5, answer); // Value for the UPDATE part
             return pstmt.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

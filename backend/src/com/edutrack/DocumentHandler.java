@@ -45,7 +45,7 @@ public class DocumentHandler implements HttpHandler {
                 try {
                     subject = URLDecoder.decode(subject, StandardCharsets.UTF_8.name());
                 } catch (Exception e) {
-                    subject = URLDecoder.decode(subject); // Fallback
+                    System.out.println("Warning: Could not decode URL.");
                 }
                 
                 String jsonResponse = documentDAO.getDocumentsBySubjectJson(subject);

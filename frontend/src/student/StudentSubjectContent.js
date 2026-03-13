@@ -31,7 +31,7 @@ const StudentSubjectContent = ({ subject, user, onBack }) => {
             <div style={{ marginTop: '20px' }}>
                 {activeMaterialTab === 'videos' && <StudentVideos subjectName={subjectName} user={user} />}
                 {activeMaterialTab === 'quizzes' && <StudentQuizzes subjectName={subjectName} user={user} />}
-                {activeMaterialTab === 'documents' && <StudentDocuments subjectName={subjectName} />}
+                {activeMaterialTab === 'documents' && <StudentDocuments subjectName={subjectName} user={user} />}
             </div>
             
         </div>

@@ -11,11 +11,11 @@ const StudentVideos = ({ subjectName, user }) => {
     const [savedAnswers, setSavedAnswers] = useState({}); 
     const [revealedAnswers, setRevealedAnswers] = useState({});
     
-    // --- Native YouTube Tracking States ---
-    const [maxPlayed, setMaxPlayed] = useState(0); // Tracks Percentage
-    const [maxPlayedSeconds, setMaxPlayedSeconds] = useState(0); // NEW: Tracks actual seconds!
+    // --- NEW: Cheat-Proof Tracking States ---
+    const [actualWatchedSeconds, setActualWatchedSeconds] = useState(0); 
     const playerRef = useRef(null);
     const intervalRef = useRef(null);
+    const lastTimeRef = useRef(0); // Remembers the exact second they were just at
 
     useEffect(() => {
         fetchVideos();
@@ -27,15 +27,18 @@ const StudentVideos = ({ subjectName, user }) => {
         setUserAnswers({});
         setRevealedAnswers({});
         setSavedAnswers({});
-        setMaxPlayed(0); 
-        setMaxPlayedSeconds(0); // Reset seconds
+        
+        // Load their previous watch time from the DB so they don't lose progress!
+        const existingProgress = videoProgress[selectedItem?.id];
+        setActualWatchedSeconds(existingProgress?.watchedSeconds || 0);
+
         if (selectedItem && user) {
             fetchSavedAnswers();
         }
-    }, [selectedItem]);
+    }, [selectedItem]); // Wait for selectedItem to change safely
 
     // ==========================================
-    // NATIVE YOUTUBE API TRACKER
+    // CHEAT-PROOF YOUTUBE API TRACKER
     // ==========================================
     useEffect(() => {
         if (!selectedItem) return;
@@ -56,21 +59,31 @@ const StudentVideos = ({ subjectName, user }) => {
                 events: {
                     'onStateChange': (event) => {
                         if (event.data === window.YT.PlayerState.PLAYING) {
+                            
+                            // Sync the tracker the moment they press Play
+                            if (playerRef.current && playerRef.current.getCurrentTime) {
+                                lastTimeRef.current = playerRef.current.getCurrentTime();
+                            }
+
                             intervalRef.current = setInterval(() => {
                                 if (playerRef.current && playerRef.current.getCurrentTime) {
                                     const currentTime = playerRef.current.getCurrentTime();
-                                    const duration = playerRef.current.getDuration();
                                     
-                                    // NEW: Track the exact seconds watched
-                                    setMaxPlayedSeconds(prev => Math.max(prev, currentTime));
-
-                                    if (duration > 0) {
-                                        const pct = (currentTime / duration) * 100;
-                                        setMaxPlayed(prev => Math.max(prev, pct));
+                                    // Calculate how much time passed since the last tick
+                                    const delta = currentTime - lastTimeRef.current;
+                                    
+                                    // If they are watching normally (or up to 3x speed), the delta is small.
+                                    // If delta is huge (> 4s), they skipped forward. If negative, they rewound.
+                                    if (delta > 0 && delta <= 4) {
+                                        setActualWatchedSeconds(prev => prev + delta);
                                     }
+                                    
+                                    // Save the current time for the next tick
+                                    lastTimeRef.current = currentTime;
                                 }
-                            }, 1000);
+                            }, 1000); // Check every 1 second
                         } else {
+                            // If they pause or stop, stop the timer
                             clearInterval(intervalRef.current);
                         }
                     }
@@ -104,7 +117,6 @@ const StudentVideos = ({ subjectName, user }) => {
         return (match && match[2].length === 11) ? match[2] : null;
     };
 
-    // --- Helper to format seconds into MM:SS ---
     const formatTime = (totalSeconds) => {
         if (!totalSeconds) return "0:00";
         const m = Math.floor(totalSeconds / 60);
@@ -165,17 +177,29 @@ const StudentVideos = ({ subjectName, user }) => {
         }
     };
 
+    // --- Calculates the final secure numbers on close ---
     const handleCloseVideo = async () => {
         const answeredCount = Object.keys(savedAnswers).length;
-        const percentage = Math.round(maxPlayed);
-        const seconds = Math.round(maxPlayedSeconds); // NEW
+        const seconds = Math.round(actualWatchedSeconds); 
+        
+        let percentage = videoProgress[selectedItem.id]?.watchedPercentage || 0;
+        
+        // Calculate percentage based on video duration
+        if (playerRef.current && playerRef.current.getDuration) {
+            const duration = playerRef.current.getDuration();
+            if (duration > 0) {
+                const calculatedPct = Math.round((seconds / duration) * 100);
+                percentage = Math.min(100, Math.max(percentage, calculatedPct)); // Cap at 100% max
+            }
+        }
+
         const nowStr = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         setVideoProgress(prev => ({
             ...prev,
             [selectedItem.id]: {
-                watchedPercentage: Math.max(percentage, prev[selectedItem.id]?.watchedPercentage || 0),
-                watchedSeconds: Math.max(seconds, prev[selectedItem.id]?.watchedSeconds || 0), // NEW
+                watchedPercentage: percentage,
+                watchedSeconds: seconds,
                 answeredCount: answeredCount
             }
         }));
@@ -185,7 +209,7 @@ const StudentVideos = ({ subjectName, user }) => {
                 studentId: user.id,
                 videoId: selectedItem.id,
                 watchedPercentage: percentage,
-                watchedSeconds: seconds, // NEW
+                watchedSeconds: seconds,
                 answeredCount: answeredCount,
                 lastAccessed: nowStr
             });
@@ -277,7 +301,6 @@ const StudentVideos = ({ subjectName, user }) => {
                         
                         <div style={{ margin: '15px 0', fontSize: '13px', color: '#7f8c8d', backgroundColor: '#fdfefe', padding: '10px', borderRadius: '6px', border: '1px solid #ecf0f1' }}>
                             
-                            {/* NEW: Duration Display */}
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', paddingBottom: '8px', borderBottom: '1px dashed #ddd' }}>
                                 <strong>Watch Time:</strong> 
                                 <span style={{ color: '#34495e', fontWeight: 'bold' }}>{formatTime(progress.watchedSeconds)}</span>

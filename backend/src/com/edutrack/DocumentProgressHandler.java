@@ -32,7 +32,13 @@ public class DocumentProgressHandler implements HttpHandler {
             try {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                
+                // FIX: Added the fallback parser for studentId!
                 String studentId = extractJsonString(body, "studentId");
+                if (studentId.isEmpty()) {
+                    studentId = extractJsonNumber(body, "studentId");
+                }
+                
                 int docId = Integer.parseInt(extractJsonNumber(body, "documentId"));
                 int pct = Integer.parseInt(extractJsonNumber(body, "watchedPercentage"));
                 int ans = Integer.parseInt(extractJsonNumber(body, "answeredCount"));
@@ -41,7 +47,10 @@ public class DocumentProgressHandler implements HttpHandler {
                 if (progressDAO.saveProgress(studentId, docId, pct, ans, lastAcc)) {
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else sendResponse(exchange, 500, "{\"success\":false}");
-            } catch (Exception e) { sendResponse(exchange, 500, "{\"success\":false}"); }
+            } catch (Exception e) { 
+                e.printStackTrace();
+                sendResponse(exchange, 500, "{\"success\":false}"); 
+            }
         }
     }
 
