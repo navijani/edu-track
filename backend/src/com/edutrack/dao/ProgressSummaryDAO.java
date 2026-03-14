@@ -21,7 +21,7 @@ public class ProgressSummaryDAO {
         try (Connection conn = DBConnection.getConnection()) {
             
             // 1. Fetch EVERY SUBJECT from Master Table first
-            String allSubjectsSql = "SELECT name FROM subjects"; 
+            String allSubjectsSql = "SELECT title FROM subjects"; 
             try(PreparedStatement ps = conn.prepareStatement(allSubjectsSql)) {
                 ResultSet rs = ps.executeQuery();
                 while(rs.next()) {

@@ -18,7 +18,6 @@ public class UserHandler implements HttpHandler {
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
 
-        // FIX: Added exchange.close() so the browser doesn't freeze and block React!
         if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
             exchange.sendResponseHeaders(204, -1);
             exchange.close(); 
@@ -56,6 +55,11 @@ public class UserHandler implements HttpHandler {
                 String password = extractValue(body, "password");
                 String role = extractValue(body, "role");
                 String subject = extractValue(body, "subject");
+                String childId = extractValue(body, "childId");
+
+                // DEBUG LOG: This will prove if Java is successfully reading the childId
+                System.out.println("Extracted Role: " + role);
+                System.out.println("Extracted Child ID: '" + childId + "'");
 
                 User newUser;
                 if (role.equalsIgnoreCase("TEACHER")) {
@@ -64,7 +68,7 @@ public class UserHandler implements HttpHandler {
                     newUser = new User(id, name, email, password, role);
                 }
 
-                if (userDAO.saveUser(newUser)) {
+                if (userDAO.saveUser(newUser, childId)) {
                     System.out.println("SUCCESS: User " + name + " added to database.\n");
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
@@ -79,13 +83,30 @@ public class UserHandler implements HttpHandler {
         }
     }
 
+    // UPDATED: Bulletproof JSON Extractor
     private String extractValue(String json, String key) {
         try {
-            String[] parts = json.split("\"" + key + "\"\\s*:\\s*\"");
-            if (parts.length > 1) {
-                return parts[1].split("\"")[0];
+            int keyIndex = json.indexOf("\"" + key + "\"");
+            if (keyIndex == -1) return "";
+            
+            int colonIndex = json.indexOf(":", keyIndex);
+            String afterColon = json.substring(colonIndex + 1).trim();
+            
+            // Check if the value is wrapped in quotes
+            if (afterColon.startsWith("\"")) {
+                int valueStart = json.indexOf("\"", colonIndex) + 1;
+                int valueEnd = json.indexOf("\"", valueStart);
+                return json.substring(valueStart, valueEnd);
+            } else {
+                // If it's a number, null, or unquoted value at the end of the JSON
+                int commaIndex = afterColon.indexOf(",");
+                int braceIndex = afterColon.indexOf("}");
+                int end = (commaIndex != -1 && commaIndex < braceIndex) ? commaIndex : braceIndex;
+                if (end == -1) end = afterColon.length();
+                
+                String val = afterColon.substring(0, end).trim();
+                return val.equals("null") ? "" : val;
             }
-            return ""; 
         } catch (Exception e) {
             return "";
         }

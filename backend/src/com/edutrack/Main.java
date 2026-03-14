@@ -32,6 +32,24 @@ public class Main {
         server.createContext("/api/progress/document", new DocumentProgressHandler());
 
         server.createContext("/api/progress/summary", new ProgressSummaryHandler());
+
+        server.createContext("/api/student/dashboard", new StudentDashboardHandler());
+
+        server.createContext("/api/zoom", new ZoomHandler());
+
+        server.createContext("/api/forum", new ForumHandler());
+
+        server.createContext("/api/teacher/students", new TeacherStudentHandler());
+
+        server.createContext("/api/teacher/dashboard", new TeacherDashboardHandler());
+
+        server.createContext("/api/parent/dashboard", new ParentHandler());
+
+        server.createContext("/api/chat", new ChatHandler());
+
+        server.createContext("/api/parent/teachers", new ParentTeachersHandler());
+
+        server.createContext("/api/teacher/parents", new TeacherParentHandler());
         
         server.setExecutor(null);
         System.out.println("EduTrack Backend started on port 8080...");

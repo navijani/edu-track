@@ -2,21 +2,24 @@ import React, { useState } from 'react';
 import StudentSubjects from './StudentSubjects';
 import StudentSubjectContent from './StudentSubjectContent';
 import StudentProgress from './StudentProgress';
+import DashboardHome from './DashboardHome';
+import StudentLiveClasses from './StudentLiveClasses';
+import StudentForum from './StudentForum';
 
 // Notice we accept the 'onLogout' prop here!
 const StudentDashboard = ({ user, onLogout }) => {
     // State to track which tab is currently selected in the sidebar
     const [activeTab, setActiveTab] = useState('dashboard');
-    const [selectedSubject, setSelectedSubject] = useState(null); 
+    const [selectedSubject, setSelectedSubject] = useState(null);
 
     // Sidebar Navigation Item Component for clean code
     const NavItem = ({ id, icon, label }) => (
         <li
             onClick={() => {
                 setActiveTab(id);
-                setSelectedSubject(null); 
+                setSelectedSubject(null);
             }}
-            
+
             style={{
                 padding: '15px 20px',
                 cursor: 'pointer',
@@ -38,17 +41,17 @@ const StudentDashboard = ({ user, onLogout }) => {
         <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f6f7', textAlign: 'left' }}>
 
             {/*  LEFT SIDEBAR  */}
-            <div style={{ 
-                width: '250px', 
+            <div style={{
+                width: '250px',
                 minWidth: '250px', /* Forces the width to never go below 250px */
                 flexShrink: 0,     /* Strictly forbids Flexbox from squishing this element */
                 height: '100vh',   /* Forces it to be exactly the height of the browser window */
                 position: 'sticky',/* Pins it to the screen so it doesn't move when scrolling */
                 top: 0,
-                backgroundColor: '#2c3e50', 
-                color: 'white', 
-                display: 'flex', 
-                flexDirection: 'column' 
+                backgroundColor: '#2c3e50',
+                color: 'white',
+                display: 'flex',
+                flexDirection: 'column'
             }}>
                 <div style={{ padding: '20px', textAlign: 'center', borderBottom: '1px solid #34495e' }}>
                     <h2 style={{ margin: 0, color: '#3498db' }}>EduTrack</h2>
@@ -65,6 +68,7 @@ const StudentDashboard = ({ user, onLogout }) => {
                 <ul style={{ listStyleType: 'none', padding: 0, margin: 0, flexGrow: 1 }}>
                     <NavItem id="dashboard" icon="🏠" label="Dashboard" />
                     <NavItem id="subjects" icon="📚" label="My Subjects" />
+                    <NavItem id="live" icon="🎥" label="Live Classes" />
                     <NavItem id="progress" icon="📈" label="My Progress" />
                     <NavItem id="messages" icon="💬" label="Messages" />
                 </ul>
@@ -84,41 +88,33 @@ const StudentDashboard = ({ user, onLogout }) => {
             <div style={{ flexGrow: 1, padding: '30px', overflowY: 'auto' }}>
 
                 {activeTab === 'dashboard' && (
-                    <div>
-                        <h2>Welcome back, {user?.name?.split(' ')[0] || 'Student'}! 👋</h2>
-                        <p style={{ color: '#7f8c8d' }}>Here is an overview of your recent activity and upcoming tasks.</p>
-                        {/* We will build the Dashboard widgets here later */}
-                    </div>
+                    <DashboardHome user={user} />
                 )}
 
                 {activeTab === 'subjects' && (
                     <div>
                         {/* If a subject is clicked, show the content. Otherwise, show the grid. */}
                         {selectedSubject ? (
-                            <StudentSubjectContent 
+                            <StudentSubjectContent
                                 subject={selectedSubject}
                                 user={user}
-                                onBack={() => setSelectedSubject(null)} 
+                                onBack={() => setSelectedSubject(null)}
                             />
                         ) : (
-                            <StudentSubjects 
-                                onSelectSubject={(sub) => setSelectedSubject(sub)} 
+                            <StudentSubjects
+                                onSelectSubject={(sub) => setSelectedSubject(sub)}
                             />
                         )}
                     </div>
                 )}
 
+                {activeTab === 'live' && <StudentLiveClasses user={user} />}
+
                 {activeTab === 'progress' && (
                     <StudentProgress user={user} />
                 )}
 
-                {activeTab === 'messages' && (
-                    <div>
-                        <h2>Messages</h2>
-                        <p style={{ color: '#7f8c8d' }}>Communicate with your teachers and administrators.</p>
-                        {/* We will build the Inbox here later */}
-                    </div>
-                )}
+                {activeTab === 'messages' && <StudentForum user={user} />}
 
             </div>
         </div>

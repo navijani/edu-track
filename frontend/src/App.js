@@ -6,7 +6,8 @@ import Dashboard from './components/Dashboard';
 import AdminDashboard from './admin/AdminDashboard'; 
 import TeacherDashboard from './teacher/TeacherDashboard';
 import StudentDashboard from './student/StudentDashboard';
-
+// 1. IMPORT THE PARENT DASHBOARD
+import ParentDashboard from './parent/ParentDashboard'; // Make sure this path matches where you saved it!
 
 import './App.css';
 
@@ -14,7 +15,7 @@ function App() {
   const [screen, setScreen] = useState('intro');
   const [userRole, setUserRole] = useState('');
   
-  // NEW: Store the actual user data after a successful login
+  // Store the actual user data after a successful login
   const [currentUser, setCurrentUser] = useState(null); 
 
   const handleAdminAuth = () => {
@@ -69,17 +70,18 @@ function App() {
         />
       )}
 
-      {/*  DASHBOARD ROUTING  */}
       {/* --- DASHBOARD ROUTING --- */}
       {screen === 'dashboard' && (
         <>
           {userRole.toUpperCase() === 'TEACHER' ? (
             <TeacherDashboard user={currentUser} onLogout={handleLogout} />
           ) : userRole.toUpperCase() === 'STUDENT' ? (
-            /* NEW: Show the Student Dashboard if the role is STUDENT */
             <StudentDashboard user={currentUser} onLogout={handleLogout} />
+          ) : userRole.toUpperCase() === 'PARENT' ? (
+            /* 2. ADD THE PARENT ROUTE HERE */
+            <ParentDashboard user={currentUser} onLogout={handleLogout} />
           ) : (
-            /* Otherwise, show the generic Dashboard (e.g., for Parents) */
+            /* Fallback Dashboard */
             <Dashboard role={userRole} user={currentUser} onLogout={handleLogout} />
           )}
         </>
