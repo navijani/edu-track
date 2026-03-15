@@ -1,0 +1,55 @@
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.admin-sidebar {
+  width: 260px;
+  background-color: #1a202c;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+}
+
+.sidebar-menu li {
+  padding: 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  transition: 0.3s;
+}
+
+.sidebar-menu li.active, .sidebar-menu li:hover {
+  background-color: #2d3748;
+  color: #63b3ed;
+}
+
+.admin-main-content {
+  flex-grow: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.admin-card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  max-width: 500px;
+}
+
+.admin-card input, .admin-card select {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
