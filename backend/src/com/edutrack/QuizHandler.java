@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.edutrack.dao.QuizDAO;
 import com.edutrack.models.QuizContent;
 import com.edutrack.models.QuizQuestion;
+import java.net.URLDecoder;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -26,27 +27,43 @@ public class QuizHandler implements HttpHandler {
             return;
         }
 
-        //  Handle GET request to fetch quizzes 
+        // Handle GET request to fetch quizzes 
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             String query = exchange.getRequestURI().getQuery();
+            
+            // 1. Teacher Dashboard Request
             if (query != null && query.startsWith("teacherId=")) {
                 String teacherId = query.split("=")[1];
-                
                 String jsonResponse = quizDAO.getQuizzesByTeacherJson(teacherId);
                 sendResponse(exchange, 200, jsonResponse);
-            } else {
+            } 
+            // 2. Student Dashboard Request
+            else if (query != null && query.startsWith("subject=")) {
+                String subject = query.split("=")[1];
+                
+                // Safely decode the URL
+                try {
+                    subject = URLDecoder.decode(subject, StandardCharsets.UTF_8.name());
+                } catch (Exception e) {
+                    subject = URLDecoder.decode(subject); // Fallback
+                }
+                
+                String jsonResponse = quizDAO.getQuizzesBySubjectJson(subject);
+                sendResponse(exchange, 200, jsonResponse);
+            } 
+            else {
                 sendResponse(exchange, 400, "[]");
             }
             return;
         }
 
-        //  Handle DELETE request 
+        // Handle DELETE request 
         if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
-            String query = exchange.getRequestURI().getQuery(); // looks like "id=5"
+            String query = exchange.getRequestURI().getQuery(); 
             if (query != null && query.startsWith("id=")) {
                 String id = query.split("=")[1];
                 
-                if (quizDAO.deleteQuiz(id)) { // Change this line in Quiz/Doc handlers!
+                if (quizDAO.deleteQuiz(id)) { 
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
                     sendResponse(exchange, 500, "{\"success\":false}");
@@ -69,6 +86,9 @@ public class QuizHandler implements HttpHandler {
                 int duration = Integer.parseInt(body.split("\"duration\":")[1].split(",")[0].trim());
                 int totalMarks = Integer.parseInt(body.split("\"totalMarks\":")[1].split(",")[0].trim());
                 String scheduledDate = body.split("\"scheduledDate\":\"")[1].split("\"")[0];
+                
+                // NEW: Safely extract the deadline (uses ternary operator to prevent crashes)
+                String deadline = body.contains("\"deadline\":\"") ? body.split("\"deadline\":\"")[1].split("\"")[0] : "";
 
                 // Parse the array of questions
                 List<QuizQuestion> questionList = new ArrayList<>();
@@ -92,8 +112,13 @@ public class QuizHandler implements HttpHandler {
                     }
                 }
 
+                // Build the quiz object
                 QuizContent newQuiz = new QuizContent(teacherId, subject, title, duration, scheduledDate, totalMarks, questionList);
                 
+                // NEW: Inject the deadline into the object before saving!
+                newQuiz.setDeadline(deadline);
+                
+                // Save to database
                 if (quizDAO.saveQuizAndQuestions(newQuiz)) {
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {

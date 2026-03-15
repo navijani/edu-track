@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 
 public class UserHandler implements HttpHandler {
 
-    // Instantiate the DAO
     private UserDAO userDAO = new UserDAO();
 
     @Override
@@ -21,16 +20,15 @@ public class UserHandler implements HttpHandler {
 
         if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
             exchange.sendResponseHeaders(204, -1);
+            exchange.close(); 
             return;
         }
 
-        // GET: Fetch all users
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             String jsonResponse = userDAO.getAllUsersJson();
             sendResponse(exchange, 200, jsonResponse);
         }
 
-        // DELETE: Remove a user
         if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
             String query = exchange.getRequestURI().getQuery();
             if (query != null && query.startsWith("id=")) {
@@ -43,25 +41,26 @@ public class UserHandler implements HttpHandler {
             }
         }
 
-        // POST: Register a user 
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
             try {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
                 
-                // Print the incoming data to the terminal for debugging!
-                System.out.println("--- NEW REGISTRATION ATTEMPT ---");
+                System.out.println("\n--- NEW REGISTRATION ATTEMPT ---");
                 System.out.println("Received Payload: " + body);
 
-                // Use our new safe extraction method
                 String id = extractValue(body, "id");
                 String name = extractValue(body, "name");
                 String email = extractValue(body, "email");
                 String password = extractValue(body, "password");
                 String role = extractValue(body, "role");
                 String subject = extractValue(body, "subject");
+                String childId = extractValue(body, "childId");
 
-                // Instantiating the correct Model based on the role
+                // DEBUG LOG: This will prove if Java is successfully reading the childId
+                System.out.println("Extracted Role: " + role);
+                System.out.println("Extracted Child ID: '" + childId + "'");
+
                 User newUser;
                 if (role.equalsIgnoreCase("TEACHER")) {
                     newUser = new Teacher(id, name, email, password, role, subject);
@@ -69,32 +68,45 @@ public class UserHandler implements HttpHandler {
                     newUser = new User(id, name, email, password, role);
                 }
 
-                // Saving via the DAO
-                if (userDAO.saveUser(newUser)) {
-                    System.out.println("SUCCESS: User " + name + " added to database.");
+                if (userDAO.saveUser(newUser, childId)) {
+                    System.out.println("SUCCESS: User " + name + " added to database.\n");
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
-                    System.out.println("FAIL: userDAO.saveUser returned false. Check database constraints (e.g., duplicate ID).");
+                    System.out.println("FAIL: Database rejected it. Check for duplicate ID!\n");
                     sendResponse(exchange, 500, "{\"success\":false}");
                 }
             } catch (Exception e) {
-                System.out.println("CRASH: Server threw an error during registration.");
+                System.out.println("CRASH: Server threw an error during registration.\n");
                 e.printStackTrace();
                 sendResponse(exchange, 500, "{\"success\":false}");
             }
         }
     }
 
-    // --- NEW HELPER METHOD ---
-    // This safely extracts values from JSON without crashing if formatting is slightly off
+    // UPDATED: Bulletproof JSON Extractor
     private String extractValue(String json, String key) {
         try {
-            // This safely splits the JSON regardless of spaces before or after the colon
-            String[] parts = json.split("\"" + key + "\"\\s*:\\s*\"");
-            if (parts.length > 1) {
-                return parts[1].split("\"")[0];
+            int keyIndex = json.indexOf("\"" + key + "\"");
+            if (keyIndex == -1) return "";
+            
+            int colonIndex = json.indexOf(":", keyIndex);
+            String afterColon = json.substring(colonIndex + 1).trim();
+            
+            // Check if the value is wrapped in quotes
+            if (afterColon.startsWith("\"")) {
+                int valueStart = json.indexOf("\"", colonIndex) + 1;
+                int valueEnd = json.indexOf("\"", valueStart);
+                return json.substring(valueStart, valueEnd);
+            } else {
+                // If it's a number, null, or unquoted value at the end of the JSON
+                int commaIndex = afterColon.indexOf(",");
+                int braceIndex = afterColon.indexOf("}");
+                int end = (commaIndex != -1 && commaIndex < braceIndex) ? commaIndex : braceIndex;
+                if (end == -1) end = afterColon.length();
+                
+                String val = afterColon.substring(0, end).trim();
+                return val.equals("null") ? "" : val;
             }
-            return ""; // Return empty if the key isn't found
         } catch (Exception e) {
             return "";
         }

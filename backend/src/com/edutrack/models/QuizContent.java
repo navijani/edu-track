@@ -8,6 +8,7 @@ public class QuizContent {
     private int durationMinutes;
     private String scheduledDate;
     private int totalMarks;
+    private String deadline;
     private List<QuizQuestion> questions;
 
     public QuizContent(String teacherId, String subject, String title, int durationMinutes, String scheduledDate, int totalMarks, List<QuizQuestion> questions) {
@@ -27,4 +28,6 @@ public class QuizContent {
     public String getScheduledDate() { return scheduledDate; }
     public int getTotalMarks() { return totalMarks; }
     public List<QuizQuestion> getQuestions() { return questions; }
+    public String getDeadline() { return deadline; }
+    public void setDeadline(String deadline) { this.deadline = deadline; }
 }

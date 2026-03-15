@@ -6,15 +6,16 @@ const TeacherAddQuiz = ({ user }) => {
   const [title, setTitle] = useState('');
   const [duration, setDuration] = useState('');
   const [scheduledDate, setScheduledDate] = useState('');
+  const [deadline, setDeadline] = useState(''); // NEW: Quiz closing time
   const [totalMarks, setTotalMarks] = useState('');
   const [status, setStatus] = useState('');
 
-  // 2. Dynamic Questions State (Starts with 1 question containing 2 empty options)
+  // 2. Dynamic Questions State 
   const [questions, setQuestions] = useState([
     { question: '', imageUrl: '', options: ['', ''], correctAnswer: '' }
   ]);
 
-  //  Handlers for Dynamic Questions 
+  // Handlers for Dynamic Questions 
   const handleAddQuestion = () => {
     setQuestions([...questions, { question: '', imageUrl: '', options: ['', ''], correctAnswer: '' }]);
   };
@@ -25,10 +26,10 @@ const TeacherAddQuiz = ({ user }) => {
     setQuestions(updatedQuestions);
   };
 
-  //  Handlers for Dynamic Options 
+  // Handlers for Dynamic Options 
   const handleAddOption = (qIndex) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[qIndex].options.push(''); // Add a new blank option
+    updatedQuestions[qIndex].options.push('');
     setQuestions(updatedQuestions);
   };
 
@@ -44,10 +45,16 @@ const TeacherAddQuiz = ({ user }) => {
     setQuestions(updatedQuestions);
   };
 
-  //  Save to Database 
+  // Save to Database 
   const handleSaveQuiz = async () => {
-    if (!title || !duration || !scheduledDate || !totalMarks) {
-      setStatus('❌ Please fill out all Quiz Settings.');
+    if (!title || !duration || !scheduledDate || !deadline || !totalMarks) {
+      setStatus('❌ Please fill out all Quiz Settings, including the Deadline.');
+      return;
+    }
+
+    // NEW: Validation to ensure the deadline is AFTER the open date!
+    if (new Date(deadline) <= new Date(scheduledDate)) {
+      setStatus('❌ The Quiz Closing Time must be strictly AFTER the Open Time!');
       return;
     }
 
@@ -57,6 +64,7 @@ const TeacherAddQuiz = ({ user }) => {
       title: title,
       duration: parseInt(duration),
       scheduledDate: scheduledDate,
+      deadline: deadline, // NEW: Sending the deadline to Java
       totalMarks: parseInt(totalMarks),
       questions: questions
     };
@@ -64,8 +72,9 @@ const TeacherAddQuiz = ({ user }) => {
     try {
       await axios.post('http://localhost:8080/api/contents/quiz', payload);
       setStatus('✅ Quiz saved successfully!');
+
       // Reset form
-      setTitle(''); setDuration(''); setScheduledDate(''); setTotalMarks('');
+      setTitle(''); setDuration(''); setScheduledDate(''); setDeadline(''); setTotalMarks('');
       setQuestions([{ question: '', imageUrl: '', options: ['', ''], correctAnswer: '' }]);
     } catch (error) {
       console.error(error);
@@ -79,15 +88,27 @@ const TeacherAddQuiz = ({ user }) => {
 
       {status && <p style={{ fontWeight: 'bold', color: status.includes('✅') ? 'green' : 'red' }}>{status}</p>}
 
-      {/*  QUIZ SETTINGS  */}
+      {/* QUIZ SETTINGS */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
         <input type="text" placeholder="Quiz Title (e.g., Midterm)" value={title} onChange={(e) => setTitle(e.target.value)} style={{ flex: '1 1 100%', padding: '8px' }} />
-        <input type="number" placeholder="Duration (Minutes)" value={duration} onChange={(e) => setDuration(e.target.value)} style={{ flex: '1 1 30%', padding: '8px' }} />
+
+        <input type="number" placeholder="Duration (Minutes)" value={duration} onChange={(e) => setDuration(e.target.value)} style={{ flex: '1 1 30%', padding: '8px' }} title="Time limit once started" />
         <input type="number" placeholder="Total Marks" value={totalMarks} onChange={(e) => setTotalMarks(e.target.value)} style={{ flex: '1 1 30%', padding: '8px' }} />
-        <input type="datetime-local" value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} style={{ flex: '1 1 30%', padding: '8px' }} title="Scheduled Date & Time" />
+
+        {/* Date Inputs side-by-side */}
+        <div style={{ flex: '1 1 100%', display: 'flex', gap: '10px', marginTop: '10px' }}>
+          <div style={{ flex: '1' }}>
+            <label style={{ display: 'block', fontSize: '12px', color: '#7f8c8d', marginBottom: '4px', fontWeight: 'bold' }}>Quiz Opens (Start Time):</label>
+            <input type="datetime-local" value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }} />
+          </div>
+          <div style={{ flex: '1' }}>
+            <label style={{ display: 'block', fontSize: '12px', color: '#7f8c8d', marginBottom: '4px', fontWeight: 'bold' }}>Quiz Closes (Deadline):</label>
+            <input type="datetime-local" value={deadline} onChange={(e) => setDeadline(e.target.value)} style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }} />
+          </div>
+        </div>
       </div>
 
-      {/*  DYNAMIC QUESTIONS  */}
+      {/* DYNAMIC QUESTIONS */}
       {questions.map((q, qIndex) => (
         <div key={qIndex} style={{ backgroundColor: '#f9f9f9', padding: '15px', marginTop: '15px', borderLeft: '4px solid #e67e22' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -111,7 +132,6 @@ const TeacherAddQuiz = ({ user }) => {
                 alt="Question Preview"
                 style={{ maxHeight: '150px', borderRadius: '4px', maxWidth: '100%' }}
                 onError={(e) => {
-                  // If the link is broken or not an image, swap it to a placeholder instantly!
                   e.target.onerror = null;
                   e.target.src = 'https://via.placeholder.com/300x150?text=Invalid+Image+Link';
                 }}
@@ -119,7 +139,7 @@ const TeacherAddQuiz = ({ user }) => {
             </div>
           )}
 
-          {/*  DYNAMIC OPTIONS  */}
+          {/* DYNAMIC OPTIONS */}
           <h6>Answers / Options:</h6>
           {q.options.map((opt, optIndex) => (
             <div key={optIndex} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
@@ -132,12 +152,11 @@ const TeacherAddQuiz = ({ user }) => {
 
           <button onClick={() => handleAddOption(qIndex)} style={{ padding: '5px 10px', fontSize: '12px', cursor: 'pointer', marginBottom: '15px' }}>+ Add Another Option</button>
 
-          {/*  CORRECT ANSWER DROPDOWN  */}
+          {/* CORRECT ANSWER DROPDOWN */}
           <div style={{ marginTop: '10px', padding: '10px', backgroundColor: '#ecf0f1', borderRadius: '4px' }}>
             <label style={{ fontWeight: 'bold', marginRight: '10px' }}>Select Correct Answer: </label>
             <select value={q.correctAnswer} onChange={(e) => handleQuestionChange(qIndex, 'correctAnswer', e.target.value)} style={{ padding: '5px' }}>
               <option value="">-- Choose Correct Option --</option>
-              {/* Dynamically populate the dropdown with the typed options */}
               {q.options.map((opt, optIndex) => (
                 opt.trim() !== '' && <option key={optIndex} value={opt}>{opt}</option>
               ))}
