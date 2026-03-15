@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
+
+/* --- 1. OVERLAY & BACKDROP --- */
+.intro-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  
+  /* The moving background gradient */
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #090e17, #172033);
+  background-size: 400% 400%;
+  animation: bgShift 20s ease infinite; /* 20-second infinite loop */
+}
+
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- 2. THE FLOATING ORBS --- */
+/* --- 2. THE LONG-RUNNING ORBS --- */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px); /* Increased blur for a smoother glow */
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.orb-1 {
+  width: 350px;
+  height: 350px;
+  background: #3b82f6; 
+  top: -10%;
+  left: -10%;
+  /* 25 seconds, infinite loop, smooth easing */
+  animation: driftOrb1 25s infinite ease-in-out;
+}
+
+.orb-2 {
+  width: 300px;
+  height: 300px;
+  background: #8b5cf6; 
+  bottom: -10%;
+  right: -10%;
+  /* 30 seconds, infinite loop */
+  animation: driftOrb2 30s infinite ease-in-out;
+}
+
+.orb-3 {
+  width: 250px;
+  height: 250px;
+  background: #06b6d4; 
+  top: 50%;
+  left: 50%;
+  /* 22 seconds, infinite loop */
+  animation: driftOrb3 22s infinite ease-in-out;
+}
+
+/* --- LONG RUNNING KEYFRAMES --- */
+/* The orbs now travel across the entire screen using viewport width/height (vw/vh) */
+
+@keyframes driftOrb1 {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40vw, 30vh) scale(1.2); }
+  66% { transform: translate(20vw, 60vh) scale(0.8); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes driftOrb2 {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-30vw, -40vh) scale(1.3); }
+  66% { transform: translate(-60vw, -20vh) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes driftOrb3 {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  33% { transform: translate(30vw, -30vh) scale(0.8); }
+  66% { transform: translate(-30vw, 30vh) scale(1.4); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* --- 3. THE PREMIUM GLASS CARD --- */
+.glass-card {
+  width: 90%;
+  max-width: 480px;
+  padding: 50px 40px;
+  text-align: center;
+  border-radius: 24px;
+  position: relative;
+  z-index: 10;
+  
+  /* FIX: Added a subtle dark tint (rgba 0,0,0, 0.2) to make white text pop */
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%), rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(25px); /* Increased blur slightly for better contrast */
+  -webkit-backdrop-filter: blur(25px);
+  
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+  animation: cardFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- 4. TYPOGRAPHY & ICONS --- */
+.icon-wrapper {
+  margin-bottom: 15px;
+  display: inline-block;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.icon-wrap {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.logo-title {
+  /* FIX: Apply the heavy, modern font to the title */
+  font-family: 'Outfit', sans-serif; 
+  
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  letter-spacing: -1px;
+  color: #ffffff;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.subtitle {
+  color: #f1f5f9; /* FIX: Much brighter text color */
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 40px;
+  font-weight: 400;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* FIX: Added shadow to subtitle */
+}
+
+.subtitle .highlight {
+  color: #ffffff;
+  font-weight: 700; /* FIX: Made the highlight bolder */
+  display: block;
+  margin-top: 5px;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+}
+
+/* --- 5. THE BUTTON --- */
+.btn-glass-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.15); /* FIX: Made button slightly more solid */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700; /* FIX: Bolder button text */
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* FIX: Shadow on button text */
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.btn-glass-login .arrow {
+  transition: transform 0.3s ease;
+}
+
+/* Hover Effects */
+.btn-glass-login:hover {
+  background: rgba(255, 255, 255, 0.25); /* Brighter on hover */
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-glass-login:hover .arrow {
+  transform: translateX(5px);
+}
+
+.btn-glass-login:active {
+  transform: translateY(1px);
+}
+
+/* --- 6. ENTRANCE ANIMATIONS --- */
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.content-fade-in {
+  opacity: 0;
+  animation: contentGlideIn 0.8s ease-out 0.3s forwards;
+}
+
+@keyframes contentGlideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

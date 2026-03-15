@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../admin/Admin.css'; 
+import '../styles/Admin.css'; // Correct path
 
 // 1. Import your new modular components
 import TeacherAddVideo from './TeacherAddVideo';
