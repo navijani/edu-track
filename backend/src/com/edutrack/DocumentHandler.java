@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.edutrack.dao.DocumentDAO;
 import com.edutrack.models.DocumentContent;
 import com.edutrack.models.DocumentQuestion;
+import java.net.URLDecoder;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -28,13 +29,29 @@ public class DocumentHandler implements HttpHandler {
 
         // Handle GET request to fetch documents 
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-            String query = exchange.getRequestURI().getQuery(); // looks like "teacherId=t01"
+            String query = exchange.getRequestURI().getQuery();
+            
+            // 1. Teacher Dashboard Request
             if (query != null && query.startsWith("teacherId=")) {
                 String teacherId = query.split("=")[1];
-                
                 String jsonResponse = documentDAO.getDocumentsByTeacherJson(teacherId);
                 sendResponse(exchange, 200, jsonResponse);
-            } else {
+            } 
+            // 2. Student Dashboard Request
+            else if (query != null && query.startsWith("subject=")) {
+                String subject = query.split("=")[1];
+                
+                // Safely decode the URL (so "Computer%20Science" becomes "Computer Science")
+                try {
+                    subject = URLDecoder.decode(subject, StandardCharsets.UTF_8.name());
+                } catch (Exception e) {
+                    System.out.println("Warning: Could not decode URL.");
+                }
+                
+                String jsonResponse = documentDAO.getDocumentsBySubjectJson(subject);
+                sendResponse(exchange, 200, jsonResponse);
+            } 
+            else {
                 sendResponse(exchange, 400, "[]");
             }
             return;

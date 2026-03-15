@@ -5,6 +5,9 @@ import LoginCredentials from './components/LoginCredentials';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './admin/AdminDashboard'; 
 import TeacherDashboard from './teacher/TeacherDashboard';
+import StudentDashboard from './student/StudentDashboard';
+// 1. IMPORT THE PARENT DASHBOARD
+import ParentDashboard from './parent/ParentDashboard'; // Make sure this path matches where you saved it!
 
 import './App.css';
 
@@ -12,14 +15,14 @@ function App() {
   const [screen, setScreen] = useState('intro');
   const [userRole, setUserRole] = useState('');
   
-  // NEW: Store the actual user data after a successful login
+  // Store the actual user data after a successful login
   const [currentUser, setCurrentUser] = useState(null); 
 
   const handleAdminAuth = () => {
     const email = prompt("Enter Admin Email:");
     const password = prompt("Enter Admin Password:");
 
-    if (email === "navindujanith2004@gmail.com" && password === "123456") {
+    if (email === "2004@gmail.com" && password === "123") {
       setScreen('admin-dashboard'); 
     } else {
       alert("Unauthorized Access!");
@@ -67,14 +70,18 @@ function App() {
         />
       )}
 
-      {/*  DASHBOARD ROUTING  */}
+      {/* --- DASHBOARD ROUTING --- */}
       {screen === 'dashboard' && (
         <>
-          {/* If Teacher, show the dedicated Teacher Dashboard */}
           {userRole.toUpperCase() === 'TEACHER' ? (
             <TeacherDashboard user={currentUser} onLogout={handleLogout} />
+          ) : userRole.toUpperCase() === 'STUDENT' ? (
+            <StudentDashboard user={currentUser} onLogout={handleLogout} />
+          ) : userRole.toUpperCase() === 'PARENT' ? (
+            /* 2. ADD THE PARENT ROUTE HERE */
+            <ParentDashboard user={currentUser} onLogout={handleLogout} />
           ) : (
-            /* Otherwise, show the generic Dashboard for Students/Parents */
+            /* Fallback Dashboard */
             <Dashboard role={userRole} user={currentUser} onLogout={handleLogout} />
           )}
         </>

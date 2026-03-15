@@ -98,6 +98,57 @@ public class DocumentDAO {
         return json.toString();
     }
 
+    // Fetch Documents by Subject for the Student Dashboard 
+    public String getDocumentsBySubjectJson(String subject) {
+        StringBuilder json = new StringBuilder("[");
+        // We search by subject instead of teacher_id!
+        String docSql = "SELECT id, title, subject, document_url FROM documents WHERE subject = ? ORDER BY id DESC";
+        String questionSql = "SELECT question, answer FROM document_questions WHERE document_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmtDoc = conn.prepareStatement(docSql);
+             PreparedStatement pstmtQuestion = conn.prepareStatement(questionSql)) {
+            
+            pstmtDoc.setString(1, subject);
+            ResultSet rsDoc = pstmtDoc.executeQuery();
+            
+            boolean firstDoc = true;
+            while (rsDoc.next()) {
+                if (!firstDoc) json.append(",");
+                int docId = rsDoc.getInt("id");
+
+                // Start Document Object
+                json.append("{")
+                    .append("\"id\":").append(docId).append(",")
+                    .append("\"title\":\"").append(escapeJson(rsDoc.getString("title"))).append("\",")
+                    .append("\"subject\":\"").append(escapeJson(rsDoc.getString("subject"))).append("\",")
+                    .append("\"documentUrl\":\"").append(escapeJson(rsDoc.getString("document_url"))).append("\",")
+                    .append("\"questions\":["); // Start Questions Array
+
+                // Fetch questions for THIS specific document
+                pstmtQuestion.setInt(1, docId);
+                ResultSet rsQuestion = pstmtQuestion.executeQuery();
+                boolean firstQuestion = true;
+                while (rsQuestion.next()) {
+                    if (!firstQuestion) json.append(",");
+                    json.append("{")
+                        .append("\"question\":\"").append(escapeJson(rsQuestion.getString("question"))).append("\",")
+                        .append("\"answer\":\"").append(escapeJson(rsQuestion.getString("answer"))).append("\"")
+                        .append("}");
+                    firstQuestion = false;
+                }
+                
+                json.append("]"); // Close Questions Array
+                json.append("}"); // Close Document Object
+                firstDoc = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        json.append("]");
+        return json.toString();
+    }
+
     public boolean deleteDocument(String id) {
         String sql = "DELETE FROM documents WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
