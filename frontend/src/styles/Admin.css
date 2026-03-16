@@ -484,36 +484,3 @@
   transform: translateY(-2px);
 }
 
-/* Update these inside Admin.css to make the Teacher feel unique */
-
-/* Teacher-specific "Active" tab color (Purple/Indigo) */
-.admin-sidebar .sidebar-menu li.active {
-  background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%);
-  color: white;
-  box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3);
-}
-
-/* Header Text Accent */
-.content-header h1 span {
-  color: #a78bfa; /* Soft Purple */
-  font-weight: 300;
-}
-
-/* Content Body adjustment for scrolling */
-.content-body {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 10px; /* Space for scrollbar */
-}
-
-/* Custom Scrollbar for the Glass look */
-.content-body::-webkit-scrollbar {
-  width: 6px;
-}
-.content-body::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-}
-.content-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
