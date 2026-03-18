@@ -2,7 +2,9 @@
 .teacher-glass-wrapper {
   min-height: 100vh;
   width: 100vw;
-  background: #0a0f1e;
+  /* background: #0a0f1e; */
+  /* background: #f8f9f9; */
+  background: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,14 +20,19 @@
   opacity: 0.35;
   z-index: 1;
 }
-.t-orb-1 { width: 500px; height: 500px; background: #6366f1; top: -10%; right: -5%; }
+/*.t-orb-1 { width: 500px; height: 500px; background: #6366f1; top: -10%; right: -5%; }
 .t-orb-2 { width: 400px; height: 400px; background: #a855f7; bottom: -10%; left: -5%; }
+*/
+.t-orb-1 { width: 500px; height: 500px; background: #e1e1e9; top: -10%; right: -5%; }
+.t-orb-2 { width: 400px; height: 400px; background: #eeecf0; bottom: -10%; left: -5%; }
 
 /* --- Layout --- */
 .teacher-layout {
   width: 96vw;
   height: 92vh;
-  background: rgba(255, 255, 255, 0.03);
+  /* background: rgba(255, 255, 255, 0.03); */
+   background: rgba(241, 238, 238, 0.05); 
+  /*background: rgba(213, 196, 196, 0.05);*/
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 30px;
@@ -38,7 +45,8 @@
 /* --- Sidebar --- */
 .teacher-sidebar {
   width: 280px;
-  background: rgba(0, 0, 0, 0.2);
+  /* background: rgba(0, 0, 0, 0.2); */
+  background: rgba(92, 10, 246, 0.1);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
@@ -53,14 +61,15 @@
 }
 
 .t-logo-icon { font-size: 1.8rem; }
-.t-sidebar-header h2 { color: white; font-size: 1.1rem; letter-spacing: 0.5px; }
+.t-sidebar-header h2 { color: rgb(73, 44, 188); font-size: 1.1rem; letter-spacing: 0.5px; }
 .t-sidebar-header h2 span { color: #818cf8; font-weight: 300; }
 
 .t-sidebar-menu { list-style: none; flex-grow: 1; }
 
 .t-sidebar-menu li {
   padding: 14px 18px;
-  color: #94a3b8;
+  /*color: #94a3b8;*/
+  color: #7789a8;
   border-radius: 14px;
   cursor: pointer;
   margin-bottom: 8px;
@@ -72,12 +81,14 @@
 }
 
 .t-sidebar-menu li:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  /*background: rgba(255, 255, 255, 0.05);
+  color: white;*/
+  background: rgba(233, 230, 230, 0.05);
+  color: rgb(84, 84, 148);
 }
 
 .t-sidebar-menu li.active {
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); 
   color: white;
   box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
 }
@@ -98,13 +109,13 @@
   margin-bottom: 30px;
 }
 
-.t-welcome h1 { color: white; font-size: 1.8rem; }
+.t-welcome h1 { color: rgb(58, 73, 158); font-size: 1.8rem; }
 .t-welcome h1 span { color: #818cf8; font-weight: 400; }
 .t-welcome p { color: #64748b; font-size: 0.9rem; margin-top: 4px; }
 
 .t-status-tag {
-  background: rgba(129, 140, 248, 0.1);
-  color: #818cf8;
+  background: rgba(129, 140, 248, 0.1); 
+  color: #818cf8; 
   padding: 6px 16px;
   border-radius: 20px;
   font-size: 0.75rem;
@@ -114,7 +125,7 @@
 
 .t-content-body {
   flex-grow: 1;
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(250, 250, 250, 0.01);
   border-radius: 20px;
 }
 
@@ -123,7 +134,7 @@
   width: 100%;
   padding: 12px;
   background: rgba(244, 63, 94, 0.05);
-  border: 1px solid rgba(244, 63, 94, 0.2);
+  border: 2px solid rgba(244, 63, 94, 0.2);
   color: #fb7185;
   border-radius: 12px;
   cursor: pointer;
@@ -149,8 +160,8 @@
 
 /* Glass Card Base */
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(250, 250, 250, 0.03);
+    border: 1px solid rgba(250, 250, 250, 0.08);
     border-radius: 20px;
     padding: 25px;
     backdrop-filter: blur(10px);
@@ -161,9 +172,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+    /*background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);*/
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, rgba(222, 222, 229, 0.1) 100%);
 }
-.banner-text h2 { color: white; margin: 0; font-size: 1.6rem; }
+.banner-text h2 { color: rgb(95, 93, 156); margin: 0; font-size: 1.6rem; }
 .banner-text p { color: #94a3b8; margin: 5px 0 0 0; }
 .banner-badge {
     background: rgba(129, 140, 248, 0.2);
@@ -190,7 +202,7 @@
 }
 .t-stat-card:hover { transform: translateY(-5px); }
 .stat-icon { font-size: 2rem; }
-.stat-info h3 { color: white; font-size: 1.8rem; margin: 0; }
+.stat-info h3 { color: rgb(98, 82, 142); font-size: 1.8rem; margin: 0; }
 .stat-info p { color: #64748b; margin: 0; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
 
 /* Glow Effects */
@@ -229,7 +241,7 @@
     font-weight: bold;
     font-size: 0.8rem;
 }
-.meeting-details h4 { color: #e2e8f0; margin: 0; font-size: 0.95rem; }
+.meeting-details h4 { color: #4c688d; margin: 0; font-size: 0.95rem; }
 .meeting-details p { color: #64748b; margin: 2px 0 0 0; font-size: 0.8rem; }
 .no-data { color: #475569; font-style: italic; text-align: center; padding: 20px; }
 
@@ -245,7 +257,7 @@
   margin-bottom: 30px;
 }
 
-.t-header-title h2 { color: white; margin: 0; }
+.t-header-title h2 { color: #818cf8; margin: 0; }
 .t-header-title h2 span { color: #818cf8; font-weight: 300; }
 .t-header-title p { color: #64748b; margin: 5px 0 0 0; }
 
