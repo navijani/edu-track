@@ -43,7 +43,10 @@ const TeacherParentsChat = ({ user }) => {
                     {filteredParents.map((parent) => (
                         <div 
                             key={parent.id} 
-                            onClick={() => setSelectedParent(parent)}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setSelectedParent(parent);
+                            }}
                             style={{
                                 ...styles.card,
                                 borderLeft: selectedParent?.id === parent.id ? '4px solid #3498db' : '4px solid transparent',
@@ -85,7 +88,7 @@ const TeacherParentsChat = ({ user }) => {
 };
 
 const styles = {
-    container: { display: 'flex', gap: '25px', height: 'calc(100vh - 80px)', alignItems: 'flex-start' },
+    container: { display: 'flex', gap: '25px', height: 'calc(100vh - 80px)', alignItems: 'flex-start', overflow: 'hidden',},
     leftPanel: { flex: '1', minWidth: '280px', maxWidth: '350px', display: 'flex', flexDirection: 'column', height: '100%' },
     header: { marginBottom: '15px' },
     searchBar: { padding: '10px 15px', borderRadius: '8px', border: '1px solid #ddd', width: '100%', fontSize: '14px', outline: 'none', boxSizing: 'border-box', marginTop: '10px' },
@@ -97,6 +100,13 @@ const styles = {
     childText: { margin: 0, color: '#7f8c8d', fontSize: '12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
     
     rightPanel: { flex: '2', backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', height: '100%', overflowY: 'auto', border: '1px solid #e9ecef' },
+    //rightPanel: {
+       // flex: 1,
+       // backgroundColor: '#fff',
+       // minHeight: '600px', // Set a fixed minimum height
+       // display: 'flex',
+       // flexDirection: 'column'
+    //},
     emptyState: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#95a5a6' },
 };
 
