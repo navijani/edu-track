@@ -845,21 +845,13 @@
 /* Container for the form title */
 .t-addvideo-header.glass-card {
     padding: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 50px;
     text-align: center;
     background: rgba(170, 178, 233, 0.3); /* Transparent glass */
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(116, 132, 190, 0.2);
     width: fit-content;    /* Shrinks the box to fit the text */
     margin-left: auto;     /* Centers the box */
     margin-right: auto;    /* Centers the box */
-
-    padding: 20px;
-    margin-bottom: 30px;
-    text-align: center;
-    background: rgba(185, 210, 198, 0.4);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    width: fit-content;
-    margin: 0 auto 30px auto;
     border-radius: 15px;
     backdrop-filter: blur(10px);
 }
@@ -1126,13 +1118,14 @@
     padding: 25px;
     border-radius: 20px;
     border: 1px solid #ddd6fe;
+    margin-top: 30px;
     margin-bottom: 30px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
 /* --- Vertical Purple Accent Line for Questions --- */
 .t-adddoc-question-card {
-    border-left: 6px solid #a855f7; /* The Purple Line */
+    border-left: 4px solid #a855f7; /* The Purple Line */
     background: white;
     padding: 25px;
     border-radius: 0 20px 20px 0;
@@ -1202,3 +1195,544 @@
     transform: translateY(-2px);
     background: #a855f7;
 }
+
+/* --- Student Page Layout --- */
+.t-students-container {
+    display: flex;
+    gap: 25px;
+    height: calc(100vh - 120px);
+    align-items: flex-start;
+    animation: fadeIn 0.5s ease;
+}
+
+/* --- Left Panel: List --- */
+.t-students-left {
+    flex: 1;
+    min-width: 300px;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.t-students-search {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: linear-gradient(90deg, #ffffff 0%, #f8fafc 100%);
+    margin-bottom: 20px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.t-students-search:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(118, 174, 211, 0.1);
+}
+
+.t-student-list-scroll {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 8px;
+}
+
+/* --- Student Cards --- */
+.t-student-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 2px solid #f1f5f9;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.t-student-card:hover {
+    transform: translateX(5px);
+    background: #f8fafc;
+}
+
+.t-student-card.active {
+    border-left: 5px solid #3498db;
+    background: linear-gradient(90deg, #f0f7ff 0%, #ffffff 100%);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1);
+}
+
+/* --- Right Panel: Details --- */
+.t-students-right {
+    flex: 2;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    height: 100%;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.t-student-details-inner {
+    padding: 30px;
+}
+
+/* --- Progress Bars --- */
+.t-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.t-progress-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.t-progress-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Avatars --- */
+.t-student-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #7a5ee1;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* --- Progress Section Styling --- */
+.t-detail-section {
+    margin-top: 25px;
+    background: rgba(248, 248, 248, 0.5);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Specific Category Headers */
+.t-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* --- Progress Rows --- */
+.t-progress-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(90deg, #e6eff4 0%, #f8fafc 100%);
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #f1f5f9;
+    transition: transform 0.2s ease;
+}
+
+.t-progress-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    
+}
+
+.t-progress-title {
+    flex: 1;
+    font-weight: 500;
+    color: #334155;
+}
+
+/* --- The Progress Bars --- */
+.t-progress-container {
+    flex: 1;
+    max-width: 200px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.t-progress-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.t-progress-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+}
+
+/* Score Badge for Quizzes */
+.t-score-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.t-score-badge.green { background: #dcfce7; color: #166534; }
+.t-score-badge.blue { background: #dbeafe; color: #1e40af; }
+.t-score-badge.purple { background: #f3e8ff; color: #6b21a8; }
+
+/* --- Forum Container Layout --- */
+.t-forum-container {
+    display: flex;
+    gap: 30px;
+    height: calc(100vh - 120px);
+    align-items: flex-start;
+}
+
+/* --- Left Panel: Sticky Post Form --- */
+.t-forum-left {
+    flex: 1;
+    min-width: 320px;
+    max-width: 400px;
+    position: sticky;
+    top: 0;
+}
+
+.t-forum-form-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.t-forum-textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: linear-gradient(90deg, #ffffff 0%, #f8fafc 100%);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+    resize: none;
+    margin-bottom: 15px;
+}
+
+.t-forum-textarea:focus {
+    border-color: #2ecc71;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.1);
+}
+
+/* --- Right Panel: Discussion Feed --- */
+.t-forum-right {
+    flex: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 20px;
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+}
+
+.t-forum-feed-header {
+    padding: 20px 25px;
+    background: #fafbfc;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.t-forum-scroll {
+    padding: 25px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* --- Message Cards & Bubbles --- */
+.t-post-card {
+    padding: 20px;
+    border-radius: 15px;
+    background: white;
+    border: 1px solid #f1f5f9;
+    margin-bottom: 15px;
+    transition: all 0.2s ease;
+}
+
+.t-post-card.teacher-post {
+    background: linear-gradient(90deg, #f0fdf4 0%, #ffffff 100%);
+    border-left: 6px solid #2ecc71;
+}
+
+.t-post-card.student-post {
+    border-left: 6px solid #3498db;
+}
+
+/* --- Reply Threading --- */
+.t-reply-thread {
+    margin-left: 45px;
+    border-left: 2px solid #e2e8f0;
+    padding-left: 20px;
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
+.t-reply-card {
+    padding: 12px 18px;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-top: 10px;
+    font-size: 0.95rem;
+    border: 1px solid #f1f5f9;
+}
+
+/* --- Badges & Buttons --- */
+.t-role-badge {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.t-btn-broadcast {
+    background: #2ecc71;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.t-btn-broadcast:hover {
+    background: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+}
+
+.t-add-option-link{
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.8rem;
+    gap: 5px;
+    transition: all 0.2s ease;
+}
+
+/* --- Zoom Page Layout --- */
+.t-zoom-container {
+    display: flex;
+    gap: 25px;
+    height: calc(100vh - 120px);
+    align-items: stretch;
+}
+
+/* --- Form Side (Glassmorphism) --- */
+.t-zoom-left {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.t-zoom-input {
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: linear-gradient(90deg, #ffffff 0%, #f0f9ff 100%);
+    font-size: 1rem;
+    margin-bottom: 20px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.t-zoom-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.1);
+}
+
+/* --- List Side (Scrollable Feed) --- */
+.t-zoom-right {
+    flex: 1.2;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.t-zoom-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    border-left: 6px solid #3498db;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease;
+}
+
+.t-zoom-card:hover {
+    transform: translateY(-3px);
+}
+
+/* --- Buttons & Badges --- */
+.t-btn-zoom-schedule {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.t-badge-count {
+    background: #3498db;
+    color: white;
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+/* Pulse animation for Live meetings */
+.t-pulse-dot {
+    height: 8px;
+    width: 8px;
+    background-color: #2ecc71;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    box-shadow: 0 0 0 rgba(46, 204, 113, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+
+/* --- Chat Page Layout --- */
+.t-chat-container {
+    display: flex;
+    gap: 25px;
+    height: calc(100vh - 120px);
+    align-items: flex-start;
+}
+
+/* --- Left Panel: Directory --- */
+.t-chat-left {
+    flex: 1;
+    min-width: 300px;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.t-chat-search {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: linear-gradient(90deg, #ffffff 0%, #f5f3ff 100%); /* Light Purple Tint */
+    margin-bottom: 20px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.t-chat-search:focus {
+    border-color: #9b59b6;
+    box-shadow: 0 0 10px rgba(155, 89, 182, 0.1);
+}
+
+.t-parent-list-scroll {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 8px;
+}
+
+/* --- Parent Cards --- */
+.t-parent-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    border: 1px solid #f1f5f9;
+    border-left: 5px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.t-parent-card:hover {
+    background: #fdfaff;
+    transform: translateX(5px);
+}
+
+.t-parent-card.active {
+    border-left: 5px solid #9b59b6;
+    background: linear-gradient(90deg, #f5f3ff 0%, #ffffff 100%);
+    box-shadow: 0 4px 12px rgba(155, 89, 182, 0.1);
+}
+
+/* --- Parent Avatar --- */
+.t-parent-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #9b59b6;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* --- Right Panel: Chat Area --- */
+.t-chat-right {
+    flex: 2;
+    background: white;
+    border-radius: 20px;
+    border: 1px solid #f1f5f9;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+/*.t-student-info h4 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 15px;
+    text-transform: capitalize; /* Makes names like 'janith' look better as 'Janith' */
+/*}*/

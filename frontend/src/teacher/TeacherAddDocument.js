@@ -96,7 +96,7 @@ const TeacherAddDocument = ({ user }) => {
             </div>
 
             {/* 3. Questions Section with Purple Accent */}
-            <div className="t-questions-accent-area" style={{ borderLeft: '6px solid #a855f7', paddingLeft: '20px' }}>
+            <div className="t-questions-accent-area" style={{ borderLeft: '5px solid #a855f7', paddingLeft: '20px' }}>
                 <h5 style={{ color: '#a855f7', fontWeight: '800', marginBottom: '20px', fontSize: '1.2rem' }}>COMPREHENSION QUESTIONS</h5>
                 
                 {questions.map((q, index) => (

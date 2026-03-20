@@ -1,0 +1,95 @@
+/* --- Parent Portal Layout --- */
+.p-portal-container {
+    background-color: #f8fafc;
+    min-height: 100vh;
+    padding: 30px;
+}
+
+.p-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e293b;
+    color: white;
+    padding: 15px 35px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* --- Hero Academic Card --- */
+.p-hero-card {
+    background: linear-gradient(90deg,#b9ddf5 0%, #ffffff 100%);
+    padding: 35px;
+    border-radius: 24px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    margin: 30px auto;
+    max-width: 1000px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+
+/* --- Parent Tab Buttons --- */
+.p-tab-btn {
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.p-tab-btn.active {
+    background: #3498db;
+    color: white;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* --- Progress Tracking Cards --- */
+.p-stat-card {
+    max-width: 80%;
+    margin: 0 auto;
+    background: white;
+    margin-bottom: 20px;
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.p-progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f8fafc;
+}
+
+.p-subject-tag {
+    font-size: 10px;
+    background: #eff6ff;
+    color: #3b82f6;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+/* Container for the Chat area in the Parent Portal */
+.p-chat-right-content {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    height: 100%;            /* Fills the 600px height we set in the JS */
+    width: 100%;
+    background-color: #ffffff; /* Clean white background */
+    border-radius: 0 24px 24px 0; /* Matches the parent rounding */
+}
+
+/* Limits the width of the actual chat box so it doesn't look too stretched */
+.p-chat-window-wrapper {
+    width: 100%;
+    max-width: 600px; /* Adjust this to make the chat box wider or narrower */
+    height: 90%;      /* Gives some breathing room at top/bottom */
+}
