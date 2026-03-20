@@ -22,9 +22,9 @@ const TeacherDashboardHome = ({ user }) => {
     if (!stats) return <div className="t-loading">Initializing Teacher Portal...</div>;
 
     const chartData = [
-        { name: 'Videos', count: stats.totalVideos, color: '#818cf8' },
-        { name: 'Docs', count: stats.totalDocs, color: '#a855f7' },
-        { name: 'Quizzes', count: stats.totalQuizzes, color: '#2dd4bf' }
+        { name: 'Videos', count: stats.totalVideos, color: '#63aff2' },
+        { name: 'Docs', count: stats.totalDocs, color: '#c390f2' },
+        { name: 'Quizzes', count: stats.totalQuizzes, color: '#1dea87' }
     ];
 
     const totalMaterials = stats.totalVideos + stats.totalDocs + stats.totalQuizzes;

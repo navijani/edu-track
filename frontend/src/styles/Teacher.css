@@ -261,10 +261,11 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  width: 100%;
 }
 
 .t-content-banner.glass-card {
-    width: 80%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -275,22 +276,23 @@
 
 /* Tabs */
 .t-tab-navigation {
-  background: rgba(28, 66, 236, 0.05);
-  padding: 5px;
+  padding: 15px;
   border-radius: 12px;
+  width: auto;
   display: flex;
   gap: 10px;
 }
 
 .t-tab-navigation button {
-  background: transparent;
-  border: none;
+  background: white;
+  border: #c4c9d9 solid 2px;
   color: #8294ad;
-  padding: 10px 10px;
+  padding: 15px 20px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s;
-  font-weight: 500;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 .t-tab-navigation button.active {
@@ -794,4 +796,409 @@
     
     /* Optional: adds a bright white inner glow */
     outline: none; 
+}
+/* Container for the Upload Nav */
+.t-add-content-nav {
+    display: flex;
+    justify-content: center; /* Centers the 3 buttons */
+    gap: 15px;
+    margin-top: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.05); /* Subtle separator line */
+}
+
+.t-add-content-nav, .t-tab-navigation {
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-left: 100px;
+}
+/* Individual Add Buttons */
+.t-add-nav-btn {
+    padding: 10px 20px;
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #bfc9d6;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: .95rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.t-add-nav-btn:hover {
+    background-color: #ffffff;
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+/* The Active State (Blue for creation mode) */
+.t-add-nav-btn.active {
+    background-color: #6264e1;
+    color: white;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Container for the form title */
+.t-addvideo-header.glass-card {
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    background: rgba(170, 178, 233, 0.3); /* Transparent glass */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: fit-content;    /* Shrinks the box to fit the text */
+    margin-left: auto;     /* Centers the box */
+    margin-right: auto;    /* Centers the box */
+
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    background: rgba(185, 210, 198, 0.4);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    width: fit-content;
+    margin: 0 auto 30px auto;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+/* The actual H4 text */
+.t-addvideo-header h4 {
+    font-size: 1.6rem;
+    font-weight: 800;      /* Bold */
+    color: #1e293b;        /* Dark Slate */
+    margin: 0;
+    letter-spacing: -0.5px;
+
+   
+}
+
+/* The "Lesson" blue accent */
+.t-addvideo-header h4 span {
+    color: #3b82f6;        /* Video Theme Blue */
+}
+
+/* --- 1. Main Input Styling (Rectangles) --- */
+.t-addvideo-input {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 12px 18px;
+    border-radius: 12px; /* Rounded shape */
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    /* 90-degree gradient mixing */
+    background: linear-gradient(90deg, #ffffff 0%, #f0f7ff 100%);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.t-addvideo-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+}
+
+/* --- 2. Question Section Header --- */
+.t-question-header {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2c3e50;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+    border-bottom: 2px solid #3498db;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* --- 3. URL Boxes --- */
+.t-question-box {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.7) 0%, rgba(240, 247, 255, 0.8) 100%);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(52, 152, 219, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.t-q-label {
+    color: #3498db;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 1.00rem;
+    margin-bottom: 10px;
+}
+
+/* --- 4. Questionarea and  Input Questions --- */
+.t-addvideo-qarea, .t-addvideo-inputquestion {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #cfd4db;
+    background: white;
+    margin-bottom: 10px;
+    font-family: inherit;
+}
+
+/* --- 5. Add Button Style --- */
+.t-btn-addvideo-q {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px; /* Pill shape */
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s;
+    margin-top: 20px;
+}
+
+.t-btn-addvideo-q:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+}
+
+.t-savevideo-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Container that only wraps the Questions area */
+.t-questions-accent-area {
+    border-left: 5px solid #3498db; 
+    padding: 20px 30px;             
+    margin-top: 30px;              
+    background: rgba(255, 255, 255, 0.2); 
+    border-radius: 0 15px 15px 0;   
+}
+
+/* Make the line a gradient instead of a solid color */
+.t-questions-accent-area {
+    border-image: linear-gradient(to bottom, #3498db, #85c1e9) 1;
+}
+
+/* --- Quiz Form Header (Green Theme) --- */
+.t-addquiz-header-card {
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    background: rgba(185, 210, 198, 0.4);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    width: fit-content;
+    margin: 0 auto 30px auto;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.t-addquiz-header-card h4 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #2f405b;
+    margin: 0;
+}
+
+.t-addquiz-header-card h4 span {
+    color: #10b981; /* Emerald Green */
+}
+
+/* --- Settings Box (Green Gradient Mix) --- */
+.t-addquiz-settings-box {
+    background: linear-gradient(90deg, #ffffff 0%, #f0fdf4 100%);
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid #bbf7d0;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+/* --- Question Card with Green Vertical Accent --- */
+.t-addquiz-question-card {
+    border-left: 3px solid #10b981; /* The Green Line */
+    background: white;
+    padding: 25px;
+    border-radius: 0 20px 20px 0;
+    margin-top: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Modern Inputs (90deg Gradient) --- */
+.t-addquiz-input {
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: linear-gradient(90deg, #ffffff 0%, #fcfcfc 100%);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.t-addquiz-input:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+}
+
+/* --- Image Preview Area --- */
+.t-addquiz-img-preview {
+    margin-top: 15px;
+    padding: 12px;
+    background: #f0fdf4;
+    border: 1px dashed #10b981;
+    display: inline-block;
+    border-radius: 12px;
+}
+
+.t-addquiz-img-preview img {
+    max-height: 180px;
+    border-radius: 8px;
+    display: block;
+    margin-top: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Dropdown Area --- */
+.t-addquiz-dropdown-area {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f0fdf4;
+    border-radius: 12px;
+    border: 1px solid #bbf7d0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- Buttons --- */
+.t-btn-save-quiz {
+    background: #58abd2; /* Slightly darker green for the main action */
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    width: 100%;
+    margin-top: 40px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.t-btn-save-quiz:hover {
+    transform: translateY(-2px);
+    background: #10b981;
+}
+
+/* --- Document Form Header (Purple Theme) --- */
+.t-adddoc-header-card {
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    background: rgba(226, 201, 230, 0.4);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    width: fit-content;
+    margin: 0 auto 30px auto;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.t-adddoc-header-card h4 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+}
+
+.t-adddoc-header-card h4 span {
+    color: #a855f7; /* Purple Accent */
+}
+
+/* --- Document Settings Box --- */
+.t-adddoc-settings-box {
+    background: linear-gradient(90deg, #ffffff 0%, #f5f3ff 100%);
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid #ddd6fe;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+/* --- Vertical Purple Accent Line for Questions --- */
+.t-adddoc-question-card {
+    border-left: 6px solid #a855f7; /* The Purple Line */
+    background: white;
+    padding: 25px;
+    border-radius: 0 20px 20px 0;
+    margin-top: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Input Styling --- */
+.t-adddoc-input {
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: linear-gradient(90deg, #ffffff 0%, #fcfcfc 100%);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.t-adddoc-input:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.2);
+}
+
+/* --- Preview Link Box --- */
+.t-adddoc-preview-box {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f5f3ff;
+    border-radius: 12px;
+    border-left: 4px solid #a855f7;
+}
+
+.t-btn-test-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #a855f7;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.t-btn-test-link:hover {
+    background-color: #9333ea;
+}
+
+/* --- Main Save Button --- */
+.t-btn-save-doc {
+    background: #7c3aed; /* Deep Purple */
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    width: 100%;
+    margin-top: 40px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.t-btn-save-doc:hover {
+    transform: translateY(-2px);
+    background: #a855f7;
 }
