@@ -481,7 +481,7 @@
   background: white;
   padding: 15px 25px;
   border-radius: 15px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #a8c0df;
   flex: 1;
   min-width: 150px;
   text-align: center;
@@ -498,7 +498,7 @@
   color: #94a3b8;
   text-transform: uppercase;
   margin-bottom: 5px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 /* Wide Questions */
@@ -508,12 +508,32 @@
   gap: 20px;
 }
 
-.t-q-card-wide {
+/*.t-q-card-wide {
   background: white;
   padding: 30px;
   border-radius: 20px;
   border: 1px solid #f1f5f9;
   position: relative;
+}*/
+.t-q-card-wide {
+    /* 90-degree light blue gradient mix */
+    background: linear-gradient(90deg, rgba(209, 221, 235, 0.4) 0%, rgba(245, 247, 248, 0.6) 100%);
+    
+    /* Soft border to define the card edges */
+    border: 1px solid rgba(59, 130, 246, 0.2);
+
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03); /* Subtle shadow */
+}
+
+/* Add a hover effect to make the gradient "glow" */
+.t-q-card-wide:hover {
+    background: linear-gradient(90deg, rgba(245, 246, 248, 0.6) 0%, rgba(191, 219, 254, 0.8) 100%);
+    transform: translateX(5px); /* Slight shift to the right */
+    transition: all 0.3s ease;
 }
 
 .q-badge {
@@ -689,7 +709,8 @@
 .question-set-header {
   color: #7c3aed; /* Violet */
   font-size: 1.4rem;
-  border-bottom: 3px solid rgba(124, 58, 237, 0.2);
+  font-weight: 700;
+  border-bottom: 3px solid rgba(37, 13, 250, 0.2);
   padding-bottom: 8px;
   margin-bottom: 20px;
   display: inline-block;
@@ -710,7 +731,7 @@
 
 /* --- General Layout --- */
 .t-spacer {
-  height: 2px;
+  height: 4px;
   background: #e2e8f0;
   margin: 40px 0;
 }
@@ -726,11 +747,51 @@
 }
 
 .quizzes-theme .t-wide-title {
-    color: #35b684; 
+    color: #e5520e; 
+    padding-bottom: 15px;
+    font-size: 2rem;
 }
 .videos-theme .t-wide-title {
     color: #3b82f6; 
 }
 .documents-theme .t-wide-title {
     color: #66167b;
+    font-size: 2rem;
+    font-weight: 800;
+    text-shadow: 2px 2px 4px rgba(102, 22, 123, 0.1);
+    padding: 15px;
+}
+
+.t-btn-glass-purple {
+    /* Base styles to ensure the transition is smooth */
+    display: inline-block;
+    padding: 14px 28px;
+    background: rgba(168, 85, 247, 0.1);
+    border: 2px solid #a855f7;
+    color: #a855f7;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out; /* Smooths the glow entry/exit */
+    cursor: pointer;
+}
+
+/* 1. The Hover State (Pre-glow) */
+.t-btn-glass-purple:hover {
+    background: rgba(168, 85, 247, 0.2);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+    transform: translateY(-2px);
+}
+
+/* 2. The Clicking State (THE GLOW) */
+.t-btn-glass-purple:active {
+    transform: scale(0.96); /* Slightly shrinks for a "pressed" feel */
+    background: #a855f7;    /* Fills the button with solid purple */
+    color: white;           /* Text turns white for contrast */
+    
+    /* This creates the intense glow effect */
+    box-shadow: 0 0 30px 10px rgba(168, 85, 247, 0.7); 
+    
+    /* Optional: adds a bright white inner glow */
+    outline: none; 
 }

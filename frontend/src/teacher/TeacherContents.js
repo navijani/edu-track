@@ -94,7 +94,7 @@ const TeacherContents = ({ user }) => {
       ) : (
         <div className={`t-wide-detail-container animated-fade-in ${activeTab}-theme`}>
           {/* By adding ${activeTab}-theme here, the title inside will turn blue/purple/green */}
-          
+
           {/* Enhanced Navigation Buttons */}
           <div className="t-detail-nav">
             <button className="t-btn-back-pill" onClick={() => setSelectedItem(null)}>
@@ -136,7 +136,7 @@ const TeacherContents = ({ user }) => {
             {activeTab === 'documents' && (
               <div className="t-doc-action-box">
                 <a href={selectedItem.documentUrl} target="_blank" rel="noreferrer" className="t-btn-glass-purple">
-                  📄 Open Full Document
+                  📄 Open Full Document: <strong>{selectedItem.title}</strong>
                 </a>
               </div>
             )}
@@ -145,7 +145,7 @@ const TeacherContents = ({ user }) => {
 
             <div className="t-questions-section">
               {/* Colored Question Set Header */}
-              <h3 className="question-set-header">Question Set </h3>
+              <h3 className="question-set-header">QUESTION SET</h3>
               
               <div className="t-q-stack">
                 {selectedItem.questions?.map((q, idx) => (
