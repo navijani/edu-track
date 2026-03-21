@@ -158,7 +158,7 @@ const StudentDocuments = ({ subjectName, user }) => {
                             <span style={{ fontSize: '20px' }}>{isDone ? '✅' : '📖'}</span>
                         </div>
                         
-                        <div className="t-addquiz-dropdown-area" style={{ marginTop: '15px', padding: '10px', fontSize: '12px' }}>
+                        <div className="s-doc-dropdown-area" style={{ marginTop: '15px', padding: '10px', fontSize: '12px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
                                 <span>Status:</span>
                                 <span style={{ fontWeight: 'bold', color: isOpened ? '#3498db' : '#f59e0b' }}>

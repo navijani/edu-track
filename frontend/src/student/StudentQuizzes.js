@@ -97,7 +97,7 @@ const StudentQuizzes = ({ subjectName, user }) => {
         const parsedAnswers = JSON.parse(mySub.answers || "{}");
         return (
             <div className="s-quiz-take-container">
-                <button onClick={() => setViewMode('list')} className="s-btn-logout" style={{ background: '#94a3b8', width: 'auto', marginBottom: '20px' }}>
+                <button onClick={() => setViewMode('list')} className="s-btn-back" style={{ background: '#94a3b8', width: 'auto', marginBottom: '20px' }}>
                     ⬅ Back to List
                 </button>
                 <div className="s-quiz-review-header">
@@ -172,21 +172,31 @@ const StudentQuizzes = ({ subjectName, user }) => {
                 const hasSub = submissions[item.id] !== undefined;
                 
                 return (
-                    <div key={index} onClick={() => handleQuizClick(item)} className="s-quiz-card" style={{ opacity: isTooEarly || (isTooLate && !hasSub) ? 0.6 : 1 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <h4 style={{ margin: 0 }}>{item.title}</h4>
-                            <span style={{ fontSize: '20px' }}>{hasSub ? '✅' : isTooEarly ? '🔒' : '📝'}</span>
-                        </div>
-                        <div className="t-addquiz-dropdown-area" style={{ marginTop: '15px', background: '#f8fafc' }}>
-                            <div style={{ fontSize: '11px', color: '#64748b' }}>
-                                <div><strong>Opens:</strong> {item.scheduledDate || "N/A"}</div>
-                                <div style={{ marginTop: '5px' }}><strong>Closes:</strong> {item.deadline || "N/A"}</div>
-                            </div>
-                        </div>
-                        <p style={{ margin: '15px 0 0 0', fontSize: '12px', fontWeight: '800', color: hasSub ? '#3498db' : isTooLate ? '#ef4444' : '#10b981' }}>
-                            {hasSub ? "VIEW RESULTS" : isTooLate ? "MISSED" : "START QUIZ →"}
-                        </p>
-                    </div>
+                    <div 
+        key={index} 
+        onClick={() => handleQuizClick(item)} 
+        className={`s-quiz-card ${isTooLate && !hasSub ? 'missed' : ''}`} // Added conditional class
+        style={{ 
+            opacity: isTooEarly ? 0.6 : 1, // Missed cards usually don't need low opacity if they have a 'Missed' label
+        }}
+    >
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h4 style={{ margin: 0 }}>{item.title}</h4>
+            <span style={{ fontSize: '20px' }}>{hasSub ? '✅' : isTooEarly ? '🔒' : '📝'}</span>
+        </div>
+
+        {/* This is that light grey/green box from your screenshot */}
+        <div className="t-addquiz-dropdown-area" style={{ marginTop: '15px', background: '#f8fafc' }}>
+            <div style={{ fontSize: '11px', color: '#64748b' }}>
+                <div><strong>Opens:</strong> {item.scheduledDate || "N/A"}</div>
+                <div style={{ marginTop: '5px' }}><strong>Closes:</strong> {item.deadline || "N/A"}</div>
+            </div>
+        </div>
+
+        <p style={{ margin: '15px 0 0 0', fontSize: '12px', fontWeight: '800', color: hasSub ? '#3498db' : isTooLate ? '#ef4444' : '#10b981' }}>
+            {hasSub ? "VIEW RESULTS" : isTooLate ? "MISSED" : "START QUIZ →"}
+        </p>
+    </div>
                 );
             })}
         </div>

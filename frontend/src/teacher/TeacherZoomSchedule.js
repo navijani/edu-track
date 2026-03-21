@@ -8,6 +8,7 @@ const TeacherZoomSchedule = ({ user }) => {
     const [meetingDate, setMeetingDate] = useState('');
     const [meetingTime, setMeetingTime] = useState('');
     const [scheduledMeetings, setScheduledMeetings] = useState([]);
+    const [endTime, setEndTime] = useState('');
 
     const fetchMeetings = useCallback(async () => {
         try {
@@ -78,6 +79,10 @@ const TeacherZoomSchedule = ({ user }) => {
                         <div style={{ flex: 1 }}>
                             <label className="t-q-label">Time</label>
                             <input type="time" required className="t-zoom-input" value={meetingTime} onChange={(e) => setMeetingTime(e.target.value)} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <label className="t-q-label">End Time</label>
+                            <input type="time" required className="t-zoom-input" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
                         </div>
                     </div>
 

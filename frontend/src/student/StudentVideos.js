@@ -206,11 +206,11 @@ const StudentVideos = ({ subjectName, user }) => {
                 return (
                     <div key={index} onClick={() => setSelectedItem(item)} className={`s-video-card ${isDone ? 'completed' : ''}`}>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <h4 style={{ margin: 0, color: '#1e293b' }}>{item.title}</h4>
+                            <h4 style={{ margin: 0, color: '#496da5' }}>{item.title}</h4>
                             <span style={{ fontSize: '20px' }}>{isDone ? '✅' : '▶️'}</span>
                         </div>
                         
-                        <div className="t-addquiz-dropdown-area" style={{ marginTop: '15px', padding: '10px' }}>
+                        <div className="s-video-dropdown-area" style={{ marginTop: '15px', padding: '10px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
                                 <span>Watched:</span>
                                 <strong>{formatTime(progress.watchedSeconds)}</strong>

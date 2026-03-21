@@ -484,19 +484,42 @@
 }
 
 .s-quiz-card {
-    background: white;
+    background:white;
     padding: 20px;
     border-radius: 16px;
-    border: 2px solid #c4ced7;
+    border: 2px solid #cce0e7;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
-.s-quiz-card:hover {
+/*.s-quiz-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1);
+    box-shadow: 0 10px 25px rgba(22, 232, 162, 0.1);
+    border-color: #92b6eb;
 }
+*/
+/* 135-degree Green Gradient on Hover (Only for non-missed cards) */
+.s-quiz-card:not(.missed):hover {
+    background: linear-gradient(90deg, white 0%, #9cd8c4 100%);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+}
+
+/* Change text to white when card background becomes green on hover */
+.s-quiz-card:not(.missed):hover h4,
+.s-quiz-card:not(.missed):hover p,
+.s-quiz-card:not(.missed):hover strong,
+.s-quiz-card:not(.missed):hover span {
+    color: rgb(98, 187, 136) !important;
+}
+
+/* Style for the missed cards to prevent the hover effect */
+.s-quiz-card.missed {
+    cursor: not-allowed;
+    background-color: #fcfcfc;
+}
+
 
 /* --- Active Quiz Mode --- */
 .s-quiz-take-container {
@@ -526,7 +549,7 @@
 
 /* --- Review Card --- */
 .s-quiz-review-header {
-    background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+    background: linear-gradient(90deg, #5f7eaa 0%, #afdaee 100%);
     color: white;
     padding: 30px;
     border-radius: 20px;
@@ -625,4 +648,50 @@
     border-left: 4px solid #a855f7;
     border-radius: 10px;
     font-size: 0.95rem;
+}
+
+.s-video-dropdown-area{
+    margin-top: 15px;
+    padding: 15px;
+    background: #ebf6fc;
+    border-radius: 12px;
+    border: 1px solid #bbe6f7;
+    /*display: flex;*/
+    align-items: center;
+    gap: 10px;
+}
+
+.s-doc-dropdown-area{
+    margin-top: 15px;
+    padding: 15px;
+    background: #f7e4fd;
+    border-radius: 12px;
+    border: 1px solid #eabbf7;
+    /*display: flex;*/
+    align-items: center;
+    gap: 10px;
+}
+
+.s-btn-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: rgba(207, 204, 228, 0.1); /* Very light purple tint */
+    color: #4834d4; /* Deep purple text */
+    border: 2px solid #4834d4;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: fit-content; /* Only as wide as the text */
+    margin-bottom: 25px;
+}
+
+.s-btn-back:hover {
+    background: #4834d4;
+    color: white;
+    box-shadow: 0 5px 15px rgba(72, 52, 212, 0.3);
+    transform: translateX(-5px); /* Gentle slide effect */
 }
