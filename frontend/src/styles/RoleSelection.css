@@ -1,0 +1,309 @@
+/* --- FULL SCREEN OVERLAY --- */
+/* --- 1. FULL SCREEN OVERLAY (Now with moving gradient) --- */
+.glass-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  /* Deep, shifting premium gradient */
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #090e17, #172033);
+  background-size: 400% 400%;
+  animation: bgShift 20s ease infinite; /* 20-second continuous loop */
+  overflow: hidden;
+  position: absolute; 
+  top: 0;
+  left: 0;
+  z-index: 1;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Slowly pans the dark background colors */
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- 2. THE LONG-RUNNING FLOATING ORBS --- */
+.glass-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px); /* Slightly more blur for a smoother cinematic glow */
+  z-index: 2;
+  opacity: 0.5;
+}
+
+.glass-orb-1 { 
+  width: 350px; height: 350px; background: #3b82f6; 
+  top: -10%; left: -10%; 
+  animation: driftOrb1 25s infinite ease-in-out; 
+}
+
+.glass-orb-2 { 
+  width: 300px; height: 300px; background: #8b5cf6; 
+  bottom: -10%; right: -10%; 
+  animation: driftOrb2 30s infinite ease-in-out; 
+}
+
+.glass-orb-3 { 
+  width: 250px; height: 250px; background: #06b6d4; 
+  top: 50%; left: 50%; 
+  animation: driftOrb3 22s infinite ease-in-out; 
+}
+
+/* These keyframes use vw/vh to travel across the entire monitor */
+@keyframes driftOrb1 {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40vw, 30vh) scale(1.2); }
+  66% { transform: translate(20vw, 60vh) scale(0.8); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes driftOrb2 {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-30vw, -40vh) scale(1.3); }
+  66% { transform: translate(-60vw, -20vh) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes driftOrb3 {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  33% { transform: translate(30vw, -30vh) scale(0.8); }
+  66% { transform: translate(-30vw, 30vh) scale(1.4); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ... Keep the rest of your CSS (from "THE MAIN GLASS CARD" downwards) exactly the same! ... */
+/* --- THE MAIN GLASS CARD --- */
+.glass-container {
+  width: 90%;
+  max-width: 800px;
+  padding: 50px;
+  text-align: center;
+  border-radius: 20px;
+  position: relative;
+  z-index: 10;
+  
+  /* The Frost Effect */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  
+  /* Delicate Borders */
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+  animation: popIn 0.8s ease-out forwards;
+}
+
+/* --- TEXT STYLES --- */
+.glass-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 10px;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.glass-subtitle {
+  color: #94a3b8;
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+
+/* --- THE FLEXBOX GRID & BUTTONS --- */
+.glass-grid {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+
+.glass-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 30px 20px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.glass-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.glass-btn:hover .glass-icon {
+  transform: scale(1.1);
+}
+
+.glass-btn h3 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.glass-btn p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-top: 5px;
+}
+
+/* Entrance Animation */
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .glass-grid { flex-direction: column; }
+}
+
+
+/* --- Login Card Container --- */
+.login-glass-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 30px;
+  padding: 50px 40px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+/* --- Back Button --- */
+.back-arrow {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.back-arrow:hover {
+  color: white;
+  transform: translateX(-5px);
+}
+
+/* --- Header Section --- */
+.role-icon-circle {
+  width: 70px;
+  height: 70px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 20px;
+  font-size: 2rem;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+
+.login-header h2 {
+  color: white;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.login-header h2 span {
+  font-weight: 300;
+  color: #3b82f6;
+}
+
+.login-header p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-bottom: 35px;
+}
+
+/* --- Form Fields --- */
+.input-field-wrapper {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.input-field-wrapper label {
+  display: block;
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  margin-left: 5px;
+  text-transform: uppercase;
+}
+
+.input-field-wrapper input {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-field-wrapper input:focus {
+  border-color: #3b82f6;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+/* --- Login Button --- */
+.login-primary-btn {
+  width: 100%;
+  padding: 15px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+}
+
+.login-primary-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.4);
+}
+
+.login-primary-btn:disabled {
+  background: #64748b;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.login-footer p {
+  margin-top: 30px;
+  color: #64748b;
+  font-size: 0.8rem;
+}

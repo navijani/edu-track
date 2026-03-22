@@ -148,12 +148,12 @@ const StudentProgress = ({ user }) => {
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                 <XAxis dataKey="subject" />
                                 <YAxis domain={[0, 100]} />
-                                <Tooltip content={<CustomTooltip />} />
+                                <Tooltip content={<CustomTooltip />} cursor={{fill: '#f4f6f7'}}/>
                                 <Bar dataKey="quizPercentage" fill="#27ae60" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                    {/* ... (Keep your other two overview charts similar to the one above) ... */}
+                    {/* ... (Keep other two overview charts similar to the one above) ... */}
                     <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                         <h3 style={{ textAlign: 'center', color: '#3498db', marginBottom: '20px' }}>Avg. Video Completion (%)</h3>
                         <ResponsiveContainer width="100%" height={250}>
@@ -161,7 +161,7 @@ const StudentProgress = ({ user }) => {
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                 <XAxis dataKey="subject" />
                                 <YAxis domain={[0, 100]} />
-                                <Tooltip content={<CustomTooltip />} />
+                                <Tooltip content={<CustomTooltip />} cursor={{fill: '#f4f6f7'}} />
                                 <Bar dataKey="videoAvg" fill="#3498db" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
