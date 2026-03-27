@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const Dashboard = ({ role, onLogout }) => {
   return (
     <div className="dashboard-container">
