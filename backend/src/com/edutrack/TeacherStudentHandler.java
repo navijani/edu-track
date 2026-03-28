@@ -43,9 +43,11 @@ public class TeacherStudentHandler implements HttpHandler {
 
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         exchange.sendResponseHeaders(200, bytes.length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private Map<String, String> getQueryParams(String query) {

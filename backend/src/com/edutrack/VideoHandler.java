@@ -91,11 +91,8 @@ public class VideoHandler implements HttpHandler {
                     // Split the array into individual question blocks
                     String[] qBlocks = questionsPart.split("},\\{");
                     for (String block : qBlocks) {
-                        ObjectMapper mapper = new ObjectMapper();
-                        JsonNode node = mapper.readTree(block);
-
-                        String q = node.get("question").asText();
-                        String a = node.get("answer").asText();
+                        String q = block.split("\"question\":\"")[1].split("\"")[0];
+                        String a = block.split("\"answer\":\"")[1].split("\"")[0];
                         questionList.add(new VideoQuestion(q, a));
                     }
                 }
