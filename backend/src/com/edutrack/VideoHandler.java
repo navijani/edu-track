@@ -1,5 +1,11 @@
 package com.edutrack;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.IOException;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.edutrack.dao.VideoDAO;
@@ -7,10 +13,7 @@ import com.edutrack.models.VideoContent;
 import com.edutrack.models.VideoQuestion;
 import java.net.URLDecoder;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class VideoHandler implements HttpHandler {
 
@@ -88,8 +91,11 @@ public class VideoHandler implements HttpHandler {
                     // Split the array into individual question blocks
                     String[] qBlocks = questionsPart.split("},\\{");
                     for (String block : qBlocks) {
-                        String q = block.split("\"question\":\"")[1].split("\"")[0];
-                        String a = block.split("\"answer\":\"")[1].split("\"")[0];
+                        ObjectMapper mapper = new ObjectMapper();
+                        JsonNode node = mapper.readTree(block);
+
+                        String q = node.get("question").asText();
+                        String a = node.get("answer").asText();
                         questionList.add(new VideoQuestion(q, a));
                     }
                 }
@@ -114,8 +120,12 @@ public class VideoHandler implements HttpHandler {
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, bytes.length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        try {
+            OutputStream os = exchange.getResponseBody();
+            os.write(bytes);
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
