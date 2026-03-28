@@ -1,5 +1,6 @@
 package com.edutrack;
 
+
 import com.edutrack.dao.ZoomDAO;
 import com.sun.net.httpserver.*;
 import java.io.*;
@@ -68,9 +69,11 @@ public class ZoomHandler implements HttpHandler {
 
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         exchange.sendResponseHeaders(200, bytes.length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        try (OutputStream os = exchange.getResponseBody()) {
+            os.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Helper to parse query parameters safely (?id=1&subject=Math)
