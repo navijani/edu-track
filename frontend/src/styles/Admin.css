@@ -1,0 +1,486 @@
+/* --- Admin Layout Container --- */
+.admin-glass-wrapper {
+  min-height: 100vh;
+  width: 100vw;
+  background: #0f172a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+}
+
+/* --- Animated Background Orbs --- */
+.admin-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+  z-index: 1;
+}
+.admin-orb-1 { width: 400px; height: 400px; background: #3b82f6; top: -10%; left: -10%; }
+.admin-orb-2 { width: 300px; height: 300px; background: #f43f5e; bottom: -5%; right: 5%; }
+
+/* --- Main Structure --- */
+.admin-layout {
+  width: 95vw;
+  height: 90vh;
+  display: flex;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  z-index: 10;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Sidebar Styling --- */
+.admin-sidebar {
+  width: 280px;
+  background: rgba(0, 0, 0, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 20px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  padding-left: 10px;
+}
+
+.admin-logo-icon { font-size: 1.8rem; }
+
+.sidebar-header h2 {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-header h2 span { color: #3b82f6; }
+
+.sidebar-menu {
+  list-style: none;
+  flex-grow: 1;
+}
+
+.sidebar-menu li {
+  padding: 14px 18px;
+  color: #94a3b8;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+
+.sidebar-menu li:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.sidebar-menu li.active {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+}
+
+.menu-icon { font-size: 1.2rem; }
+
+/* --- Main Content Area --- */
+.admin-main-content {
+  flex-grow: 1;
+  padding: 40px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.content-header h1 {
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.admin-status {
+  padding: 6px 14px;
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.content-body {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 25px;
+  height: 100%;
+}
+
+/* --- PREMIUN GHOST LOGOUT BUTTON --- */
+.admin-logout-btn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03); /* Almost transparent */
+  border: 1px solid rgba(244, 63, 94, 0.3); /* Subtle red border */
+  color: #fb7185; /* Soft rose/red text */
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy feel */
+  position: relative;
+  overflow: hidden;
+}
+
+/* The Icon inside the button */
+.admin-logout-btn span {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+/* --- HOVER EFFECTS --- */
+.admin-logout-btn:hover {
+  background: rgba(244, 63, 94, 0.1); /* Slight red tint */
+  border-color: #f43f5e; /* Brighter red border */
+  color: #ffffff;
+  transform: translateY(-3px); /* Lift up */
+  
+  /* The Neon Glow */
+  box-shadow: 0 10px 20px rgba(244, 63, 94, 0.3), 
+              0 0 15px rgba(244, 63, 94, 0.2);
+}
+
+.admin-logout-btn:hover span {
+  transform: translateX(-5px) rotate(-10deg); /* Icon "peeks" out */
+}
+
+/* --- CLICK EFFECT --- */
+.admin-logout-btn:active {
+  transform: translateY(0);
+  background: rgba(244, 63, 94, 0.2);
+}
+
+/* Ensure the footer pushes to the bottom */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+
+/* --- Glass Table Styling --- */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+}
+
+.glass-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px; /* Gap between rows */
+  text-align: left;
+}
+
+.glass-table th {
+  padding: 15px 20px;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+.table-row {
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.3s ease;
+}
+
+.table-row:hover {
+  background: rgba(255, 255, 255, 0.07);
+  transform: scale(1.005);
+}
+
+.glass-table td {
+  padding: 16px 20px;
+  color: #e2e8f0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- Role Badges --- */
+.role-tag {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.badge-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+.badge-purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); }
+.badge-cyan { background: rgba(6, 182, 212, 0.15); color: #67e8f9; border: 1px solid rgba(6, 182, 212, 0.3); }
+
+/* --- Action Buttons --- */
+.actions-cell { text-align: right; }
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 15px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+.action-btn.view { color: #3b82f6; }
+.action-btn.delete { color: #f43f5e; }
+.action-btn:hover { opacity: 0.7; }
+
+/* --- Detail Modal --- */
+.details-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.details-card {
+  width: 400px;
+  background: rgba(30, 41, 59, 0.9);
+  padding: 30px;
+  border-radius: 20px;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.close-btn {
+  position: absolute; top: 15px; right: 20px;
+  background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;
+}
+
+/* --- Search Section --- */
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  gap: 20px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+
+.glass-search-input {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.glass-search-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #3b82f6;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+.user-count {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* --- AddUser Form Styling --- */
+.add-user-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.form-glass-card {
+  width: 100%;
+  max-width: 700px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.form-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.form-header h3 { color: white; font-size: 1.5rem; margin-bottom: 5px; }
+.form-header p { color: #94a3b8; font-size: 0.9rem; }
+
+/* Grid Layout */
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.input-group input, 
+.input-group select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 15px;
+  border-radius: 10px;
+  color: white;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* Specific styling for select dropdowns to prevent white background */
+.input-group select option {
+  background: #1e293b;
+  color: white;
+}
+
+.input-group input:focus, 
+.input-group select:focus {
+  border-color: #3b82f6;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+/* Submit Button */
+.submit-btn {
+  grid-column: span 2;
+  margin-top: 30px;
+  padding: 15px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Animations for appearing fields */
+.animated-field {
+  animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .input-grid { grid-template-columns: 1fr; }
+}
+
+/* --- AddSubject Specific Styling --- */
+
+/* Centering the container */
+.add-subject-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+/* A more focused, smaller version of the glass card */
+.form-glass-card.compact {
+  max-width: 450px;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Subtle glow for the subject icon */
+.form-icon {
+  text-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+/* Ensure labels stand out */
+.input-group label {
+  margin-bottom: 8px;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Button specific for subject creation (Greenish hue) */
+.add-subject-container .submit-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+  border: none;
+  margin-top: 40px;
+}
+
+.add-subject-container .submit-btn:hover {
+  box-shadow: 0 10px 20px rgba(45, 212, 191, 0.3);
+  transform: translateY(-2px);
+}
+
