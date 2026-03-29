@@ -33,8 +33,8 @@ public class SubjectHandler implements HttpHandler {
         //  POST: Save a new subject 
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
             try {
-                InputStream is = exchange.getRequestBody();
-                String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                InputStream i = exchange.getRequestBody();
+                String body = new String(i.readAllBytes(), StandardCharsets.UTF_8);
                 
                 // Extract strings
                 String code = body.split("\"code\":\"")[1].split("\"")[0];
@@ -61,8 +61,12 @@ public class SubjectHandler implements HttpHandler {
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", contentType);
         exchange.sendResponseHeaders(statusCode, bytes.length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        try {
+            OutputStream os = exchange.getResponseBody();
+            os.write(bytes);
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

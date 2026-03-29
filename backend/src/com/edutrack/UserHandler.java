@@ -1,12 +1,15 @@
 package com.edutrack;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+
 import com.edutrack.dao.UserDAO;
 import com.edutrack.models.Teacher;
 import com.edutrack.models.User;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+
+
 
 public class UserHandler implements HttpHandler {
 
@@ -18,16 +21,17 @@ public class UserHandler implements HttpHandler {
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
 
+        if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+            String jsonResponse = userDAO.getAllUsersJson();
+            sendResponse(exchange, 200, jsonResponse);
+        }
         if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
             exchange.sendResponseHeaders(204, -1);
             exchange.close(); 
             return;
         }
 
-        if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-            String jsonResponse = userDAO.getAllUsersJson();
-            sendResponse(exchange, 200, jsonResponse);
-        }
+
 
         if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
             String query = exchange.getRequestURI().getQuery();
@@ -116,8 +120,12 @@ public class UserHandler implements HttpHandler {
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, bytes.length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        try {
+            OutputStream os = exchange.getResponseBody();
+            os.write(bytes);
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

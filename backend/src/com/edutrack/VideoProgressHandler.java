@@ -35,7 +35,6 @@ public class VideoProgressHandler implements HttpHandler {
             }
             return;
         }
-        
         // POST: Save new progress when they close the video
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
             try {
