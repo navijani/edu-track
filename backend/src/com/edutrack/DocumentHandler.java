@@ -31,13 +31,9 @@ public class DocumentHandler implements HttpHandler {
             String query = exchange.getRequestURI().getQuery();
             
             // 1. Teacher Dashboard Request
-            if (query != null && query.startsWith("teacherId=")) {
-                String teacherId = query.split("=")[1];
-                String jsonResponse = documentDAO.getDocumentsByTeacherJson(teacherId);
-                sendResponse(exchange, 200, jsonResponse);
-            } 
+
             // 2. Student Dashboard Request
-            else if (query != null && query.startsWith("subject=")) {
+            if (query != null && query.startsWith("subject=")) {
                 String subject = query.split("=")[1];
                 
                 // Safely decode the URL (so "Computer%20Science" becomes "Computer Science")
@@ -46,8 +42,14 @@ public class DocumentHandler implements HttpHandler {
                 } catch (Exception e) {
                     System.out.println("Warning: Could not decode URL.");
                 }
+
                 
                 String jsonResponse = documentDAO.getDocumentsBySubjectJson(subject);
+                sendResponse(exchange, 200, jsonResponse);
+            }
+            else if (query != null && query.startsWith("teacherId=")) {
+                String teacherId = query.split("=")[1];
+                String jsonResponse = documentDAO.getDocumentsByTeacherJson(teacherId);
                 sendResponse(exchange, 200, jsonResponse);
             } 
             else {
