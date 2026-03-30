@@ -1,10 +1,9 @@
 package com.edutrack;
 
+import com.edutrack.dao.SubjectDAO;
+import com.edutrack.models.Subject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.edutrack.models.Subject;
-import com.edutrack.dao.SubjectDAO;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 

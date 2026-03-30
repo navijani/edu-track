@@ -47,7 +47,7 @@ public class DocumentHandler implements HttpHandler {
                 String jsonResponse = documentDAO.getDocumentsBySubjectJson(subject);
                 sendResponse(exchange, 200, jsonResponse);
             }
-            else if (query != null && query.startsWith("teacherId=")) {
+            else if (query != null && query.startsWith("teacherId=")){
                 String teacherId = query.split("=")[1];
                 String jsonResponse = documentDAO.getDocumentsByTeacherJson(teacherId);
                 sendResponse(exchange, 200, jsonResponse);
@@ -116,8 +116,12 @@ public class DocumentHandler implements HttpHandler {
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, bytes.length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        try {
+            OutputStream os = exchange.getResponseBody();
+            os.write(bytes);
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
