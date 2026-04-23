@@ -9,6 +9,9 @@ import StudentDashboard from './student/StudentDashboard';
 // 1. IMPORT THE PARENT DASHBOARD
 import ParentDashboard from './parent/ParentDashboard'; // Make sure this path matches where you saved it!
 
+
+import AdminLoginPage from './components/AdminLoginPage'; 
+
 import './App.css';
 
 function App() {
@@ -18,15 +21,9 @@ function App() {
   // Store the actual user data after a successful login
   const [currentUser, setCurrentUser] = useState(null); 
 
+  
   const handleAdminAuth = () => {
-    const email = prompt("Enter Admin Email:");
-    const password = prompt("Enter Admin Password:");
-
-    if (email === "navindujanith2004@gmail.com" && password === "123456") {
-      setScreen('admin-dashboard'); 
-    } else {
-      alert("Unauthorized Access!");
-    }
+    setScreen('admin-login-page');
   };
 
   const handleLogout = () => {
@@ -55,6 +52,14 @@ function App() {
             setScreen('login-entry'); 
           }} />
         </>
+      )}
+
+      
+      {screen === 'admin-login-page' && (
+        <AdminLoginPage 
+          onBack={() => setScreen('role')} 
+          onAdminSuccess={() => setScreen('admin-dashboard')} 
+        />
       )}
 
       {/* Admin Dashboard */}
