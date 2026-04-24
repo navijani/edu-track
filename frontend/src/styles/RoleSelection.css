@@ -348,3 +348,30 @@
   max-width: 450px;
   text-align: center;
 }
+
+.login-glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 3rem;
+    border-radius: 20px;
+    width: 400px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.login-primary-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-primary-btn:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+}

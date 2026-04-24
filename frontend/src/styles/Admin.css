@@ -486,3 +486,206 @@
   transform: translateY(-2px);
 }
 
+/* Modern EduTrack Admin Styles */
+:root {
+  --admin-primary: #3b82f6;
+  --admin-bg: #0f172a;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+.admin-glass-wrapper {
+  background: var(--admin-bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Glassmorphism Layout Container */
+.admin-layout {
+  width: 96%;
+  height: 92vh;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  background: var(--glass-bg);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* Sidebar Styles */
+.admin-sidebar {
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-right: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header h2 {
+  color: white;
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+
+.sidebar-header span {
+  color: var(--admin-primary);
+  font-weight: 300;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin-top: 2.5rem;
+  flex-grow: 1;
+}
+
+.sidebar-menu li {
+  padding: 14px 20px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-menu li:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.sidebar-menu li.active {
+  background: var(--admin-primary);
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+}
+
+/* Main Content Header */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 1.5rem;
+}
+
+.header-title-area h1 {
+  color: white;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.admin-status-badge {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Animated Background Effects */
+.admin-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 1;
+}
+
+.admin-orb-1 {
+  width: 400px;
+  height: 400px;
+  background: rgba(59, 130, 246, 0.15);
+  top: -100px;
+  right: -100px;
+}
+
+.admin-orb-2 {
+  width: 300px;
+  height: 300px;
+  background: rgba(139, 92, 246, 0.1);
+  bottom: -50px;
+  left: -50px;
+}
+
+/* Table Styles for UsersList */
+.users-list-container {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px; /* Adds space between rows */
+    text-align: left;
+}
+
+.admin-table th {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 20px;
+}
+
+.admin-table tbody tr {
+    background: rgba(255, 255, 255, 0.03);
+    transition: 0.3s;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1.01);
+}
+
+.admin-table td {
+    padding: 16px 20px;
+    color: #e2e8f0;
+}
+
+.admin-table td:first-child {
+    border-radius: 12px 0 0 12px;
+    font-weight: 600;
+    color: #3b82f6;
+}
+
+.admin-table td:last-child {
+    border-radius: 0 12px 12px 0;
+}
+
+/* Role Badges */
+.role-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.role-badge.parent { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+.role-badge.student { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.role-badge.teacher { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+
+/* Action Buttons */
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: 0.2s;
+}
+
+.delete-btn:hover {
+    transform: scale(1.2);
+}

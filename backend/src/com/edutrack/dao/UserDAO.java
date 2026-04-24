@@ -1,19 +1,13 @@
 package com.edutrack.dao;
 
 import com.edutrack.DBConnection;
-import com.edutrack.models.User;
 import com.edutrack.models.Teacher;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import com.edutrack.models.User;
+import java.sql.*; // This covers Connection, PreparedStatement, etc.
 
 public class UserDAO {
     
-    // UPDATED: Now accepts childId as a parameter
     public boolean saveUser(User user, String childId) {
-        // Added child_id to the INSERT statement
         String sql = "INSERT INTO users (id, name, email, password, role, subject, child_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -24,14 +18,12 @@ public class UserDAO {
             pstmt.setString(4, user.getPassword());
             pstmt.setString(5, user.getRole());
             
-            // Handle Teacher Subject
             if (user instanceof Teacher) {
                 pstmt.setString(6, ((Teacher) user).getSubject());
             } else {
-                pstmt.setNull(6, Types.VARCHAR); // Using setNull is cleaner for databases than empty strings
+                pstmt.setNull(6, Types.VARCHAR);
             }
             
-            // Handle Parent childId
             if (childId != null && !childId.trim().isEmpty()) {
                 pstmt.setString(7, childId);
             } else {
@@ -57,7 +49,6 @@ public class UserDAO {
         }
     }
 
-    // UPDATED: Now also fetches child_id so you can see it in the Admin Dashboard
     public String getAllUsersJson() {
         StringBuilder json = new StringBuilder("[");
         String sql = "SELECT id, name, email, role, subject, child_id FROM users";
@@ -88,24 +79,20 @@ public class UserDAO {
 
     public User authenticateUser(String id, String password, String role) {
         String sql = "SELECT * FROM users WHERE id = ? AND password = ? AND role = ?";
-        
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, id);
             pstmt.setString(2, password);
             pstmt.setString(3, role);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String dbName = rs.getString("name");
-                String dbEmail = rs.getString("email");
-                String dbSubject = rs.getString("subject");
-
-                if ("TEACHER".equalsIgnoreCase(role)) {
-                    return new Teacher(id, dbName, dbEmail, password, role, dbSubject);
-                } else {
-                    return new User(id, dbName, dbEmail, password, role);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    if ("TEACHER".equalsIgnoreCase(role)) {
+                        return new Teacher(id, rs.getString("name"), rs.getString("email"), password, role, rs.getString("subject"));
+                    } else {
+                        return new User(id, rs.getString("name"), rs.getString("email"), password, role);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -115,24 +102,23 @@ public class UserDAO {
     }
 
     public boolean validateLogin(String id, String password, String role) {
-    String query = "SELECT * FROM users WHERE id = ? AND password = ? AND role = ?";
-    
-    // Assuming you have a method to get a database connection
-    try (Connection conn = this.getConnection(); 
-         PreparedStatement pstmt = conn.prepareStatement(query)) {
-        
-        pstmt.setString(1, id);
-        pstmt.setString(2, password);
-        pstmt.setString(3, role);
-        
-        ResultSet rs = pstmt.executeQuery();
-        
-        // If a row is returned, the credentials are valid
-        return rs.next(); 
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
+        String query = "SELECT * FROM users WHERE id = ? AND password = ? AND role = ?";
+        try (Connection conn = DBConnection.getConnection(); 
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, id);
+            pstmt.setString(2, password);
+            pstmt.setString(3, role);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next(); 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 }

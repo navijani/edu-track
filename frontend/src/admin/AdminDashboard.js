@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import AddUser from './AddUser';
 import AddSubject from './AddSubject';
 import UsersList from './UsersList';
-import '../styles/Admin.css';
-
+import '../styles/Admin.css'; // Ensure this path is correct
 
 const AdminDashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('viewUsers');
 
   return (
     <div className="admin-glass-wrapper">
-      {/* Background Effects */}
+      {/* Background Orbs for the Glassmorphism effect */}
       <div className="admin-orb admin-orb-1"></div>
       <div className="admin-orb admin-orb-2"></div>
 
       <div className="admin-layout">
-        {/* Sidebar */}
+        {/* Sidebar Navigation */}
         <nav className="admin-sidebar">
           <div className="sidebar-header">
             <div className="admin-logo-icon">🛡️</div>
@@ -52,12 +51,17 @@ const AdminDashboard = ({ onLogout }) => {
           </div>
         </nav>
 
-        {/* Main Content Area */}
+        {/* Main Content Dashboard Area */}
         <main className="admin-main-content">
           <header className="content-header">
-            <h1>{activeTab === 'viewUsers' ? 'User Management' :
-              activeTab === 'users' ? 'Onboard New User' : 'Subject Directory'}</h1>
-            <div className="admin-status">System Active</div>
+            <div className="header-title-area">
+               <h1>{activeTab === 'viewUsers' ? 'User Management' :
+                 activeTab === 'users' ? 'Onboard New User' : 'Subject Directory'}</h1>
+               <p className="breadcrumb">Dashboard / {activeTab}</p>
+            </div>
+            <div className="admin-status-badge">
+                <span className="status-dot"></span> System Active
+            </div>
           </header>
 
           <div className="content-body">
