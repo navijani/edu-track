@@ -6,47 +6,52 @@ import Dashboard from './components/Dashboard';
 import AdminDashboard from './admin/AdminDashboard'; 
 import TeacherDashboard from './teacher/TeacherDashboard';
 import StudentDashboard from './student/StudentDashboard';
-// 1. IMPORT THE PARENT DASHBOARD
-import ParentDashboard from './parent/ParentDashboard'; // Make sure this path matches where you saved it!
+import ParentDashboard from './parent/ParentDashboard';
 
 import './App.css';
 
 function App() {
   const [screen, setScreen] = useState('intro');
   const [userRole, setUserRole] = useState('');
-  
-  // Store the actual user data after a successful login
   const [currentUser, setCurrentUser] = useState(null); 
+
+  // Unified logout function
+  const handleLogout = () => {
+    setScreen('intro');
+    setCurrentUser(null); 
+    setUserRole('');
+  };
+
+  // Triggered by the Admin button in the corner
+  const handleAdminInitiation = () => {
+    setUserRole('ADMIN');
+    setScreen('login-entry');
+  };
 
   const handleAdminAuth = () => {
     const email = prompt("Enter Admin Email:");
     const password = prompt("Enter Admin Password:");
 
-    if (email === "2004@gmail.com" && password === "123") {
+    // YOUR CREDENTIALS ARE HERE:
+    if (email === "2004@gmail.com" && password === "123") { 
       setScreen('admin-dashboard'); 
     } else {
       alert("Unauthorized Access!");
     }
   };
-
-  const handleLogout = () => {
-    setScreen('intro');
-    setCurrentUser(null); // Clear user data on logout
-    setUserRole('');
-  };
-
+  
   return (
     <div className="App">
-      {/* Introduction Screen */}
+      {/* 1. Introduction Screen */}
       {screen === 'intro' && <IntroScreen onLogin={() => setScreen('role')} />}
       
-      {/* Role Selection Screen */}
+      {/* 2. Role Selection Screen */}
       {screen === 'role' && (
         <>
-          {/* Note the zIndex: 50 added here so it floats above the glass background! */}
+          {/* Admin Login Button - Stays in corner per your request */}
           <div style={{position: 'absolute', top: '20px', right: '20px', zIndex: 50}}>
-            <button className="admin-btn-small" onClick={handleAdminAuth}>
-              Admin Login
+            <button className="admin-btn-small" onClick={handleAdminInitiation}>
+              🛡️ Admin Login
             </button>
           </div>
           
@@ -57,24 +62,25 @@ function App() {
         </>
       )}
 
-      {/* Admin Dashboard */}
-      {screen === 'admin-dashboard' && (
-        <AdminDashboard onLogout={handleLogout} />
-      )}
-
-      {/* Login Credentials Screen */}
+      {/* 3. Login Credentials Screen (Now handles Admin, Student, Teacher, Parent) */}
       {screen === 'login-entry' && (
         <LoginCredentials 
           role={userRole} 
           onBack={() => setScreen('role')} 
           onSuccess={(userData) => {
-            setCurrentUser(userData); // Save the logged-in user's data
-            setScreen('dashboard');   // Move to the dashboard phase
+            setCurrentUser(userData);
+            // Route to Admin Dashboard or General Dashboards
+            setScreen(userRole === 'ADMIN' ? 'admin-dashboard' : 'dashboard');
           }} 
         />
       )}
 
-      {/* --- DASHBOARD ROUTING --- */}
+      {/* 4. Admin Dashboard */}
+      {screen === 'admin-dashboard' && (
+        <AdminDashboard user={currentUser} onLogout={handleLogout} />
+      )}
+
+      {/* 5. User Dashboards Routing */}
       {screen === 'dashboard' && (
         <>
           {userRole.toUpperCase() === 'TEACHER' ? (
@@ -82,10 +88,8 @@ function App() {
           ) : userRole.toUpperCase() === 'STUDENT' ? (
             <StudentDashboard user={currentUser} onLogout={handleLogout} />
           ) : userRole.toUpperCase() === 'PARENT' ? (
-            /* 2. ADD THE PARENT ROUTE HERE */
             <ParentDashboard user={currentUser} onLogout={handleLogout} />
           ) : (
-            /* Fallback Dashboard */
             <Dashboard role={userRole} user={currentUser} onLogout={handleLogout} />
           )}
         </>
