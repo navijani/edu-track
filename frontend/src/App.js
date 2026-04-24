@@ -15,31 +15,18 @@ function App() {
   const [userRole, setUserRole] = useState('');
   const [currentUser, setCurrentUser] = useState(null); 
 
-  // Unified logout function
   const handleLogout = () => {
     setScreen('intro');
     setCurrentUser(null); 
     setUserRole('');
   };
 
-  // Triggered by the Admin button in the corner
+  // This handles clicking the 🛡️ button in the corner
   const handleAdminInitiation = () => {
     setUserRole('ADMIN');
     setScreen('login-entry');
   };
 
-  const handleAdminAuth = () => {
-    const email = prompt("Enter Admin Email:");
-    const password = prompt("Enter Admin Password:");
-
-    // YOUR CREDENTIALS ARE HERE:
-    if (email === "2004@gmail.com" && password === "123") { 
-      setScreen('admin-dashboard'); 
-    } else {
-      alert("Unauthorized Access!");
-    }
-  };
-  
   return (
     <div className="App">
       {/* 1. Introduction Screen */}
@@ -48,7 +35,6 @@ function App() {
       {/* 2. Role Selection Screen */}
       {screen === 'role' && (
         <>
-          {/* Admin Login Button - Stays in corner per your request */}
           <div style={{position: 'absolute', top: '20px', right: '20px', zIndex: 50}}>
             <button className="admin-btn-small" onClick={handleAdminInitiation}>
               🛡️ Admin Login
@@ -62,15 +48,19 @@ function App() {
         </>
       )}
 
-      {/* 3. Login Credentials Screen (Now handles Admin, Student, Teacher, Parent) */}
+      {/* 3. Login Credentials Screen (Full Page for all roles) */}
       {screen === 'login-entry' && (
         <LoginCredentials 
           role={userRole} 
           onBack={() => setScreen('role')} 
           onSuccess={(userData) => {
             setCurrentUser(userData);
-            // Route to Admin Dashboard or General Dashboards
-            setScreen(userRole === 'ADMIN' ? 'admin-dashboard' : 'dashboard');
+            // Unified routing based on role
+            if (userRole === 'ADMIN') {
+              setScreen('admin-dashboard');
+            } else {
+              setScreen('dashboard');
+            }
           }} 
         />
       )}

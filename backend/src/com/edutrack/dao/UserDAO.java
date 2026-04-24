@@ -6,6 +6,7 @@ import com.edutrack.models.Teacher;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 
 public class UserDAO {
@@ -112,4 +113,26 @@ public class UserDAO {
         }
         return null;
     }
+
+    public boolean validateLogin(String id, String password, String role) {
+    String query = "SELECT * FROM users WHERE id = ? AND password = ? AND role = ?";
+    
+    // Assuming you have a method to get a database connection
+    try (Connection conn = this.getConnection(); 
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        
+        pstmt.setString(1, id);
+        pstmt.setString(2, password);
+        pstmt.setString(3, role);
+        
+        ResultSet rs = pstmt.executeQuery();
+        
+        // If a row is returned, the credentials are valid
+        return rs.next(); 
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 }

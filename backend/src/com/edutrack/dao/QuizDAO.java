@@ -3,7 +3,6 @@ package com.edutrack.dao;
 import com.edutrack.DBConnection;
 import com.edutrack.models.QuizContent;
 import com.edutrack.models.QuizQuestion;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

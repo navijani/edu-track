@@ -1,4 +1,4 @@
-import React from 'react';
+
 import '../styles/RoleSelection.css'; // We will create this beautiful CSS next
 
 const RoleSelection = ({ onSelect }) => (

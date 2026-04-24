@@ -1,22 +1,18 @@
 package com.edutrack;
 
+import com.edutrack.dao.UserDAO;
+import com.edutrack.models.Teacher;
+import com.edutrack.models.User;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.edutrack.dao.UserDAO;
-import com.edutrack.models.User;
-import com.edutrack.models.Teacher;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class LoginHandler implements HttpHandler {
-
-    // Instantiate the DAO
     private UserDAO userDAO = new UserDAO();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        // Enable CORS
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "POST, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
@@ -31,48 +27,59 @@ public class LoginHandler implements HttpHandler {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 
-                // 1. Extract the exact fields sent by React
-                String id = body.split("\"id\":\"")[1].split("\"")[0];
-                String password = body.split("\"password\":\"")[1].split("\"")[0];
-                String role = body.split("\"role\":\"")[1].split("\"")[0];
+                // --- 1. CLEAN EXTRACTION ---
+                String id = extractValue(body, "id");
+                String password = extractValue(body, "password");
+                String role = extractValue(body, "role");
 
-                // 2. Use the DAO to authenticate (Abstraction)
-                User authenticatedUser = userDAO.authenticateUser(id, password, role);
-
-                if (authenticatedUser != null) {
-                    // User found! Build JSON using the Model's getters (Encapsulation)
-                    String subject = "";
-
-                    // Polymorphism: Check if the returned object is specifically a Teacher
-                    if (authenticatedUser instanceof Teacher) {
-                        subject = ((Teacher) authenticatedUser).getSubject();
+                // --- 2. THE ADMIN CHECK (Must be first) ---
+                if ("ADMIN".equalsIgnoreCase(role)) {
+                    if ("2004@gmail.com".equals(id) && "123".equals(password)) {
+                        String adminJson = "{\"success\":true, \"role\":\"ADMIN\", \"name\":\"System Admin\", \"id\":\"admin-01\"}";
+                        sendResponse(exchange, 200, adminJson);
+                        return; // Stop here!
+                    } else {
+                        sendResponse(exchange, 401, "{\"success\":false, \"message\":\"Invalid Admin Credentials\"}");
+                        return;
                     }
+                }
 
+                // --- 3. DATABASE CHECK (For everyone else) ---
+                User authUser = userDAO.authenticateUser(id, password, role);
+
+                if (authUser != null) {
+                    String subject = (authUser instanceof Teacher) ? ((Teacher) authUser).getSubject() : "";
                     String jsonResponse = String.format(
-                            "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"id\":\"%s\"}",
-                            authenticatedUser.getRole(), authenticatedUser.getName(), subject,
-                            authenticatedUser.getId());
-
+                        "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"id\":\"%s\"}",
+                        authUser.getRole(), authUser.getName(), subject, authUser.getId());
                     sendResponse(exchange, 200, jsonResponse);
                 } else {
-                    // Invalid login
-                    String error = "{\"success\":false, \"message\":\"Invalid credentials\"}";
-                    sendResponse(exchange, 401, error);
+                    sendResponse(exchange, 401, "{\"success\":false, \"message\":\"Invalid Credentials\"}");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                sendResponse(exchange, 500, "{\"success\":false, \"message\":\"Server error\"}");
+                sendResponse(exchange, 500, "{\"success\":false, \"message\":\"Server Error\"}");
             }
         }
     }
 
-    // Helper method to keep code DRY
+    private String extractValue(String json, String key) {
+        try {
+            String searchKey = "\"" + key + "\"";
+            int keyIndex = json.indexOf(searchKey);
+            if (keyIndex == -1) return "";
+            int colonIndex = json.indexOf(":", keyIndex);
+            int valueStart = json.indexOf("\"", colonIndex) + 1;
+            int valueEnd = json.indexOf("\"", valueStart);
+            return json.substring(valueStart, valueEnd).trim();
+        } catch (Exception e) { return ""; }
+    }
+
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, bytes.length);
-        OutputStream os = exchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        exchange.getResponseBody().write(bytes);
+        exchange.getResponseBody().close();
     }
 }
