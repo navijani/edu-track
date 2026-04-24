@@ -689,3 +689,49 @@
 .delete-btn:hover {
     transform: scale(1.2);
 }
+
+/* Table Controls (Search & Count) */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 0 10px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 18px;
+    border-radius: 12px;
+    width: 350px;
+    transition: 0.3s;
+}
+
+.search-bar:focus-within {
+    border-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.search-bar span {
+    margin-right: 12px;
+    font-size: 1.1rem;
+    opacity: 0.7;
+}
+
+.search-bar input {
+    background: none;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+.user-count {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
