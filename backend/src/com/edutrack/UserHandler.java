@@ -2,18 +2,27 @@ package com.edutrack;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.edutrack.dao.UserDAO;
-import com.edutrack.models.Teacher;
 import com.edutrack.models.User;
+import com.edutrack.models.UserFactory;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-
-
 public class UserHandler implements HttpHandler {
 
-    private UserDAO userDAO = new UserDAO();
+    private final Map<String, HttpMethodStrategy> strategies;
+
+    public UserHandler() {
+        UserDAO userDAO = new UserDAO();
+        strategies = new HashMap<>();
+        strategies.put("GET", new UserGetStrategy(userDAO));
+        strategies.put("POST", new UserPostStrategy(userDAO));
+        strategies.put("DELETE", new UserDeleteStrategy(userDAO));
+        strategies.put("OPTIONS", new OptionsStrategy());
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -21,31 +30,87 @@ public class UserHandler implements HttpHandler {
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
 
-        if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-            String jsonResponse = userDAO.getAllUsersJson();
-            sendResponse(exchange, 200, jsonResponse);
+        String method = exchange.getRequestMethod().toUpperCase();
+        HttpMethodStrategy strategy = strategies.get(method);
+
+        if (strategy != null) {
+            strategy.execute(exchange);
+        } else {
+            exchange.sendResponseHeaders(405, -1);
+            exchange.close();
         }
-        if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
-            exchange.sendResponseHeaders(204, -1);
-            exchange.close(); 
-            return;
-        }
+    }
 
+    // --- STRATEGY PATTERN INNER CLASSES ---
 
+    interface HttpMethodStrategy {
+        void execute(HttpExchange exchange) throws IOException;
+    }
 
-        if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
-            String query = exchange.getRequestURI().getQuery();
-            if (query != null && query.startsWith("id=")) {
-                String userId = query.split("=")[1];
-                if (userDAO.deleteUser(userId)) {
-                    sendResponse(exchange, 200, "{\"success\":true}");
-                } else {
-                    sendResponse(exchange, 500, "{\"success\":false}");
-                }
+    abstract class BaseStrategy implements HttpMethodStrategy {
+        protected void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
+            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().add("Content-Type", "application/json");
+            exchange.sendResponseHeaders(statusCode, bytes.length);
+            try {
+                OutputStream os = exchange.getResponseBody();
+                os.write(bytes);
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
-        if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+        protected String extractValue(String json, String key) {
+            try {
+                int keyIndex = json.indexOf("\"" + key + "\"");
+                if (keyIndex == -1) return "";
+                
+                int colonIndex = json.indexOf(":", keyIndex);
+                String afterColon = json.substring(colonIndex + 1).trim();
+                
+                if (afterColon.startsWith("\"")) {
+                    int valueStart = json.indexOf("\"", colonIndex) + 1;
+                    int valueEnd = json.indexOf("\"", valueStart);
+                    return json.substring(valueStart, valueEnd);
+                } else {
+                    int commaIndex = afterColon.indexOf(",");
+                    int braceIndex = afterColon.indexOf("}");
+                    int end = (commaIndex != -1 && commaIndex < braceIndex) ? commaIndex : braceIndex;
+                    if (end == -1) end = afterColon.length();
+                    
+                    String val = afterColon.substring(0, end).trim();
+                    return val.equals("null") ? "" : val;
+                }
+            } catch (Exception e) {
+                return "";
+            }
+        }
+    }
+
+    class UserGetStrategy extends BaseStrategy {
+        private final UserDAO userDAO;
+
+        public UserGetStrategy(UserDAO userDAO) {
+            this.userDAO = userDAO;
+        }
+
+        @Override
+        public void execute(HttpExchange exchange) throws IOException {
+            String jsonResponse = userDAO.getAllUsersJson();
+            sendResponse(exchange, 200, jsonResponse);
+        }
+    }
+
+    class UserPostStrategy extends BaseStrategy {
+        private final UserDAO userDAO;
+
+        public UserPostStrategy(UserDAO userDAO) {
+            this.userDAO = userDAO;
+        }
+
+        @Override
+        public void execute(HttpExchange exchange) throws IOException {
             try {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
@@ -61,16 +126,10 @@ public class UserHandler implements HttpHandler {
                 String subject = extractValue(body, "subject");
                 String childId = extractValue(body, "childId");
 
-                // DEBUG LOG: This will prove if Java is successfully reading the childId
                 System.out.println("Extracted Role: " + role);
                 System.out.println("Extracted Child ID: '" + childId + "'");
 
-                User newUser;
-                if (role.equalsIgnoreCase("TEACHER")) {
-                    newUser = new Teacher(id, name, email, password, role, subject);
-                } else {
-                    newUser = new User(id, name, email, password, role);
-                }
+                User newUser = UserFactory.createUser(id, name, email, password, role, subject);
 
                 if (userDAO.saveUser(newUser, childId)) {
                     System.out.println("SUCCESS: User " + name + " added to database.\n");
@@ -87,45 +146,34 @@ public class UserHandler implements HttpHandler {
         }
     }
 
-    // UPDATED: Bulletproof JSON Extractor
-    private String extractValue(String json, String key) {
-        try {
-            int keyIndex = json.indexOf("\"" + key + "\"");
-            if (keyIndex == -1) return "";
-            
-            int colonIndex = json.indexOf(":", keyIndex);
-            String afterColon = json.substring(colonIndex + 1).trim();
-            
-            // Check if the value is wrapped in quotes
-            if (afterColon.startsWith("\"")) {
-                int valueStart = json.indexOf("\"", colonIndex) + 1;
-                int valueEnd = json.indexOf("\"", valueStart);
-                return json.substring(valueStart, valueEnd);
+    class UserDeleteStrategy extends BaseStrategy {
+        private final UserDAO userDAO;
+
+        public UserDeleteStrategy(UserDAO userDAO) {
+            this.userDAO = userDAO;
+        }
+
+        @Override
+        public void execute(HttpExchange exchange) throws IOException {
+            String query = exchange.getRequestURI().getQuery();
+            if (query != null && query.startsWith("id=")) {
+                String userId = query.split("=")[1];
+                if (userDAO.deleteUser(userId)) {
+                    sendResponse(exchange, 200, "{\"success\":true}");
+                } else {
+                    sendResponse(exchange, 500, "{\"success\":false}");
+                }
             } else {
-                // If it's a number, null, or unquoted value at the end of the JSON
-                int commaIndex = afterColon.indexOf(",");
-                int braceIndex = afterColon.indexOf("}");
-                int end = (commaIndex != -1 && commaIndex < braceIndex) ? commaIndex : braceIndex;
-                if (end == -1) end = afterColon.length();
-                
-                String val = afterColon.substring(0, end).trim();
-                return val.equals("null") ? "" : val;
+                sendResponse(exchange, 400, "{\"success\":false, \"error\":\"Missing or invalid id parameter\"}");
             }
-        } catch (Exception e) {
-            return "";
         }
     }
-    
-    private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
-        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(statusCode, bytes.length);
-        try {
-            OutputStream os = exchange.getResponseBody();
-            os.write(bytes);
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    class OptionsStrategy extends BaseStrategy {
+        @Override
+        public void execute(HttpExchange exchange) throws IOException {
+            exchange.sendResponseHeaders(204, -1);
+            exchange.close(); 
         }
     }
 }
