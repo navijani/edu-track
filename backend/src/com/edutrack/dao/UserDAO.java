@@ -56,7 +56,6 @@ public class UserDAO {
         }
     }
 
-    // UPDATED: Now also fetches child_id so you can see it in the Admin Dashboard
     public String getAllUsersJson() {
         StringBuilder json = new StringBuilder("[");
         String sql = "SELECT id, name, email, role, subject, child_id FROM users";
@@ -67,15 +66,27 @@ public class UserDAO {
             boolean first = true;
             while (rs.next()) {
                 if (!first) json.append(",");
-                String subject = rs.getString("subject") == null ? "None" : rs.getString("subject");
-                String childId = rs.getString("child_id") == null ? "None" : rs.getString("child_id");
                 
-                json.append("{\"id\":\"").append(rs.getString("id"))
-                    .append("\",\"name\":\"").append(rs.getString("name"))
-                    .append("\",\"email\":\"").append(rs.getString("email"))
-                    .append("\",\"role\":\"").append(rs.getString("role"))
-                    .append("\",\"subject\":\"").append(subject)
-                    .append("\",\"childId\":\"").append(childId).append("\"}");
+                String id = rs.getString("id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String role = rs.getString("role");
+                String subject = rs.getString("subject");
+                String childId = rs.getString("child_id");
+                
+                // 1. Use the Factory during fetching operations as stated in the report
+                User user = com.edutrack.models.UserFactory.createUser(id, name, email, "", role, subject);
+                
+                String displaySubject = (user instanceof Teacher) ? ((Teacher) user).getSubject() : "None";
+                String displayChildId = (childId == null) ? "None" : childId;
+                
+                // 2. Build JSON from the actual Factory-created object
+                json.append("{\"id\":\"").append(user.getId())
+                    .append("\",\"name\":\"").append(user.getName())
+                    .append("\",\"email\":\"").append(user.getEmail())
+                    .append("\",\"role\":\"").append(user.getRole())
+                    .append("\",\"subject\":\"").append(displaySubject)
+                    .append("\",\"childId\":\"").append(displayChildId).append("\"}");
                 first = false;
             }
         } catch (Exception e) {
@@ -101,11 +112,7 @@ public class UserDAO {
                 String dbEmail = rs.getString("email");
                 String dbSubject = rs.getString("subject");
 
-                if ("TEACHER".equalsIgnoreCase(role)) {
-                    return new Teacher(id, dbName, dbEmail, password, role, dbSubject);
-                } else {
-                    return new User(id, dbName, dbEmail, password, role);
-                }
+                return com.edutrack.models.UserFactory.createUser(id, dbName, dbEmail, password, role, dbSubject);
             }
         } catch (Exception e) {
             e.printStackTrace();
