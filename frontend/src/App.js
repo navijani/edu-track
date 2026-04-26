@@ -43,9 +43,13 @@ function App() {
       {/* Role Selection Screen */}
       {screen === 'role' && (
         <>
-          <div style={{position: 'absolute', top: '10px', right: '10px'}}>
-            <button className="admin-btn-small" onClick={handleAdminAuth}>Admin Login</button>
+          {/* Note the zIndex: 50 added here so it floats above the glass background! */}
+          <div style={{position: 'absolute', top: '20px', right: '20px', zIndex: 50}}>
+            <button className="admin-btn-small" onClick={handleAdminAuth}>
+              Admin Login
+            </button>
           </div>
+          
           <RoleSelection onSelect={(role) => { 
             setUserRole(role); 
             setScreen('login-entry'); 

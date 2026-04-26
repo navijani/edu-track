@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../styles/Teacher.css';
 
 const TeacherAddQuiz = ({ user }) => {
-  // 1. Quiz Settings State
   const [title, setTitle] = useState('');
   const [duration, setDuration] = useState('');
   const [scheduledDate, setScheduledDate] = useState('');
-  const [deadline, setDeadline] = useState(''); // NEW: Quiz closing time
+  const [deadline, setDeadline] = useState('');
   const [totalMarks, setTotalMarks] = useState('');
   const [status, setStatus] = useState('');
-
-  // 2. Dynamic Questions State 
   const [questions, setQuestions] = useState([
     { question: '', imageUrl: '', options: ['', ''], correctAnswer: '' }
   ]);
 
-  // Handlers for Dynamic Questions 
   const handleAddQuestion = () => {
     setQuestions([...questions, { question: '', imageUrl: '', options: ['', ''], correctAnswer: '' }]);
   };
@@ -26,7 +23,6 @@ const TeacherAddQuiz = ({ user }) => {
     setQuestions(updatedQuestions);
   };
 
-  // Handlers for Dynamic Options 
   const handleAddOption = (qIndex) => {
     const updatedQuestions = [...questions];
     updatedQuestions[qIndex].options.push('');
@@ -45,133 +41,119 @@ const TeacherAddQuiz = ({ user }) => {
     setQuestions(updatedQuestions);
   };
 
-  // Save to Database 
   const handleSaveQuiz = async () => {
     if (!title || !duration || !scheduledDate || !deadline || !totalMarks) {
-      setStatus('❌ Please fill out all Quiz Settings, including the Deadline.');
+      setStatus('❌ Please fill all Quiz Settings.');
       return;
     }
-
-    // NEW: Validation to ensure the deadline is AFTER the open date!
-    if (new Date(deadline) <= new Date(scheduledDate)) {
-      setStatus('❌ The Quiz Closing Time must be strictly AFTER the Open Time!');
-      return;
-    }
-
     const payload = {
       teacherId: user.id,
       subject: user.subject,
-      title: title,
+      title,
       duration: parseInt(duration),
-      scheduledDate: scheduledDate,
-      deadline: deadline, // NEW: Sending the deadline to Java
+      scheduledDate,
+      deadline,
       totalMarks: parseInt(totalMarks),
-      questions: questions
+      questions
     };
-
     try {
       await axios.post('http://localhost:8080/api/contents/quiz', payload);
       setStatus('✅ Quiz saved successfully!');
-
-      // Reset form
       setTitle(''); setDuration(''); setScheduledDate(''); setDeadline(''); setTotalMarks('');
       setQuestions([{ question: '', imageUrl: '', options: ['', ''], correctAnswer: '' }]);
     } catch (error) {
-      console.error(error);
-      setStatus('❌ Error saving quiz. Ensure backend is running.');
+      setStatus('❌ Error saving quiz.');
     }
   };
 
   return (
-    <div className="content-form" style={{ marginTop: '20px' }}>
-      <h4>Create Advanced Interactive Quiz</h4>
+    <div className="t-contents-wrapper animated-fade-in">
+      {/* 1. Header Card */}
+      <div className="t-addquiz-header-card glass-card">
+        <h4>Create Interactive <span>Quiz</span></h4>
+      </div>
 
-      {status && <p style={{ fontWeight: 'bold', color: status.includes('✅') ? 'green' : 'red' }}>{status}</p>}
+      {status && (
+        <div style={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold', color: status.includes('✅') ? '#059669' : '#dc2626' }}>
+          {status}
+        </div>
+      )}
 
-      {/* QUIZ SETTINGS */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
-        <input type="text" placeholder="Quiz Title (e.g., Midterm)" value={title} onChange={(e) => setTitle(e.target.value)} style={{ flex: '1 1 100%', padding: '8px' }} />
-
-        <input type="number" placeholder="Duration (Minutes)" value={duration} onChange={(e) => setDuration(e.target.value)} style={{ flex: '1 1 30%', padding: '8px' }} title="Time limit once started" />
-        <input type="number" placeholder="Total Marks" value={totalMarks} onChange={(e) => setTotalMarks(e.target.value)} style={{ flex: '1 1 30%', padding: '8px' }} />
-
-        {/* Date Inputs side-by-side */}
-        <div style={{ flex: '1 1 100%', display: 'flex', gap: '10px', marginTop: '10px' }}>
-          <div style={{ flex: '1' }}>
-            <label style={{ display: 'block', fontSize: '12px', color: '#7f8c8d', marginBottom: '4px', fontWeight: 'bold' }}>Quiz Opens (Start Time):</label>
-            <input type="datetime-local" value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }} />
+      {/* 2. Settings Area */}
+      <div className="t-addquiz-settings-box">
+        <input 
+          type="text" 
+          placeholder="Quiz Title (e.g., Midterm)" 
+          className="t-addquiz-input" 
+          style={{ marginBottom: '15px' }}
+          value={title} onChange={(e) => setTitle(e.target.value)} 
+        />
+        <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
+          <input type="number" placeholder="Duration(Minutes)" className="t-addquiz-input" value={duration} onChange={(e) => setDuration(e.target.value)} />
+          <input type="number" placeholder="Total Marks" className="t-addquiz-input" value={totalMarks} onChange={(e) => setTotalMarks(e.target.value)} />
+        </div>
+        <div style={{ display: 'flex', gap: '15px' }}>
+          <div style={{ flex: 1 }}>
+            <label style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981' }}>Start Date:</label>
+            <input type="datetime-local" className="t-addquiz-input" value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} />
           </div>
-          <div style={{ flex: '1' }}>
-            <label style={{ display: 'block', fontSize: '12px', color: '#7f8c8d', marginBottom: '4px', fontWeight: 'bold' }}>Quiz Closes (Deadline):</label>
-            <input type="datetime-local" value={deadline} onChange={(e) => setDeadline(e.target.value)} style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }} />
+          <div style={{ flex: 1 }}>
+            <label style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981' }}>Deadline:</label>
+            <input type="datetime-local" className="t-addquiz-input" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
           </div>
         </div>
       </div>
 
-      {/* DYNAMIC QUESTIONS */}
-      {questions.map((q, qIndex) => (
-        <div key={qIndex} style={{ backgroundColor: '#f9f9f9', padding: '15px', marginTop: '15px', borderLeft: '4px solid #e67e22' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h5>Question {qIndex + 1}</h5>
-          </div>
+      {/* 3. Questions Section */}
+      <div className="t-questions-accent-area" style={{ borderLeft: '5px solid #10b981', paddingLeft: '20px' }}>
+        <h3 style={{ color: '#10b981', fontWeight: '800', marginBottom: '20px' }}>QUIZ QUESTIONS</h3>
 
-          <input type="text" placeholder="Enter Question..." value={q.question} onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)} style={{ width: '100%', marginBottom: '10px', padding: '8px' }} />
-          <input
-            type="text"
-            placeholder="Optional Direct Image URL (Must end in .jpg, .png, etc.)"
-            value={q.imageUrl}
-            onChange={(e) => handleQuestionChange(qIndex, 'imageUrl', e.target.value)}
-            style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-          />
+        {questions.map((q, qIndex) => (
+          <div key={qIndex} className="t-addquiz-question-card">
+            <h5 style={{ color: '#10b981', margin: '0 0 15px 0' }}>QUESTION {qIndex + 1}</h5>
+            
+            <input 
+              type="text" placeholder="Enter Question..." 
+              className="t-addquiz-input" style={{ marginBottom: '10px' }}
+              value={q.question} onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)} 
+            />
 
-          {q.imageUrl.trim() !== '' && (
-            <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#fff', border: '1px solid #ddd', display: 'inline-block', borderRadius: '4px' }}>
-              <p style={{ fontSize: '12px', color: '#7f8c8d', margin: '0 0 5px 0' }}>Image Preview:</p>
-              <img
-                src={q.imageUrl}
-                alt="Question Preview"
-                style={{ maxHeight: '150px', borderRadius: '4px', maxWidth: '100%' }}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = 'https://via.placeholder.com/300x150?text=Invalid+Image+Link';
-                }}
-              />
+            <input
+              type="text" placeholder="Optional Image URL (.jpg, .png)"
+              className="t-addquiz-input" style={{ marginBottom: '10px' }}
+              value={q.imageUrl} onChange={(e) => handleQuestionChange(qIndex, 'imageUrl', e.target.value)}
+            />
+
+            {q.imageUrl && (
+              <div className="t-addquiz-img-preview">
+                <span style={{ fontSize: '10px', color: '#64748b' }}>IMAGE PREVIEW:</span>
+                <img src={q.imageUrl} alt="Preview" onError={(e) => e.target.src='https://via.placeholder.com/150?text=Invalid+Link'} />
+              </div>
+            )}
+
+            <h6 style={{ margin: '20px 0 10px 0', color: '#64748b' }}>Options:</h6>
+            {q.options.map((opt, optIndex) => (
+              <div key={optIndex} style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+                <input type="text" placeholder={`Option ${optIndex + 1}`} className="t-addquiz-input" value={opt} onChange={(e) => handleOptionChange(qIndex, optIndex, e.target.value)} />
+                {q.options.length > 2 && <button onClick={() => handleRemoveOption(qIndex, optIndex)} style={{ background: '#ef4444', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', padding: '0 10px' }}>✕</button>}
+              </div>
+            ))}
+            <button onClick={() => handleAddOption(qIndex)} style={{ color: '#10b981', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>+ Add Option</button>
+
+            <div className="t-addquiz-dropdown-area">
+              <label style={{ fontWeight: 'bold' }}>Correct Answer:</label>
+              <select className="t-addquiz-input" style={{ width: 'auto' }} value={q.correctAnswer} onChange={(e) => handleQuestionChange(qIndex, 'correctAnswer', e.target.value)}>
+                <option value="">-- Choose --</option>
+                {q.options.map((opt, i) => opt.trim() !== '' && <option key={i} value={opt}>{opt}</option>)}
+              </select>
             </div>
-          )}
-
-          {/* DYNAMIC OPTIONS */}
-          <h6>Answers / Options:</h6>
-          {q.options.map((opt, optIndex) => (
-            <div key={optIndex} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-              <input type="text" placeholder={`Option ${optIndex + 1}`} value={opt} onChange={(e) => handleOptionChange(qIndex, optIndex, e.target.value)} style={{ flex: '1', padding: '8px' }} />
-              {q.options.length > 2 && (
-                <button onClick={() => handleRemoveOption(qIndex, optIndex)} style={{ backgroundColor: '#e74c3c', color: 'white', border: 'none', padding: '0 10px', cursor: 'pointer', borderRadius: '4px' }}>X</button>
-              )}
-            </div>
-          ))}
-
-          <button onClick={() => handleAddOption(qIndex)} style={{ padding: '5px 10px', fontSize: '12px', cursor: 'pointer', marginBottom: '15px' }}>+ Add Another Option</button>
-
-          {/* CORRECT ANSWER DROPDOWN */}
-          <div style={{ marginTop: '10px', padding: '10px', backgroundColor: '#ecf0f1', borderRadius: '4px' }}>
-            <label style={{ fontWeight: 'bold', marginRight: '10px' }}>Select Correct Answer: </label>
-            <select value={q.correctAnswer} onChange={(e) => handleQuestionChange(qIndex, 'correctAnswer', e.target.value)} style={{ padding: '5px' }}>
-              <option value="">-- Choose Correct Option --</option>
-              {q.options.map((opt, optIndex) => (
-                opt.trim() !== '' && <option key={optIndex} value={opt}>{opt}</option>
-              ))}
-            </select>
           </div>
-        </div>
-      ))}
+        ))}
 
-      <button onClick={handleAddQuestion} style={{ marginTop: '15px', padding: '8px 15px', fontSize: '14px', cursor: 'pointer', backgroundColor: '#3498db', color: 'white', border: 'none', borderRadius: '4px' }}>
-        + Add New Question
-      </button>
-      <br />
-      <button onClick={handleSaveQuiz} style={{ marginTop: '25px', padding: '12px 25px', backgroundColor: '#2ecc71', color: 'white', border: 'none', borderRadius: '4px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', width: '100%' }}>
-        Save Complete Quiz to Database
-      </button>
+        <button onClick={handleAddQuestion} style={{ marginTop: '20px', background: '#10b981', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold' }}>+ Add New Question</button>
+      </div>
+
+      <button onClick={handleSaveQuiz} className="t-btn-save-quiz">Save Complete Quiz to Database</button>
     </div>
   );
 };

@@ -42,85 +42,99 @@ const TeacherAddDocument = ({ user }) => {
 
         try {
             await axios.post('http://localhost:8080/api/contents/document', payload);
-            setStatus('✅ Document and reading questions saved successfully!');
+            setStatus('✅ Document saved successfully!');
             setTitle('');
             setDocumentUrl('');
-            setQuestions([{ question: '', answer: '' }]); // Reset form
+            setQuestions([{ question: '', answer: '' }]); 
         } catch (error) {
-            console.error(error);
-            setStatus('❌ Error saving document. Ensure Java backend is running.');
+            setStatus('❌ Error saving document.');
         }
     };
 
     return (
-        <div className="content-form" style={{ marginTop: '20px' }}>
-            <h4>Upload PDF / Reading Material</h4>
+        <div className="t-contents-wrapper animated-fade-in">
+            {/* 1. Header Card */}
+            <div className="t-adddoc-header-card glass-card">
+                <h4>Upload Reading <span>Material</span></h4>
+            </div>
             
-            {status && <p style={{ fontWeight: 'bold', color: status.includes('✅') ? 'green' : 'red' }}>{status}</p>}
-
-            <input 
-                type="text" 
-                placeholder="Document Title (e.g., Chapter 1 Reading)" 
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                style={{ width: '100%', marginBottom: '10px', padding: '8px' }} 
-            />
-            
-            <input 
-                type="text" 
-                placeholder="Document Link (Google Drive, OneDrive, etc.)" 
-                value={documentUrl}
-                onChange={(e) => setDocumentUrl(e.target.value)}
-                style={{ width: '100%', marginBottom: '15px', padding: '8px' }} 
-            />
-
-            {/* IF A LINK IS PROVIDED, SHOW A HELPFUL BUTTON TO TEST IT */}
-            {documentUrl.trim() !== '' && (
-                <div style={{ marginBottom: '20px', padding: '10px', backgroundColor: '#e8f4f8', borderRadius: '4px', borderLeft: '4px solid #3498db' }}>
-                    <p style={{ margin: '0 0 10px 0', fontSize: '14px' }}>Preview Link:</p>
-                    <a href={documentUrl} target="_blank" rel="noopener noreferrer" style={{ padding: '8px 15px', backgroundColor: '#3498db', color: 'white', textDecoration: 'none', borderRadius: '4px', fontSize: '12px' }}>
-                        Click here to test your document link
-                    </a>
+            {status && (
+                <div style={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold', color: status.includes('✅') ? '#7c3aed' : '#dc2626' }}>
+                    {status}
                 </div>
             )}
 
-            <div style={{ backgroundColor: '#f9f9f9', padding: '15px', marginTop: '15px', borderLeft: '4px solid #9b59b6' }}>
-                <h5>Reading Comprehension Questions</h5>
+            {/* 2. Document Details Area */}
+            <div className="t-adddoc-settings-box">
+                <input 
+                    type="text" 
+                    placeholder="Document Title (e.g., Chapter 1 Notes)" 
+                    className="t-adddoc-input"
+                    style={{ marginBottom: '15px' }}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+                
+                <input 
+                    type="text" 
+                    placeholder="Paste Document Link (Google Drive / OneDrive)" 
+                    className="t-adddoc-input"
+                    style={{ marginBottom: '15px' }}
+                    value={documentUrl}
+                    onChange={(e) => setDocumentUrl(e.target.value)}
+                />
+
+                {/* Helpful Link Test Button */}
+                {documentUrl.trim() !== '' && (
+                    <div className="t-adddoc-preview-box">
+                        <p style={{ margin: '0 0 10px 0', fontSize: '14px', fontWeight: 'bold', color: '#7c3aed' }}>🔗 Link Verification:</p>
+                        <a href={documentUrl} target="_blank" rel="noopener noreferrer" className="t-btn-test-link">
+                            Click to verify your document opens correctly
+                        </a>
+                    </div>
+                )}
+            </div>
+
+            {/* 3. Questions Section with Purple Accent */}
+            <div className="t-questions-accent-area" style={{ borderLeft: '5px solid #a855f7', paddingLeft: '20px' }}>
+                <h5 style={{ color: '#a855f7', fontWeight: '800', marginBottom: '20px', fontSize: '1.2rem' }}>COMPREHENSION QUESTIONS</h5>
                 
                 {questions.map((q, index) => (
-                    <div key={index} style={{ marginBottom: '15px', paddingBottom: '10px', borderBottom: '1px solid #ddd' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                            <p style={{ margin: '0', fontWeight: 'bold', fontSize: '14px' }}>Question {index + 1}</p>
+                    <div key={index} className="t-adddoc-question-card">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                            <h5 style={{ color: '#a855f7', margin: 0 }}>QUESTION {index + 1}</h5>
                             {questions.length > 1 && (
-                                <button onClick={() => handleRemoveQuestion(index)} style={{ backgroundColor: '#e74c3c', color: 'white', border: 'none', padding: '2px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Remove</button>
+                                <button onClick={() => handleRemoveQuestion(index)} style={{ background: '#ef4444', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', padding: '5px 12px' }}>✕ Remove</button>
                             )}
                         </div>
                         
                         <textarea 
                             placeholder={`Type reading question ${index + 1} here...`} 
                             rows="2" 
+                            className="t-adddoc-input"
+                            style={{ marginBottom: '10px', fontFamily: 'inherit' }}
                             value={q.question}
                             onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
-                            style={{ width: '100%', marginBottom: '5px', padding: '5px' }}
                         />
                         <input 
                             type="text" 
-                            placeholder={`Correct Answer for Question ${index + 1}`} 
+                            placeholder={`Expected Answer for Question ${index + 1}`} 
+                            className="t-adddoc-input"
                             value={q.answer}
                             onChange={(e) => handleQuestionChange(index, 'answer', e.target.value)}
-                            style={{ width: '100%', padding: '5px' }}
                         />
                     </div>
                 ))}
 
-                <button onClick={handleAddQuestion} style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer', backgroundColor: '#ecf0f1', border: '1px solid #bdc3c7', borderRadius: '4px' }}>
+                <button 
+                    onClick={handleAddQuestion} 
+                    style={{ marginTop: '20px', background: '#ecf0f1', color: '#7c3aed', padding: '10px 20px', border: '1px solid #ddd6fe', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
                     + Add Another Reading Question
                 </button>
             </div>
 
-            <button 
-                onClick={handleSaveDocument}
-                style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#2ecc71', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', width: '100%', fontWeight: 'bold', fontSize: '16px' }}>
+            <button onClick={handleSaveDocument} className="t-btn-save-doc">
                 Save Document to Database
             </button>
         </div>

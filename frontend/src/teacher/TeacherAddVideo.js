@@ -60,24 +60,28 @@ const TeacherAddVideo = ({ user }) => {
 
     return (
         <div className="content-form" style={{ marginTop: '20px' }}>
-            <h4>Upload Video Lesson</h4>
+            <div className="t-addvideo-header glass-card">
+                <h4>Upload Video <span>Lesson</span></h4>
+            </div>
             
             {status && <p style={{ fontWeight: 'bold', color: status.includes('✅') ? 'green' : 'red' }}>{status}</p>}
 
+            {/* Lesson Title Input */}
             <input 
                 type="text" 
-                placeholder="Lesson Title (e.g., Intro to Arrays)" 
+                placeholder="Lesson Title (e.g., Real numbers)" 
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                style={{ width: '100%', marginBottom: '10px', padding: '8px' }} 
-            />
-            
+                className="t-addvideo-input" 
+/>
+                
+            {/* Video URL Input */}
             <input 
                 type="text" 
                 placeholder="Paste YouTube Video URL here" 
                 value={videoUrl}
                 onChange={(e) => setVideoUrl(e.target.value)}
-                style={{ width: '100%', marginBottom: '10px', padding: '8px' }} 
+                className="t-addvideo-input"
             />
 
             {/* LIVE VIDEO PREVIEW */}
@@ -96,38 +100,40 @@ const TeacherAddVideo = ({ user }) => {
                 </div>
             )}
 
-            <div style={{ backgroundColor: '#f9f9f9', padding: '15px', marginTop: '15px', borderLeft: '4px solid #3498db' }}>
-                <h5>Associated Questions & Answers</h5>
+            <div className="t-question-section-wrapper">
+                <h5 className="t-question-header">Associated Questions & Answers</h5>
                 
                 {/* Dynamically render all questions */}
                 {questions.map((q, index) => (
-                    <div key={index} style={{ marginBottom: '15px', paddingBottom: '10px', borderBottom: '1px solid #ddd' }}>
-                        <p style={{ margin: '0 0 5px 0', fontWeight: 'bold', fontSize: '14px' }}>Question {index + 1}</p>
+                    <div className="t-questions-accent-area">
+                    <div key={index} className="t-addquestion-box light-glass">
+                        <p className="t-q-label">Question {index + 1}</p>
                         <textarea 
                             placeholder={`Type question ${index + 1} here...`} 
                             rows="2" 
                             value={q.question}
                             onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
-                            style={{ width: '100%', marginBottom: '5px', padding: '5px' }}
+                            className="t-addvideo-qarea"
                         />
                         <input 
                             type="text" 
                             placeholder={`Correct Answer for Question ${index + 1}`} 
                             value={q.answer}
                             onChange={(e) => handleQuestionChange(index, 'answer', e.target.value)}
-                            style={{ width: '100%', padding: '5px' }}
+                            className="t-addvideo-inputquestion"
                         />
+                    </div>
                     </div>
                 ))}
 
-                <button onClick={handleAddQuestion} style={{ padding: '5px 10px', fontSize: '12px', cursor: 'pointer' }}>
+                <button onClick={handleAddQuestion} className="t-btn-addvideo-q">
                     + Add Another Question
                 </button>
             </div>
 
             <button 
                 onClick={handleSaveVideo}
-                style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#2ecc71', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                className="t-savevideo-btn">
                 Save Video Lesson
             </button>
         </div>

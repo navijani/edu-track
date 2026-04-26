@@ -11,7 +11,7 @@ public class DBConnection {
         // 2. The Connection URL 
         // IMPORTANT: Verify that 'studentdb' is the exact name of your database in phpMyAdmin!
         // Also verify that your XAMPP MySQL port is actually 3308, not the default 3306.
-        String url = "jdbc:mysql://localhost:3308/studentdb"; 
+        String url = "jdbc:mysql://localhost:3306/studentdb"; 
         
         try {
             Connection conn = DriverManager.getConnection(url, "root", "");
