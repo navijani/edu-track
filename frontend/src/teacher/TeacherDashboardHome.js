@@ -22,9 +22,9 @@ const TeacherDashboardHome = ({ user }) => {
     if (!stats) return <div className="t-loading">Initializing Teacher Portal...</div>;
 
     const chartData = [
-        { name: 'Videos', count: stats.totalVideos, color: '#818cf8' },
-        { name: 'Docs', count: stats.totalDocs, color: '#a855f7' },
-        { name: 'Quizzes', count: stats.totalQuizzes, color: '#2dd4bf' }
+        { name: 'Videos', count: stats.totalVideos, color: '#63aff2' },
+        { name: 'Docs', count: stats.totalDocs, color: '#c390f2' },
+        { name: 'Quizzes', count: stats.totalQuizzes, color: '#1dea87' }
     ];
 
     const totalMaterials = stats.totalVideos + stats.totalDocs + stats.totalQuizzes;
@@ -34,7 +34,7 @@ const TeacherDashboardHome = ({ user }) => {
             {/* --- WELCOME BANNER --- */}
             <div className="t-welcome-banner glass-card">
                 <div className="banner-text">
-                    <h2>Welcome back, Professor {user.name.split(' ')[0]}! </h2>
+                    <h2>Welcome back, Teacher  {user.name.split(' ')[0]}! </h2>
                     <p>Your <strong>{user.subject}</strong> overview looks great today.</p>
                 </div>
                 <div className="banner-badge">{user.subject} Department</div>
@@ -78,7 +78,7 @@ const TeacherDashboardHome = ({ user }) => {
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
                                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
                                 <Tooltip 
-                                    contentStyle={{ backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px' }}
+                                    contentStyle={{ backgroundColor: '#abcef1', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px' }}
                                     cursor={{fill: 'rgba(255,255,255,0.05)'}}
                                 />
                                 <Bar dataKey="count" radius={[6, 6, 0, 0]}>
