@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 
 const StudentVideos = ({ subjectName, user }) => {
@@ -14,47 +14,108 @@ const StudentVideos = ({ subjectName, user }) => {
     const [actualWatchedSeconds, setActualWatchedSeconds] = useState(0); 
     const playerRef = useRef(null);
     const intervalRef = useRef(null);
+    const autoSaveIntervalRef = useRef(null);
     const lastTimeRef = useRef(0);
 
-    useEffect(() => {
-        fetchVideos();
-        if (user) fetchAllProgress();
-    }, [subjectName]);
+    // Use a Ref for watched seconds to prevent the player from re-rendering/re-initializing
+    const watchedSecondsRef = useRef(0);
 
-    useEffect(() => {
-        setUserAnswers({});
-        setRevealedAnswers({});
-        setSavedAnswers({});
+    const fetchAllProgress = useCallback(async () => {
+        if (!user) return;
+        try {
+            const response = await axios.get(`http://localhost:8080/api/progress/video?studentId=${user.id}`);
+            setVideoProgress(response.data); 
+        } catch (error) { console.error(error); }
+    }, [user]);
+
+    const saveProgressToBackend = useCallback(async () => {
+        if (!selectedItem || !user || !playerRef.current?.getDuration) return;
+
+        const seconds = Math.round(watchedSecondsRef.current);
+        const duration = playerRef.current.getDuration();
+        let percentage = 0;
         
-        const existingProgress = videoProgress[selectedItem?.id];
-        setActualWatchedSeconds(existingProgress?.watchedSeconds || 0);
+        if (duration > 0) {
+            percentage = Math.min(100, Math.round((seconds / duration) * 100));
+        }
 
-        if (selectedItem && user) fetchSavedAnswers();
-    }, [selectedItem]);
+        try {
+            await axios.post('http://localhost:8080/api/progress/video', {
+                studentId: user.id,
+                videoId: selectedItem.id,
+                watchedPercentage: percentage,
+                watchedSeconds: seconds,
+                answeredCount: Object.keys(savedAnswers).length,
+                lastAccessed: new Date().toISOString()
+            });
+        } catch (error) { console.error("Auto-save failed", error); }
+    }, [selectedItem, user, savedAnswers]);
 
+    useEffect(() => {
+        const fetchVideos = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`http://localhost:8080/api/contents/video?subject=${encodeURIComponent(subjectName)}`);
+                setContentList(response.data);
+            } catch (error) { setContentList([]); }
+            setLoading(false);
+        };
+        fetchVideos();
+        fetchAllProgress();
+    }, [subjectName, fetchAllProgress]);
+
+    useEffect(() => {
+        if (selectedItem && user) {
+            const fetchSavedAnswers = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8080/api/answers/video?studentId=${user.id}&videoId=${selectedItem.id}`);
+                    setSavedAnswers(response.data);
+                    const alreadyRevealed = {};
+                    Object.keys(response.data).forEach(key => { alreadyRevealed[key] = true; });
+                    setRevealedAnswers(alreadyRevealed);
+                } catch (error) {}
+            };
+            
+            const existingProgress = videoProgress[selectedItem.id];
+            watchedSecondsRef.current = existingProgress?.watchedSeconds || 0;
+            setActualWatchedSeconds(watchedSecondsRef.current);
+            fetchSavedAnswers();
+        }
+    }, [selectedItem, user, videoProgress]);
+
+    // --- FIX: Player initialization only happens when selectedItem changes ---
     useEffect(() => {
         if (!selectedItem) return;
         const videoId = getYouTubeId(selectedItem.videoUrl);
         if (!videoId) return;
 
         const initPlayer = () => {
-            if (playerRef.current && playerRef.current.destroy) playerRef.current.destroy();
             playerRef.current = new window.YT.Player('youtube-player-container', {
                 height: '450', width: '100%', videoId: videoId,
                 playerVars: { 'rel': 0 },
                 events: {
                     'onStateChange': (event) => {
                         if (event.data === window.YT.PlayerState.PLAYING) {
-                            if (playerRef.current?.getCurrentTime) lastTimeRef.current = playerRef.current.getCurrentTime();
+                            lastTimeRef.current = playerRef.current.getCurrentTime();
+                            
                             intervalRef.current = setInterval(() => {
-                                if (playerRef.current?.getCurrentTime) {
-                                    const currentTime = playerRef.current.getCurrentTime();
-                                    const delta = currentTime - lastTimeRef.current;
-                                    if (delta > 0 && delta <= 4) setActualWatchedSeconds(prev => prev + delta);
-                                    lastTimeRef.current = currentTime;
+                                const currentTime = playerRef.current.getCurrentTime();
+                                const delta = currentTime - lastTimeRef.current;
+                                if (delta > 0 && delta <= 3) {
+                                    watchedSecondsRef.current += delta;
+                                    setActualWatchedSeconds(watchedSecondsRef.current);
                                 }
+                                lastTimeRef.current = currentTime;
                             }, 1000);
-                        } else clearInterval(intervalRef.current);
+
+                            autoSaveIntervalRef.current = setInterval(() => {
+                                saveProgressToBackend();
+                            }, 10000);
+                        } else {
+                            clearInterval(intervalRef.current);
+                            clearInterval(autoSaveIntervalRef.current);
+                            if (event.data === window.YT.PlayerState.PAUSED) saveProgressToBackend();
+                        }
                     }
                 }
             });
@@ -65,15 +126,16 @@ const StudentVideos = ({ subjectName, user }) => {
             tag.src = "https://www.youtube.com/iframe_api";
             document.getElementsByTagName('script')[0].parentNode.insertBefore(tag, document.getElementsByTagName('script')[0]);
             window.onYouTubeIframeAPIReady = () => initPlayer();
-        } else if (window.YT?.Player) {
-            setTimeout(initPlayer, 100);
+        } else {
+            initPlayer();
         }
 
         return () => {
             clearInterval(intervalRef.current);
-            if (playerRef.current?.destroy) try { playerRef.current.destroy(); } catch(e) {}
+            clearInterval(autoSaveIntervalRef.current);
+            if (playerRef.current?.destroy) playerRef.current.destroy();
         };
-    }, [selectedItem]);
+    }, [selectedItem]); // REMOVED saveProgressToBackend from dependency to prevent re-init
 
     const getYouTubeId = (url) => {
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -87,37 +149,9 @@ const StudentVideos = ({ subjectName, user }) => {
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
 
-    const fetchVideos = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`http://localhost:8080/api/contents/video?subject=${encodeURIComponent(subjectName)}`);
-            setContentList(response.data);
-        } catch (error) { setContentList([]); }
-        setLoading(false);
-    };
-
-    const fetchAllProgress = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/progress/video?studentId=${user.id}`);
-            setVideoProgress(response.data); 
-        } catch (error) {}
-    };
-
-    const fetchSavedAnswers = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/answers/video?studentId=${user.id}&videoId=${selectedItem.id}`);
-            setSavedAnswers(response.data);
-            const alreadyRevealed = {};
-            Object.keys(response.data).forEach(key => { alreadyRevealed[key] = true; });
-            setRevealedAnswers(alreadyRevealed);
-        } catch (error) {}
-    };
-
     const handleSaveAndReveal = async (idx) => {
         const answerText = userAnswers[idx];
         if (!answerText?.trim()) return alert("Type your answer first!");
-        if (!window.confirm("Submit answer permanently?")) return;
-
         try {
             await axios.post('http://localhost:8080/api/answers/video', {
                 studentId: user.id, videoId: selectedItem.id, questionIndex: idx, answer: answerText
@@ -128,23 +162,9 @@ const StudentVideos = ({ subjectName, user }) => {
     };
 
     const handleCloseVideo = async () => {
-        const answeredCount = Object.keys(savedAnswers).length;
-        const seconds = Math.round(actualWatchedSeconds); 
-        let percentage = videoProgress[selectedItem.id]?.watchedPercentage || 0;
-        
-        if (playerRef.current?.getDuration) {
-            const duration = playerRef.current.getDuration();
-            if (duration > 0) percentage = Math.min(100, Math.max(percentage, Math.round((seconds / duration) * 100)));
-        }
-
-        try {
-            await axios.post('http://localhost:8080/api/progress/video', {
-                studentId: user.id, videoId: selectedItem.id, watchedPercentage: percentage, 
-                watchedSeconds: seconds, answeredCount, lastAccessed: new Date().toISOString()
-            });
-            fetchAllProgress();
-        } catch (error) {}
+        await saveProgressToBackend();
         setSelectedItem(null);
+        fetchAllProgress();
     };
 
     if (selectedItem) {
@@ -156,13 +176,10 @@ const StudentVideos = ({ subjectName, user }) => {
                         Finish & Save
                     </button>
                 </div>
-                
                 <div className="s-video-frame-wrapper">
                     <div id="youtube-player-container"></div>
                 </div>
-                
                 <h3 className="t-section-header" style={{ color: '#3498db' }}>Interactive Study Guide</h3>
-                
                 {selectedItem.questions?.map((q, idx) => {
                     const isSaved = savedAnswers[idx] !== undefined;
                     return (
@@ -209,7 +226,6 @@ const StudentVideos = ({ subjectName, user }) => {
                             <h4 style={{ margin: 0, color: '#496da5' }}>{item.title}</h4>
                             <span style={{ fontSize: '20px' }}>{isDone ? '✅' : '▶️'}</span>
                         </div>
-                        
                         <div className="s-video-dropdown-area" style={{ marginTop: '15px', padding: '10px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
                                 <span>Watched:</span>

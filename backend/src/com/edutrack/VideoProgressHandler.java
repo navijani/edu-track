@@ -1,9 +1,8 @@
 package com.edutrack;
 
+import com.edutrack.dao.VideoProgressDAO;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.edutrack.dao.VideoProgressDAO;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -23,12 +22,12 @@ public class VideoProgressHandler implements HttpHandler {
             return;
         }
 
-        // GET: Fetch all progress for the student to build the UI Grid
+        // GET: Fetch progress for a student
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             String query = exchange.getRequestURI().getQuery();
-            if (query != null && query.startsWith("studentId=")) {
-                String studentId = query.split("=")[1];
-                
+            if (query != null && query.contains("studentId=")) {
+                // Better extraction of studentId from query string
+                String studentId = query.split("studentId=")[1].split("&")[0];
                 String jsonResponse = progressDAO.getProgressByStudentJson(studentId);
                 sendResponse(exchange, 200, jsonResponse);
             } else {
@@ -37,19 +36,21 @@ public class VideoProgressHandler implements HttpHandler {
             return;
         }
 
-        // POST: Save new progress when they close the video
+        // POST: Save progress
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
             try {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 
-                // Extract fields manually
-                String studentId = extractJsonString(body, "studentId");
-                int videoId = Integer.parseInt(extractJsonNumber(body, "videoId"));
-                int watchedPercentage = Integer.parseInt(extractJsonNumber(body, "watchedPercentage"));
-                int watchedSeconds = Integer.parseInt(extractJsonNumber(body, "watchedSeconds"));
-                int answeredCount = Integer.parseInt(extractJsonNumber(body, "answeredCount"));
-                String lastAccessed = extractJsonString(body, "lastAccessed");
+                // --- DATA EXTRACTION ---
+                // We use String for videoId to match your DB IDs like "v01"
+                String studentId = extractJsonValue(body, "studentId");
+                String videoId = extractJsonValue(body, "videoId");
+                
+                int watchedPercentage = Integer.parseInt(extractJsonValue(body, "watchedPercentage"));
+                int watchedSeconds = Integer.parseInt(extractJsonValue(body, "watchedSeconds"));
+                int answeredCount = Integer.parseInt(extractJsonValue(body, "answeredCount"));
+                String lastAccessed = extractJsonValue(body, "lastAccessed");
 
                 if (progressDAO.saveProgress(studentId, videoId, watchedPercentage, watchedSeconds, answeredCount, lastAccessed)) {
                     sendResponse(exchange, 200, "{\"success\":true}");
@@ -57,31 +58,26 @@ public class VideoProgressHandler implements HttpHandler {
                     sendResponse(exchange, 500, "{\"success\":false}");
                 }
             } catch (Exception e) {
+                System.err.println("Error processing video progress: " + e.getMessage());
                 e.printStackTrace();
-                sendResponse(exchange, 500, "{\"success\":false}");
+                sendResponse(exchange, 500, "{\"success\":false, \"error\":\"" + e.getMessage() + "\"}");
             }
         }
     }
 
-    // --- Helpers to safely extract JSON without a library ---
-    private String extractJsonString(String json, String key) {
-        try {
-            String searchKey = "\"" + key + "\":\"";
-            if (json.contains(searchKey)) {
-                return json.split(searchKey)[1].split("\"")[0];
-            }
-            return "";
-        } catch (Exception e) { return ""; }
-    }
-
-    private String extractJsonNumber(String json, String key) {
+    // Unified helper to extract JSON values regardless of quotes
+    private String extractJsonValue(String json, String key) {
         try {
             String searchKey = "\"" + key + "\":";
-            if (json.contains(searchKey)) {
-                return json.split(searchKey)[1].split("[,}]")[0].trim();
+            int start = json.indexOf(searchKey) + searchKey.length();
+            String sub = json.substring(start).trim();
+            
+            if (sub.startsWith("\"")) {
+                return sub.split("\"")[1]; // It's a string
+            } else {
+                return sub.split("[,}]")[0].trim(); // It's a number
             }
-            return "0";
-        } catch (Exception e) { return "0"; }
+        } catch (Exception e) { return ""; }
     }
 
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
