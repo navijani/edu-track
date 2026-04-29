@@ -3,6 +3,7 @@ package com.edutrack.dao;
 import com.edutrack.DBConnection;
 import com.edutrack.models.User;
 import com.edutrack.models.Teacher;
+import org.mindrot.jbcrypt.BCrypt;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +21,11 @@ public class UserDAO {
             pstmt.setString(1, user.getId());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getEmail());
-            pstmt.setString(4, user.getPassword());
+            
+            // Hash the password before saving
+            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+            pstmt.setString(4, hashedPassword);
+            
             pstmt.setString(5, user.getRole());
             
             // Handle Teacher Subject
@@ -97,22 +102,27 @@ public class UserDAO {
     }
 
     public User authenticateUser(String id, String password, String role) {
-        String sql = "SELECT * FROM users WHERE id = ? AND password = ? AND role = ?";
+        // Fetch user by id and role only
+        String sql = "SELECT * FROM users WHERE id = ? AND role = ?";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, id);
-            pstmt.setString(2, password);
-            pstmt.setString(3, role);
+            pstmt.setString(2, role);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                String dbName = rs.getString("name");
-                String dbEmail = rs.getString("email");
-                String dbSubject = rs.getString("subject");
+                String dbPasswordHash = rs.getString("password");
+                
+                // Verify the plain text password against the stored hash////
+                if (BCrypt.checkpw(password, dbPasswordHash)) {
+                    String dbName = rs.getString("name");
+                    String dbEmail = rs.getString("email");
+                    String dbSubject = rs.getString("subject");
 
-                return com.edutrack.models.UserFactory.createUser(id, dbName, dbEmail, password, role, dbSubject);
+                    return com.edutrack.models.UserFactory.createUser(id, dbName, dbEmail, dbPasswordHash, role, dbSubject);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
