@@ -15,6 +15,10 @@ public class Main {
 
         server.createContext("/api/users/login", new LoginHandler());
 
+        server.createContext("/api/users/change-password", new ChangePasswordHandler());
+
+        server.createContext("/api/users/profile", new ProfileHandler());
+
         server.createContext("/api/contents/video", new VideoHandler());
 
         server.createContext("/api/contents/quiz", new QuizHandler());

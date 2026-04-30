@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChatWindow from '../components/ChatWindow';
+import UserProfile from '../components/UserProfile';
 import '../styles/Parent.css'; // Make sure to create this file
 
 const ParentDashboard = ({ user, onLogout }) => {
@@ -59,9 +60,10 @@ const ParentDashboard = ({ user, onLogout }) => {
                         </div>
 
                         {/* Tabs */}
-                        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginBottom: '30px' }}>
+                        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginBottom: '30px', flexWrap: 'wrap' }}>
                             <button className={`p-tab-btn ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>📊 Progress</button>
                             <button className={`p-tab-btn ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>💬 Teacher Chat</button>
+                            <button className={`p-tab-btn ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>👤 My Profile</button>
                         </div>
 
                         {/* OVERVIEW CONTENT */}
@@ -165,6 +167,8 @@ const ParentDashboard = ({ user, onLogout }) => {
                                 </div>
                             </div>
                         )}
+                        {/* PROFILE CONTENT */}
+                        {activeTab === 'profile' && <UserProfile user={user} />}
                     </>
                 )}
             </div>
