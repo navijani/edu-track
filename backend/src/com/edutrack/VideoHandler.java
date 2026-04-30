@@ -120,6 +120,7 @@ public class VideoHandler implements HttpHandler {
                 VideoContent newVideo = new VideoContent(teacherId, subject, title, videoUrl, targetClass, questionList);
                 
                 if (videoDAO.saveVideoAndQuestions(newVideo)) {
+                    new com.edutrack.dao.NotificationDAO().addNotification(teacherId, targetClass, subject, "Video", title);
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
                     sendResponse(exchange, 500, "{\"success\":false}");

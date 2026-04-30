@@ -140,6 +140,7 @@ public class QuizHandler implements HttpHandler {
 
                 // Save to database
                 if (quizDAO.saveQuizAndQuestions(newQuiz)) {
+                    new com.edutrack.dao.NotificationDAO().addNotification(teacherId, targetClass, subject, "Quiz", title);
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
                     sendResponse(exchange, 500, "{\"success\":false}");

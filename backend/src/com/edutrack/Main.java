@@ -44,6 +44,8 @@ public class Main {
         server.createContext("/api/teacher/dashboard", new TeacherDashboardHandler());
 
         server.createContext("/api/parent/dashboard", new ParentHandler());
+        
+        server.createContext("/api/notifications", new NotificationHandler());
 
         server.createContext("/api/chat", new ChatHandler());
 

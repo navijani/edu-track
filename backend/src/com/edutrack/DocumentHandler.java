@@ -117,6 +117,7 @@ public class DocumentHandler implements HttpHandler {
                 DocumentContent newDoc = new DocumentContent(teacherId, subject, title, documentUrl, targetClass, questionList);
                 
                 if (documentDAO.saveDocumentAndQuestions(newDoc)) {
+                    new com.edutrack.dao.NotificationDAO().addNotification(teacherId, targetClass, subject, "Document", title);
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
                     sendResponse(exchange, 500, "{\"success\":false}");
