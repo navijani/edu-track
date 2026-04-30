@@ -8,6 +8,7 @@ import TeacherDashboard from './teacher/TeacherDashboard';
 import StudentDashboard from './student/StudentDashboard';
 // 1. IMPORT THE PARENT DASHBOARD
 import ParentDashboard from './parent/ParentDashboard'; // Make sure this path matches where you saved it!
+import AdminLogin from './components/AdminLogin';
 
 import './App.css';
 
@@ -18,16 +19,7 @@ function App() {
   // Store the actual user data after a successful login
   const [currentUser, setCurrentUser] = useState(null); 
 
-  const handleAdminAuth = () => {
-    const email = prompt("Enter Admin Email:");
-    const password = prompt("Enter Admin Password:");
 
-    if (email === "2004@gmail.com" && password === "123") {
-      setScreen('admin-dashboard'); 
-    } else {
-      alert("Unauthorized Access!");
-    }
-  };
 
   const handleLogout = () => {
     setScreen('intro');
@@ -43,9 +35,8 @@ function App() {
       {/* Role Selection Screen */}
       {screen === 'role' && (
         <>
-          {/* Note the zIndex: 50 added here so it floats above the glass background! */}
           <div style={{position: 'absolute', top: '20px', right: '20px', zIndex: 50}}>
-            <button className="admin-btn-small" onClick={handleAdminAuth}>
+            <button className="admin-btn-small" onClick={() => setScreen('admin-login')}>
               Admin Login
             </button>
           </div>
@@ -55,6 +46,14 @@ function App() {
             setScreen('login-entry'); 
           }} />
         </>
+      )}
+
+      {/* Admin Login Screen */}
+      {screen === 'admin-login' && (
+        <AdminLogin 
+          onLoginSuccess={() => setScreen('admin-dashboard')} 
+          onCancel={() => setScreen('role')}
+        />
       )}
 
       {/* Admin Dashboard */}
