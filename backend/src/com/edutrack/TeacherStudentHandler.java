@@ -33,7 +33,7 @@ public class TeacherStudentHandler implements HttpHandler {
 
         try {
             Map<String, String> params = getQueryParams(exchange.getRequestURI().getQuery());
-            
+
             String studentId = params.get("studentId");
             String rawSubject = params.get("subject");
 
@@ -69,7 +69,8 @@ public class TeacherStudentHandler implements HttpHandler {
 
     private Map<String, String> getQueryParams(String query) {
         Map<String, String> result = new HashMap<>();
-        if (query == null || query.isBlank()) return result;
+        if (query == null || query.isBlank())
+            return result;
 
         for (String param : query.split("&")) {
             String[] entry = param.split("=", 2); // Split into max 2 parts

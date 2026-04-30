@@ -5,6 +5,7 @@ const TeacherAddDocument = ({ user }) => {
     // 1. State Management
     const [title, setTitle] = useState('');
     const [documentUrl, setDocumentUrl] = useState('');
+    const [targetClass, setTargetClass] = useState('');
     const [questions, setQuestions] = useState([{ question: '', answer: '' }]);
     const [status, setStatus] = useState('');
 
@@ -27,8 +28,8 @@ const TeacherAddDocument = ({ user }) => {
 
     // 3. Save to Database
     const handleSaveDocument = async () => {
-        if (!title || !documentUrl) {
-            setStatus('❌ Please provide a title and a valid Document URL.');
+        if (!title || !documentUrl || !targetClass) {
+            setStatus('❌ Please provide a title, a valid URL, and a Target Class.');
             return;
         }
 
@@ -37,6 +38,7 @@ const TeacherAddDocument = ({ user }) => {
             subject: user.subject,
             title: title,
             documentUrl: documentUrl,
+            targetClass: targetClass,
             questions: questions
         };
 
@@ -45,6 +47,7 @@ const TeacherAddDocument = ({ user }) => {
             setStatus('✅ Document saved successfully!');
             setTitle('');
             setDocumentUrl('');
+            setTargetClass('');
             setQuestions([{ question: '', answer: '' }]); 
         } catch (error) {
             setStatus('❌ Error saving document.');
@@ -66,6 +69,20 @@ const TeacherAddDocument = ({ user }) => {
 
             {/* 2. Document Details Area */}
             <div className="t-adddoc-settings-box">
+                <select 
+                    value={targetClass} 
+                    onChange={(e) => setTargetClass(e.target.value)} 
+                    className="t-adddoc-input" 
+                    style={{ marginBottom: '15px' }}
+                    required
+                >
+                    <option value="">Select Target Class</option>
+                    <option value="Kindergarten">Kindergarten</option>
+                    {[...Array(12)].map((_, i) => (
+                        <option key={`Grade ${i + 1}`} value={`Grade ${i + 1}`}>Grade {i + 1}</option>
+                    ))}
+                </select>
+
                 <input 
                     type="text" 
                     placeholder="Document Title (e.g., Chapter 1 Notes)" 

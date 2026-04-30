@@ -8,6 +8,7 @@ const TeacherAddQuiz = ({ user }) => {
   const [scheduledDate, setScheduledDate] = useState('');
   const [deadline, setDeadline] = useState('');
   const [totalMarks, setTotalMarks] = useState('');
+  const [targetClass, setTargetClass] = useState('');
   const [status, setStatus] = useState('');
   const [questions, setQuestions] = useState([
     { question: '', imageUrl: '', options: ['', ''], correctAnswer: '' }
@@ -42,8 +43,8 @@ const TeacherAddQuiz = ({ user }) => {
   };
 
   const handleSaveQuiz = async () => {
-    if (!title || !duration || !scheduledDate || !deadline || !totalMarks) {
-      setStatus('❌ Please fill all Quiz Settings.');
+    if (!title || !duration || !scheduledDate || !deadline || !totalMarks || !targetClass) {
+      setStatus('❌ Please fill all Quiz Settings including Target Class.');
       return;
     }
     const payload = {
@@ -54,12 +55,13 @@ const TeacherAddQuiz = ({ user }) => {
       scheduledDate,
       deadline,
       totalMarks: parseInt(totalMarks),
+      targetClass,
       questions
     };
     try {
       await axios.post('http://localhost:8080/api/contents/quiz', payload);
       setStatus('✅ Quiz saved successfully!');
-      setTitle(''); setDuration(''); setScheduledDate(''); setDeadline(''); setTotalMarks('');
+      setTitle(''); setDuration(''); setScheduledDate(''); setDeadline(''); setTotalMarks(''); setTargetClass('');
       setQuestions([{ question: '', imageUrl: '', options: ['', ''], correctAnswer: '' }]);
     } catch (error) {
       setStatus('❌ Error saving quiz.');
@@ -81,6 +83,20 @@ const TeacherAddQuiz = ({ user }) => {
 
       {/* 2. Settings Area */}
       <div className="t-addquiz-settings-box">
+        <select 
+          value={targetClass} 
+          onChange={(e) => setTargetClass(e.target.value)} 
+          className="t-addquiz-input" 
+          style={{ marginBottom: '15px' }}
+          required
+        >
+          <option value="">Select Target Class</option>
+          <option value="Kindergarten">Kindergarten</option>
+          {[...Array(12)].map((_, i) => (
+            <option key={`Grade ${i + 1}`} value={`Grade ${i + 1}`}>Grade {i + 1}</option>
+          ))}
+        </select>
+
         <input 
           type="text" 
           placeholder="Quiz Title (e.g., Midterm)" 

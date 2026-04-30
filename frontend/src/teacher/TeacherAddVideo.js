@@ -5,6 +5,7 @@ const TeacherAddVideo = ({ user }) => {
     // 1. State Management
     const [title, setTitle] = useState('');
     const [videoUrl, setVideoUrl] = useState('');
+    const [targetClass, setTargetClass] = useState('');
     // Array of question objects so the teacher can add as many as they want
     const [questions, setQuestions] = useState([{ question: '', answer: '' }]);
     const [status, setStatus] = useState('');
@@ -32,8 +33,8 @@ const TeacherAddVideo = ({ user }) => {
 
     // 4. Save to Database
     const handleSaveVideo = async () => {
-        if (!title || !videoUrl) {
-            setStatus('Please provide a title and a valid video URL.');
+        if (!title || !videoUrl || !targetClass) {
+            setStatus('Please provide a title, a valid video URL, and select a Target Class.');
             return;
         }
 
@@ -42,6 +43,7 @@ const TeacherAddVideo = ({ user }) => {
             subject: user.subject,
             title: title,
             videoUrl: videoUrl,
+            targetClass: targetClass,
             questions: questions // Sends the whole array of Q&As
         };
 
@@ -51,6 +53,7 @@ const TeacherAddVideo = ({ user }) => {
             setStatus('✅ Video and questions saved successfully!');
             setTitle('');
             setVideoUrl('');
+            setTargetClass('');
             setQuestions([{ question: '', answer: '' }]); // Reset form
         } catch (error) {
             console.error(error);
@@ -65,6 +68,21 @@ const TeacherAddVideo = ({ user }) => {
             </div>
             
             {status && <p style={{ fontWeight: 'bold', color: status.includes('✅') ? 'green' : 'red' }}>{status}</p>}
+
+            {/* Target Class Select */}
+            <select 
+                value={targetClass} 
+                onChange={(e) => setTargetClass(e.target.value)} 
+                className="t-addvideo-input" 
+                style={{ marginBottom: '15px' }}
+                required
+            >
+                <option value="">Select Target Class</option>
+                <option value="Kindergarten">Kindergarten</option>
+                {[...Array(12)].map((_, i) => (
+                    <option key={`Grade ${i + 1}`} value={`Grade ${i + 1}`}>Grade {i + 1}</option>
+                ))}
+            </select>
 
             {/* Lesson Title Input */}
             <input 
