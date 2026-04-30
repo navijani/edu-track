@@ -11,6 +11,11 @@ import com.edutrack.models.UserFactory;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+/**
+ * HTTP Handler for all User-related API endpoints.
+ * This class uses the Strategy Design Pattern to handle different HTTP methods
+ * (GET, POST, DELETE, OPTIONS) cleanly without long switch/if-else blocks.
+ */
 public class UserHandler implements HttpHandler {
 
     private final Map<String, HttpMethodStrategy> strategies;
@@ -24,8 +29,14 @@ public class UserHandler implements HttpHandler {
         strategies.put("OPTIONS", new OptionsStrategy());
     }
 
+    /**
+     * The main entry point for requests to the user endpoint.
+     * Sets CORS headers and delegates execution to the appropriate Strategy
+     * based on the HTTP method.
+     */
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        // Set CORS headers to allow cross-origin requests from the React frontend
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
@@ -33,6 +44,7 @@ public class UserHandler implements HttpHandler {
         String method = exchange.getRequestMethod().toUpperCase();
         HttpMethodStrategy strategy = strategies.get(method);
 
+        // Execute the strategy if found, otherwise return 405 Method Not Allowed
         if (strategy != null) {
             strategy.execute(exchange);
         } else {
@@ -64,11 +76,12 @@ public class UserHandler implements HttpHandler {
         protected String extractValue(String json, String key) {
             try {
                 int keyIndex = json.indexOf("\"" + key + "\"");
-                if (keyIndex == -1) return "";
-                
+                if (keyIndex == -1)
+                    return "";
+
                 int colonIndex = json.indexOf(":", keyIndex);
                 String afterColon = json.substring(colonIndex + 1).trim();
-                
+
                 if (afterColon.startsWith("\"")) {
                     int valueStart = json.indexOf("\"", colonIndex) + 1;
                     int valueEnd = json.indexOf("\"", valueStart);
@@ -77,8 +90,9 @@ public class UserHandler implements HttpHandler {
                     int commaIndex = afterColon.indexOf(",");
                     int braceIndex = afterColon.indexOf("}");
                     int end = (commaIndex != -1 && commaIndex < braceIndex) ? commaIndex : braceIndex;
-                    if (end == -1) end = afterColon.length();
-                    
+                    if (end == -1)
+                        end = afterColon.length();
+
                     String val = afterColon.substring(0, end).trim();
                     return val.equals("null") ? "" : val;
                 }
@@ -102,6 +116,9 @@ public class UserHandler implements HttpHandler {
         }
     }
 
+    /**
+     * Strategy for handling POST requests (User Registration).
+     */
     class UserPostStrategy extends BaseStrategy {
         private final UserDAO userDAO;
 
@@ -112,12 +129,14 @@ public class UserHandler implements HttpHandler {
         @Override
         public void execute(HttpExchange exchange) throws IOException {
             try {
+                // Read the incoming JSON payload from the request body
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-                
+
                 System.out.println("\n--- NEW REGISTRATION ATTEMPT ---");
                 System.out.println("Received Payload: " + body);
 
+                // Extract all fields from the JSON payload manually
                 String id = extractValue(body, "id");
                 String name = extractValue(body, "name");
                 String email = extractValue(body, "email");
@@ -125,12 +144,16 @@ public class UserHandler implements HttpHandler {
                 String role = extractValue(body, "role");
                 String subject = extractValue(body, "subject");
                 String childId = extractValue(body, "childId");
+                String studentClass = extractValue(body, "studentClass");
 
                 System.out.println("Extracted Role: " + role);
                 System.out.println("Extracted Child ID: '" + childId + "'");
+                System.out.println("Extracted Student Class: '" + studentClass + "'");
 
-                User newUser = UserFactory.createUser(id, name, email, password, role, subject);
+                // Delegate object creation to the Factory
+                User newUser = UserFactory.createUser(id, name, email, password, role, subject, studentClass);
 
+                // Save the newly instantiated user object to the database
                 if (userDAO.saveUser(newUser, childId)) {
                     System.out.println("SUCCESS: User " + name + " added to database.\n");
                     sendResponse(exchange, 200, "{\"success\":true}");
@@ -173,7 +196,7 @@ public class UserHandler implements HttpHandler {
         @Override
         public void execute(HttpExchange exchange) throws IOException {
             exchange.sendResponseHeaders(204, -1);
-            exchange.close(); 
+            exchange.close();
         }
     }
 }

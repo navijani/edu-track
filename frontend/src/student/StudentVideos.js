@@ -90,7 +90,7 @@ const StudentVideos = ({ subjectName, user }) => {
     const fetchVideos = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/api/contents/video?subject=${encodeURIComponent(subjectName)}`);
+            const response = await axios.get(`http://localhost:8080/api/contents/video?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
             setContentList(response.data);
         } catch (error) { setContentList([]); }
         setLoading(false);

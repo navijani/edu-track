@@ -9,15 +9,17 @@ public class QuizContent {
     private String scheduledDate;
     private int totalMarks;
     private String deadline;
+    private String targetClass;
     private List<QuizQuestion> questions;
 
-    public QuizContent(String teacherId, String subject, String title, int durationMinutes, String scheduledDate, int totalMarks, List<QuizQuestion> questions) {
+    public QuizContent(String teacherId, String subject, String title, int durationMinutes, String scheduledDate, int totalMarks, String targetClass, List<QuizQuestion> questions) {
         this.teacherId = teacherId;
         this.subject = subject;
         this.title = title;
         this.durationMinutes = durationMinutes;
         this.scheduledDate = scheduledDate;
         this.totalMarks = totalMarks;
+        this.targetClass = targetClass;
         this.questions = questions;
     }
 
@@ -27,6 +29,7 @@ public class QuizContent {
     public int getDurationMinutes() { return durationMinutes; }
     public String getScheduledDate() { return scheduledDate; }
     public int getTotalMarks() { return totalMarks; }
+    public String getTargetClass() { return targetClass; }
     public List<QuizQuestion> getQuestions() { return questions; }
     public String getDeadline() { return deadline; }
     public void setDeadline(String deadline) { this.deadline = deadline; }

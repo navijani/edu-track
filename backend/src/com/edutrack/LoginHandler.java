@@ -42,15 +42,24 @@ public class LoginHandler implements HttpHandler {
                 if (authenticatedUser != null) {
                     // User found! Build JSON using the Model's getters (Encapsulation)
                     String subject = "";
+                    
+                    // Added studentClass variable to fix the bug where student contents wouldn't load.
+                    // This ensures the frontend receives the student's assigned class upon login.
+                    String studentClass = "";
 
-                    // Polymorphism: Check if the returned object is specifically a Teacher
+                    // Polymorphism: Check if the returned object is specifically a Teacher or Student
                     if (authenticatedUser instanceof Teacher) {
                         subject = ((Teacher) authenticatedUser).getSubject();
+                    } else if (authenticatedUser instanceof com.edutrack.models.Student) {
+                        // Extract the studentClass if the user is a Student
+                        studentClass = ((com.edutrack.models.Student) authenticatedUser).getStudentClass();
                     }
 
+                    // Added \"studentClass\":\"%s\" to the JSON string payload so the frontend React application
+                    // can save it to its local user state and use it to fetch class-specific contents.
                     String jsonResponse = String.format(
-                            "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"id\":\"%s\"}",
-                            authenticatedUser.getRole(), authenticatedUser.getName(), subject,
+                            "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"studentClass\":\"%s\", \"id\":\"%s\"}",
+                            authenticatedUser.getRole(), authenticatedUser.getName(), subject, studentClass,
                             authenticatedUser.getId());
 
                     sendResponse(exchange, 200, jsonResponse);
