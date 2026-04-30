@@ -150,6 +150,16 @@ public class UserHandler implements HttpHandler {
                 System.out.println("Extracted Child ID: '" + childId + "'");
                 System.out.println("Extracted Student Class: '" + studentClass + "'");
 
+                // --- Default password rule ---
+                // If the password field is empty (e.g. sent from the admin form which
+                // auto-sets it, or a direct API call that omits it), fall back to
+                // the user's own ID as their initial password.
+                // BCrypt will hash this value before it is written to the database.
+                if (password == null || password.isEmpty()) {
+                    password = id;
+                    System.out.println("INFO: No password provided – defaulting to User ID: " + id);
+                }
+
                 // Delegate object creation to the Factory
                 User newUser = UserFactory.createUser(id, name, email, password, role, subject, studentClass);
 
@@ -158,13 +168,24 @@ public class UserHandler implements HttpHandler {
                     System.out.println("SUCCESS: User " + name + " added to database.\n");
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
-                    System.out.println("FAIL: Database rejected it. Check for duplicate ID!\n");
-                    sendResponse(exchange, 500, "{\"success\":false}");
+                    System.out.println("FAIL: Database rejected the insert.\n");
+                    sendResponse(exchange, 500, "{\"success\":false,\"message\":\"Registration failed. Please try again.\"}");
                 }
+
+            } catch (RuntimeException e) {
+                // UserDAO throws a RuntimeException with a DUPLICATE_* prefix
+                // when the database rejects the INSERT due to a unique constraint violation.
+                // Return 409 Conflict so the frontend knows it is a data problem, not a server crash.
+                String userMessage = e.getMessage() != null
+                    ? e.getMessage().replaceFirst("^DUPLICATE[^:]*: ", "") // strip internal prefix, keep readable part
+                    : "A duplicate entry was detected.";
+                System.out.println("DUPLICATE: " + e.getMessage() + "\n");
+                sendResponse(exchange, 409, "{\"success\":false,\"message\":\"" + userMessage + "\"}");
+
             } catch (Exception e) {
                 System.out.println("CRASH: Server threw an error during registration.\n");
                 e.printStackTrace();
-                sendResponse(exchange, 500, "{\"success\":false}");
+                sendResponse(exchange, 500, "{\"success\":false,\"message\":\"Server error. Ensure the backend is running.\"}");
             }
         }
     }

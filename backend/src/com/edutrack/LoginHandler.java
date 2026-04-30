@@ -55,11 +55,16 @@ public class LoginHandler implements HttpHandler {
                         studentClass = ((com.edutrack.models.Student) authenticatedUser).getStudentClass();
                     }
 
-                    // Added \"studentClass\":\"%s\" to the JSON string payload so the frontend React application
-                    // can save it to its local user state and use it to fetch class-specific contents.
+                    // --- JWT SECURITY STEP ---
+                    // After the user is authenticated by the database (UserDAO), we generate 
+                    // a signed JWT Token. This token acts as a "passport" that the user 
+                    // will present for every future request to prove they are logged in.
+                    String token = JwtUtil.generateToken(authenticatedUser.getId(), authenticatedUser.getRole());
+
+                    // Include the token in the JSON response so React can save it.
                     String jsonResponse = String.format(
-                            "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"studentClass\":\"%s\", \"id\":\"%s\"}",
-                            authenticatedUser.getRole(), authenticatedUser.getName(), subject, studentClass,
+                            "{\"success\":true, \"token\":\"%s\", \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"studentClass\":\"%s\", \"id\":\"%s\"}",
+                            token, authenticatedUser.getRole(), authenticatedUser.getName(), subject, studentClass,
                             authenticatedUser.getId());
 
                     sendResponse(exchange, 200, jsonResponse);

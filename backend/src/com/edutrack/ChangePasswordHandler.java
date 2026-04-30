@@ -35,7 +35,7 @@ public class ChangePasswordHandler implements HttpHandler {
         // --- CORS headers: allow React frontend on any origin ---
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "PUT, OPTIONS");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
         String method = exchange.getRequestMethod().toUpperCase();
 
@@ -48,6 +48,26 @@ public class ChangePasswordHandler implements HttpHandler {
         // Only PUT is supported; reject everything else with 405 Method Not Allowed
         if (!method.equals("PUT")) {
             exchange.sendResponseHeaders(405, -1);
+            return;
+        }
+
+        // --- Step 0.5: JWT Authorization Check (Secure Session) ---
+        // This ensures the user is actually logged in before they can change 
+        // a password. We extract the "Passport" from the Authorization header.
+        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        String tokenUserId = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7); // Remove "Bearer "
+            
+            // Verify token signature and expiration
+            tokenUserId = JwtUtil.validateTokenAndGetUserId(token);
+        }
+
+        // Rejection if the token is invalid or missing
+        if (tokenUserId == null) {
+            System.out.println("SECURITY ALERT: Someone tried to change a password without a valid session.");
+            sendResponse(exchange, 401, "{\"success\":false,\"message\":\"Unauthorized: Please login first.\"}");
             return;
         }
 

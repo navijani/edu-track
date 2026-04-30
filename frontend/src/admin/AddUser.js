@@ -3,6 +3,8 @@ import axios from 'axios';
 import '../styles/Admin.css';
 
 const AddUser = () => {
+  // `password` is not shown to admin — it is automatically set to the user's ID.
+  // Students/Teachers/Parents use the My Profile tab to change it after first login.
   const [user, setUser] = useState({ id: '', name: '', email: '', password: '', role: 'STUDENT', subject: '', childId: '', studentClass: '' });
   const [subjects, setSubjects] = useState([]);
   const [students, setStudents] = useState([]);
@@ -26,8 +28,11 @@ const AddUser = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://localhost:8080/api/users/register', user);
-      alert("✨ User registered successfully!");
+      // Always send the user ID as the password (backend will BCrypt-hash it).
+      // Users can change it themselves from the My Profile tab after first login.
+      const payload = { ...user, password: user.id };
+      await axios.post('http://localhost:8080/api/users/register', payload);
+      alert("✨ User registered successfully! Default password is their User ID.");
       setUser({ id: '', name: '', email: '', password: '', role: 'STUDENT', subject: '', childId: '', studentClass: '' });
     } catch (err) {
       alert("❌ Database error: Ensure Java backend is running.");
@@ -80,13 +85,25 @@ const AddUser = () => {
 
             <div className="input-group">
               <label>Initial Password</label>
-              <input
-                type="password"
-                value={user.password}
-                placeholder="••••••••"
-                onChange={(e) => setUser({ ...user, password: e.target.value })}
-                required
-              />
+              {/* Password is auto-set to the User ID — no manual input needed.
+                  The user can change it from My Profile after first login.       */}
+              <div style={{
+                padding: '12px 16px',
+                background: 'rgba(124, 93, 250, 0.07)',
+                border: '1.5px dashed #a78bfa',
+                borderRadius: '10px',
+                fontSize: '13px',
+                color: '#6d4fd8',
+                fontWeight: '600',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}>
+                🔑 Default password = <strong style={{ letterSpacing: '0.5px' }}>{user.id || 'User ID'}</strong>
+              </div>
+              <p style={{ margin: '6px 0 0', fontSize: '11px', color: '#94a3b8', fontStyle: 'italic' }}>
+                User must change this from My Profile after first login.
+              </p>
             </div>
 
             <div className="input-group">

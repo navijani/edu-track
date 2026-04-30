@@ -65,24 +65,41 @@ public class ProfileHandler implements HttpHandler {
         // this endpoint without being blocked by the browser's same-origin policy.
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
         String method = exchange.getRequestMethod().toUpperCase();
 
         // ─── Step 2: Handle browser pre-flight ───────────────────────────────
-        // Before making cross-origin GET requests, browsers send an OPTIONS
-        // "pre-flight" request to check what the server allows.
-        // We respond with 204 No Content to satisfy this check.
         if (method.equals("OPTIONS")) {
             exchange.sendResponseHeaders(204, -1);
             return;
         }
 
         // ─── Step 3: Method guard ─────────────────────────────────────────────
-        // This endpoint is read-only; only GET is meaningful here.
-        // Reject anything else (POST, PUT, DELETE…) with 405 Method Not Allowed.
         if (!method.equals("GET")) {
             exchange.sendResponseHeaders(405, -1);
+            return;
+        }
+
+        // ─── Step 3.5: JWT Authorization Check (Security Gate) ──────────────────
+        // This gate ensures that only users with a valid "Passport" (JWT) can 
+        // access profile data. The Passport is sent in the "Authorization" header.
+        String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
+        String tokenUserId = null;
+
+        // The standard format is: Authorization: Bearer <token_string>
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7); // Remove "Bearer " prefix
+            
+            // Delegate the verification to JwtUtil.
+            // If the passport is fake or expired, this returns null.
+            tokenUserId = JwtUtil.validateTokenAndGetUserId(token);
+        }
+
+        // If validation failed, block the request with 401 Unauthorized
+        if (tokenUserId == null) {
+            System.out.println("SECURITY ALERT: Blocked a request that had an invalid or missing token.");
+            sendResponse(exchange, 401, "{\"error\":\"Unauthorized: Please login first.\"}");
             return;
         }
 

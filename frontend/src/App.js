@@ -26,7 +26,10 @@ function App() {
   const handleLogout = () => {
     setScreen('intro');
     setCurrentUser(null); // Clear user data on logout
-    setUserRole('');
+    // --- JWT LOGOUT STEP ---
+    // We must delete the passport from the browser when logging out.
+    // This ensures no one else can use this session after the user leaves.
+    localStorage.removeItem('edu_track_token');
   };
 
   return (

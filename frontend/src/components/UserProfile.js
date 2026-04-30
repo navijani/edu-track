@@ -61,8 +61,22 @@ const UserProfile = ({ user }) => {
          */
         const fetchProfile = async () => {
             try {
-                // Call the ProfileHandler endpoint with the logged-in user's ID
-                const res  = await fetch(`http://localhost:8080/api/users/profile?userId=${user.id}`);
+                // --- JWT AUTHORIZATION STEP ---
+                // To fetch the profile, we must "show" our Passport (JWT Token) to the server.
+                // We retrieve it from Local Storage and put it in the "Authorization" header
+                // using the "Bearer" scheme (industry standard).
+                const res = await fetch(`http://localhost:8080/api/users/profile?userId=${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('edu_track_token')}`
+                    }
+                });
+
+                // If the server returns 401, it means our passport is fake or expired.
+                if (res.status === 401) {
+                    setError('Unauthorized: Your session has expired. Please log in again.');
+                    return;
+                }
+
                 const data = await res.json();
 
                 if (data.error) {

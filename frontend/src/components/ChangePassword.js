@@ -88,15 +88,28 @@ const ChangePassword = ({ user }) => {
         // ── API call ─────────────────────────────────────────────────────────
         setLoading(true);
         try {
+            // --- JWT AUTHORIZATION STEP ---
+            // To prove we have permission to change this password, we send the JWT
+            // token in the Authorization header.
             const res = await fetch('http://localhost:8080/api/users/change-password', {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('edu_track_token')}`
+                },
                 body: JSON.stringify({
-                    userId: user.id,          // The logged-in user's ID
-                    currentPassword,           // Verified against BCrypt hash on server
-                    newPassword,               // Will be hashed and stored on server
+                    userId: user.id,
+                    currentPassword,
+                    newPassword,
                 }),
             });
+
+            // If the passport is rejected (401), we stop and tell the user.
+            if (res.status === 401) {
+                setStatus('error');
+                setMessage('Unauthorized: Your session has expired. Please log in again.');
+                return;
+            }
 
             const data = await res.json();
 

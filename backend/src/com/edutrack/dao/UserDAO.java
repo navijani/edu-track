@@ -7,6 +7,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Types;
 
 /**
@@ -61,6 +62,19 @@ public class UserDAO {
             }
 
             return pstmt.executeUpdate() > 0;
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            // The database rejected the INSERT due to a UNIQUE constraint violation.
+            // Inspect the message to tell the caller exactly which field is the duplicate
+            // so the frontend can show a helpful, specific error instead of a generic one.
+            String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+            if (msg.contains("email")) {
+                throw new RuntimeException("DUPLICATE_EMAIL: An account with that email address already exists.");
+            } else if (msg.contains("primary") || msg.contains("'id'")) {
+                throw new RuntimeException("DUPLICATE_ID: An account with that User ID already exists.");
+            } else {
+                throw new RuntimeException("DUPLICATE: A duplicate value was detected. Check the User ID and email.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;

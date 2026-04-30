@@ -18,6 +18,14 @@ const LoginCredentials = ({ role, onBack, onSuccess }) => {
       });
 
       if (response.data && response.data.success) {
+        // --- JWT STORAGE STEP ---
+        // After a successful login, the server gives us a "Passport" (JWT token).
+        // We save this passport in the browser's "Local Storage".
+        // This way, even if the user refreshes the page, they stay logged in,
+        // and we can "show" this passport to the server for every authorized request.
+        if (response.data.token) {
+          localStorage.setItem('edu_track_token', response.data.token);
+        }
         onSuccess(response.data); 
       }
     } catch (error) {
