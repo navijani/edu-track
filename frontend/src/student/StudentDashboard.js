@@ -5,6 +5,7 @@ import StudentProgress from './StudentProgress';
 import DashboardHome from './DashboardHome';
 import StudentLiveClasses from './StudentLiveClasses';
 import StudentForum from './StudentForum';
+import StudentNotifications from './StudentNotifications';
 import '../styles/Students.css';
 
 const StudentDashboard = ({ user, onLogout }) => {
@@ -50,9 +51,14 @@ const StudentDashboard = ({ user, onLogout }) => {
         </aside>
 
             {/* MAIN CONTENT AREA */}
-            <main className="s-main-content">
+            <main className="s-main-content" style={{ position: 'relative' }}>
+                {/* Notification Bell at Top Right */}
+                <div style={{ position: 'absolute', top: '20px', right: '30px', zIndex: 100 }}>
+                    <StudentNotifications user={user} />
+                </div>
 
-                {activeTab === 'dashboard' && (
+                <div style={{ paddingTop: '40px' }}>
+                    {activeTab === 'dashboard' && (
                     <DashboardHome user={user} />
                 )}
 
@@ -79,6 +85,7 @@ const StudentDashboard = ({ user, onLogout }) => {
                 )}
 
                 {activeTab === 'messages' && <StudentForum user={user} />}
+                </div>
 
             </main>
         </div>
