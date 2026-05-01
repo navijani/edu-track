@@ -720,3 +720,467 @@
     align-items: center;
     /* ... existing styles ... */
 }
+
+/* ============================================================
+   CHANGE PASSWORD COMPONENT STYLES
+   ============================================================ */
+
+.cp-page-wrapper {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow: hidden;
+}
+
+/* Decorative background orbs */
+.cp-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.cp-orb-1 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, #a855f7, #7c5dfa);
+    top: -80px;
+    right: -60px;
+}
+
+.cp-orb-2 {
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, #3498db, #06b6d4);
+    bottom: -60px;
+    left: -40px;
+}
+
+/* Main card */
+.cp-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 20px 60px rgba(124, 93, 250, 0.12), 0 4px 24px rgba(0,0,0,0.06);
+    padding: 40px;
+    animation: cpSlideUp 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes cpSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Header section */
+.cp-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.cp-icon-ring {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #7c5dfa 0%, #a855f7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 8px 20px rgba(124, 93, 250, 0.3);
+}
+
+.cp-title {
+    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: -0.5px;
+}
+
+.cp-subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.cp-divider {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(124,93,250,0.3) 0%, rgba(168,85,247,0.1) 50%, transparent 100%);
+    margin-bottom: 28px;
+}
+
+/* Alert banners */
+.cp-alert {
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    animation: cpFadeIn 0.3s ease;
+}
+
+@keyframes cpFadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.cp-alert-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
+    color: #065f46;
+    border: 1.5px solid #6ee7b7;
+}
+
+.cp-alert-error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fff5f5 100%);
+    color: #991b1b;
+    border: 1.5px solid #fca5a5;
+}
+
+/* Tips box */
+.cp-tips {
+    background: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
+    border: 1px solid #ddd6fe;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+}
+
+/* Submit button */
+.cp-submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #7c5dfa 0%, #a855f7 100%);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(124, 93, 250, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+}
+
+.cp-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(124, 93, 250, 0.45);
+}
+
+.cp-submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.cp-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Loading spinner inside button */
+.cp-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: cpSpin 0.8s linear infinite;
+}
+
+@keyframes cpSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   USER PROFILE COMPONENT STYLES  (up-*)
+   ============================================================ */
+
+/* Outer wrapper – full-height scrollable area */
+.up-wrapper {
+    position: relative;
+    min-height: 80vh;
+    overflow: hidden;
+    padding: 0 20px 60px;
+}
+
+/* Decorative blurred background orbs */
+.up-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+}
+.up-orb-1 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #a855f7, #7c5dfa);
+    top: -100px; right: -80px;
+}
+.up-orb-2 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, #3498db, #06b6d4);
+    bottom: 0; left: -60px;
+}
+
+/* Scrollable inner content above orbs */
+.up-content {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding-top: 10px;
+}
+
+/* ── Hero card ── */
+.up-hero-card {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 20px 60px rgba(124, 93, 250, 0.1), 0 4px 24px rgba(0,0,0,0.05);
+    padding: 32px 36px;
+    animation: upFadeUp 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes upFadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Large avatar circle with gradient and pulsing ring */
+.up-avatar {
+    width: 90px;
+    height: 90px;
+    min-width: 90px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    font-weight: 900;
+    color: white;
+    box-shadow: 0 8px 24px rgba(124, 93, 250, 0.35);
+    animation: upAvatarPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes upAvatarPop {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+.up-hero-name {
+    margin: 0 0 10px;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: -0.5px;
+}
+
+.up-hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+/* Grey pill showing the user ID */
+.up-id-pill {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid #e2e8f0;
+}
+
+/* Coloured role badge (Student / Teacher / Parent) */
+.up-role-badge {
+    padding: 4px 14px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.up-email {
+    margin: 0;
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* ── Info cards grid ── */
+.up-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    animation: upFadeUp 0.5s 0.1s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.up-info-card {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-left: 5px solid transparent; /* coloured via inline style */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.up-info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Coloured emoji circle inside the card */
+.up-info-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.up-info-value {
+    font-weight: 800;
+    font-size: 15px;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+.up-info-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Linked-record sections (parent / child / security) ── */
+.up-linked-section {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(18px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    padding: 28px 32px;
+    animation: upFadeUp 0.55s 0.15s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.up-section-title {
+    margin: 0 0 20px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.up-section-icon {
+    font-size: 20px;
+}
+
+/* Person chip: avatar + name + sub-label */
+.up-person-chip {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 16px 20px;
+    transition: transform 0.2s ease;
+}
+.up-person-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.up-person-avatar {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 900;
+    color: white;
+}
+
+.up-person-name {
+    font-weight: 800;
+    font-size: 15px;
+    color: #1e293b;
+    margin-bottom: 3px;
+}
+.up-person-sub {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Empty state text */
+.up-no-data {
+    margin: 0;
+    color: #94a3b8;
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* Centered loading / error state */
+.up-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+}
+
+/* Large spinner for the initial profile load */
+.up-big-spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #e2e8f0;
+    border-top-color: #7c5dfa;
+    border-radius: 50%;
+    animation: cpSpin 0.9s linear infinite; /* reuses existing cpSpin keyframe */
+}
+

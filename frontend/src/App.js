@@ -8,6 +8,7 @@ import TeacherDashboard from './teacher/TeacherDashboard';
 import StudentDashboard from './student/StudentDashboard';
 // 1. IMPORT THE PARENT DASHBOARD
 import ParentDashboard from './parent/ParentDashboard'; // Make sure this path matches where you saved it!
+import AdminLogin from './components/AdminLogin';
 
 import './App.css';
 
@@ -19,14 +20,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null); 
 
   const handleAdminAuth = () => {
-    const email = prompt("Enter Admin Email:");
-    const password = prompt("Enter Admin Password:");
-
-    if (email === "2004@gmail.com" && password === "123") {
-      setScreen('admin-dashboard'); 
-    } else {
-      alert("Unauthorized Access!");
-    }
+    setScreen('admin-login');
   };
 
   const handleLogout = () => {
@@ -55,6 +49,14 @@ function App() {
             setScreen('login-entry'); 
           }} />
         </>
+      )}
+
+      {/* Admin Login Screen */}
+      {screen === 'admin-login' && (
+        <AdminLogin 
+          onBack={() => setScreen('role')}
+          onSuccess={() => setScreen('admin-dashboard')}
+        />
       )}
 
       {/* Admin Dashboard */}

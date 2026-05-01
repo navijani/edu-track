@@ -52,14 +52,14 @@ const UsersList = () => {
 
   return (
     <div className="users-list-container">
-      
+
       {/* --- SEARCH BAR SECTION --- */}
       <div className="search-container">
         <div className="search-input-wrapper">
           <span className="search-icon">🔍</span>
-          <input 
-            type="text" 
-            placeholder="Search by name, ID, or role..." 
+          <input
+            type="text"
+            placeholder="Search by name, ID, or role..."
             className="glass-search-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -87,6 +87,9 @@ const UsersList = () => {
               <div className="detail-item"><label>Email</label><span>{selectedUser.email}</span></div>
               {selectedUser.role === 'TEACHER' && (
                 <div className="detail-item"><label>Subject</label><span>{selectedUser.subject}</span></div>
+              )}
+              {selectedUser.role === 'STUDENT' && (
+                <div className="detail-item"><label>Class</label><span>{selectedUser.studentClass || 'N/A'}</span></div>
               )}
             </div>
           </div>

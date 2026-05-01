@@ -27,43 +27,54 @@ public class QuizHandler implements HttpHandler {
             return;
         }
 
-        // Handle GET request to fetch quizzes 
+        // Handle GET request to fetch quizzes
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             String query = exchange.getRequestURI().getQuery();
-            
+
             // 1. Teacher Dashboard Request
             if (query != null && query.startsWith("teacherId=")) {
                 String teacherId = query.split("=")[1];
                 String jsonResponse = quizDAO.getQuizzesByTeacherJson(teacherId);
                 sendResponse(exchange, 200, jsonResponse);
-            } 
-            // 2. Student Dashboard Request
+            }
+            // 2. Student Dashboard Request: Fetch quizzes filtered by Subject AND Student's Class
             else if (query != null && query.startsWith("subject=")) {
-                String subject = query.split("=")[1];
+                String subject = "";
                 
-                // Safely decode the URL
-                try {
-                    subject = URLDecoder.decode(subject, StandardCharsets.UTF_8.name());
-                } catch (Exception e) {
-                    subject = URLDecoder.decode(subject); // Fallback
+                // targetClass is used to filter out quizzes that don't match the student's grade
+                String targetClass = "";
+                
+                for (String param : query.split("&")) {
+                    String[] pair = param.split("=");
+                    if (pair.length > 1) {
+                        try {
+                            String value = URLDecoder.decode(pair[1], StandardCharsets.UTF_8.name());
+                            if (pair[0].equals("subject")) subject = value;
+                            
+                            // Extract the targetClass parameter sent by the React frontend
+                            if (pair[0].equals("targetClass")) targetClass = value;
+                        } catch (Exception e) {
+                            System.out.println("Warning: Could not decode URL parameter.");
+                        }
+                    }
                 }
-                
-                String jsonResponse = quizDAO.getQuizzesBySubjectJson(subject);
+
+                // Call the DAO to fetch only quizzes matching BOTH the subject and the student's class
+                String jsonResponse = quizDAO.getQuizzesBySubjectAndClassJson(subject, targetClass);
                 sendResponse(exchange, 200, jsonResponse);
-            } 
-            else {
+            } else {
                 sendResponse(exchange, 400, "[]");
             }
             return;
         }
 
-        // Handle DELETE request 
+        // Handle DELETE request
         if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
-            String query = exchange.getRequestURI().getQuery(); 
+            String query = exchange.getRequestURI().getQuery();
             if (query != null && query.startsWith("id=")) {
                 String id = query.split("=")[1];
-                
-                if (quizDAO.deleteQuiz(id)) { 
+
+                if (quizDAO.deleteQuiz(id)) {
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
                     sendResponse(exchange, 500, "{\"success\":false}");
@@ -81,45 +92,55 @@ public class QuizHandler implements HttpHandler {
                 String teacherId = body.split("\"teacherId\":\"")[1].split("\"")[0];
                 String subject = body.split("\"subject\":\"")[1].split("\"")[0];
                 String title = body.split("\"title\":\"")[1].split("\"")[0];
-                
+
                 // Numbers and Dates
                 int duration = Integer.parseInt(body.split("\"duration\":")[1].split(",")[0].trim());
                 int totalMarks = Integer.parseInt(body.split("\"totalMarks\":")[1].split(",")[0].trim());
                 String scheduledDate = body.split("\"scheduledDate\":\"")[1].split("\"")[0];
-                
+
                 // NEW: Safely extract the deadline (uses ternary operator to prevent crashes)
-                String deadline = body.contains("\"deadline\":\"") ? body.split("\"deadline\":\"")[1].split("\"")[0] : "";
+                String deadline = body.contains("\"deadline\":\"") ? body.split("\"deadline\":\"")[1].split("\"")[0]
+                        : "";
+
+                String targetClass = "";
+                if (body.contains("\"targetClass\":\"")) {
+                    targetClass = body.split("\"targetClass\":\"")[1].split("\"")[0];
+                }
 
                 // Parse the array of questions
                 List<QuizQuestion> questionList = new ArrayList<>();
                 if (body.contains("\"questions\":[{")) {
                     String questionsPart = body.substring(body.indexOf("\"questions\":[{") + 13);
                     questionsPart = questionsPart.substring(0, questionsPart.lastIndexOf("]"));
-                    
+
                     String[] qBlocks = questionsPart.split("},\\{");
                     for (String block : qBlocks) {
                         String q = block.split("\"question\":\"")[1].split("\"")[0];
-                        
+
                         // Handle optional image
-                        String imgUrl = block.contains("\"imageUrl\":\"") ? block.split("\"imageUrl\":\"")[1].split("\"")[0] : "";
-                        
+                        String imgUrl = block.contains("\"imageUrl\":\"")
+                                ? block.split("\"imageUrl\":\"")[1].split("\"")[0]
+                                : "";
+
                         // Extract the options array as a raw string to save in the DB
                         String optionsStr = "[" + block.split("\"options\":\\[")[1].split("\\]")[0] + "]";
-                        
+
                         String correct = block.split("\"correctAnswer\":\"")[1].split("\"")[0];
-                        
+
                         questionList.add(new QuizQuestion(q, imgUrl, optionsStr, correct));
                     }
                 }
 
                 // Build the quiz object
-                QuizContent newQuiz = new QuizContent(teacherId, subject, title, duration, scheduledDate, totalMarks, questionList);
-                
+                QuizContent newQuiz = new QuizContent(teacherId, subject, title, duration, scheduledDate, totalMarks,
+                        targetClass, questionList);
+
                 // NEW: Inject the deadline into the object before saving!
                 newQuiz.setDeadline(deadline);
-                
+
                 // Save to database
                 if (quizDAO.saveQuizAndQuestions(newQuiz)) {
+                    new com.edutrack.dao.NotificationDAO().addNotification(teacherId, targetClass, subject, "Quiz", title);
                     sendResponse(exchange, 200, "{\"success\":true}");
                 } else {
                     sendResponse(exchange, 500, "{\"success\":false}");

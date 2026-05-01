@@ -13,7 +13,7 @@ public class QuizDAO {
 
     public boolean saveQuizAndQuestions(QuizContent quiz) {
         // 1. NEW: Added deadline to the INSERT statement
-        String quizSql = "INSERT INTO quizzes (teacher_id, subject, title, duration_minutes, scheduled_date, deadline, total_marks) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String quizSql = "INSERT INTO quizzes (teacher_id, subject, title, duration_minutes, scheduled_date, deadline, total_marks, target_class) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         String questionSql = "INSERT INTO quiz_questions (quiz_id, question, image_url, options_json, correct_answer) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection()) {
@@ -26,6 +26,7 @@ public class QuizDAO {
             quizStmt.setString(5, quiz.getScheduledDate());
             quizStmt.setString(6, quiz.getDeadline()); // <-- NEW: Insert deadline
             quizStmt.setInt(7, quiz.getTotalMarks());
+            quizStmt.setString(8, quiz.getTargetClass());
             quizStmt.executeUpdate();
 
             ResultSet rs = quizStmt.getGeneratedKeys();
@@ -109,10 +110,10 @@ public class QuizDAO {
     }
 
     // Fetch Quizzes by Subject for the Student Dashboard ---
-    public String getQuizzesBySubjectJson(String subject) {
+    public String getQuizzesBySubjectAndClassJson(String subject, String targetClass) {
         StringBuilder json = new StringBuilder("[");
         // NEW: Added deadline to SELECT
-        String quizSql = "SELECT id, title, subject, duration_minutes, scheduled_date, deadline, total_marks FROM quizzes WHERE subject = ? ORDER BY id DESC";
+        String quizSql = "SELECT id, title, subject, duration_minutes, scheduled_date, deadline, total_marks FROM quizzes WHERE subject = ? AND target_class = ? ORDER BY id DESC";
         String questionSql = "SELECT question, image_url, options_json, correct_answer FROM quiz_questions WHERE quiz_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -120,6 +121,7 @@ public class QuizDAO {
              PreparedStatement pstmtQuestion = conn.prepareStatement(questionSql)) {
             
             pstmtQuiz.setString(1, subject);
+            pstmtQuiz.setString(2, targetClass);
             ResultSet rsQuiz = pstmtQuiz.executeQuery();
             
             boolean firstQuiz = true;

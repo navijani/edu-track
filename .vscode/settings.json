@@ -3,6 +3,7 @@
         "backend\\src"
     ],
     "java.project.referencedLibraries": [
-        "backend\\lib\\mysql-connector-j-9.6.0.jar"
+        "backend\\lib\\mysql-connector-j-9.6.0.jar",
+        "backend\\lib\\jbcrypt-0.4.jar"
     ]
 }

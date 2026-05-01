@@ -12,7 +12,7 @@ import java.sql.Statement;
 public class DocumentDAO {
 
     public boolean saveDocumentAndQuestions(DocumentContent document) {
-        String docSql = "INSERT INTO documents (teacher_id, subject, title, document_url) VALUES (?, ?, ?, ?)";
+        String docSql = "INSERT INTO documents (teacher_id, subject, title, document_url, target_class) VALUES (?, ?, ?, ?, ?)";
         String questionSql = "INSERT INTO document_questions (document_id, question, answer) VALUES (?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection()) {
@@ -22,6 +22,7 @@ public class DocumentDAO {
             docStmt.setString(2, document.getSubject());
             docStmt.setString(3, document.getTitle());
             docStmt.setString(4, document.getDocumentUrl());
+            docStmt.setString(5, document.getTargetClass());
             docStmt.executeUpdate();
 
             ResultSet rs = docStmt.getGeneratedKeys();
@@ -98,11 +99,11 @@ public class DocumentDAO {
         return json.toString();
     }
 
-    // Fetch Documents by Subject for the Student Dashboard 
-    public String getDocumentsBySubjectJson(String subject) {
+    // Fetch Documents by Subject and Class for the Student Dashboard 
+    public String getDocumentsBySubjectAndClassJson(String subject, String targetClass) {
         StringBuilder json = new StringBuilder("[");
-        // We search by subject instead of teacher_id!
-        String docSql = "SELECT id, title, subject, document_url FROM documents WHERE subject = ? ORDER BY id DESC";
+        // We search by subject and target_class
+        String docSql = "SELECT id, title, subject, document_url FROM documents WHERE subject = ? AND target_class = ? ORDER BY id DESC";
         String questionSql = "SELECT question, answer FROM document_questions WHERE document_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -110,6 +111,7 @@ public class DocumentDAO {
              PreparedStatement pstmtQuestion = conn.prepareStatement(questionSql)) {
             
             pstmtDoc.setString(1, subject);
+            pstmtDoc.setString(2, targetClass);
             ResultSet rsDoc = pstmtDoc.executeQuery();
             
             boolean firstDoc = true;

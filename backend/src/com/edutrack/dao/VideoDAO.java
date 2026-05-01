@@ -12,7 +12,7 @@ import java.sql.Statement;
 public class VideoDAO {
 
     public boolean saveVideoAndQuestions(VideoContent video) {
-        String videoSql = "INSERT INTO videos (teacher_id, subject, title, video_url) VALUES (?, ?, ?, ?)";
+        String videoSql = "INSERT INTO videos (teacher_id, subject, title, video_url, target_class) VALUES (?, ?, ?, ?, ?)";
         String questionSql = "INSERT INTO video_questions (video_id, question, answer) VALUES (?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection()) {
@@ -22,6 +22,7 @@ public class VideoDAO {
             videoStmt.setString(2, video.getSubject());
             videoStmt.setString(3, video.getTitle());
             videoStmt.setString(4, video.getVideoUrl());
+            videoStmt.setString(5, video.getTargetClass());
             videoStmt.executeUpdate();
 
             // 2. Retrieve that new ID
@@ -101,10 +102,10 @@ public class VideoDAO {
 
 
     
-    public String getVideosBySubjectJson(String subject) {
+    public String getVideosBySubjectAndClassJson(String subject, String targetClass) {
         StringBuilder json = new StringBuilder("[");
-        // Look closely: WHERE subject = ? instead of teacher_id = ?
-        String videoSql = "SELECT id, title, subject, video_url FROM videos WHERE subject = ? ORDER BY id DESC";
+        // Look closely: WHERE subject = ? and target_class = ?
+        String videoSql = "SELECT id, title, subject, video_url FROM videos WHERE subject = ? AND target_class = ? ORDER BY id DESC";
         String questionSql = "SELECT question, answer FROM video_questions WHERE video_id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -112,6 +113,7 @@ public class VideoDAO {
              PreparedStatement pstmtQuestion = conn.prepareStatement(questionSql)) {
             
             pstmtVideo.setString(1, subject);
+            pstmtVideo.setString(2, targetClass);
             ResultSet rsVideo = pstmtVideo.executeQuery();
             
             boolean firstVideo = true;
