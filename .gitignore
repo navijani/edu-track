@@ -2,3 +2,6 @@ node_modules/
 frontend/node_modules/
 backend/lib/*.jar
 .DS_Store
+*.class
+bin/
+backend/bin/
