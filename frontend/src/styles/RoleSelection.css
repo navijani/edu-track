@@ -6,10 +6,9 @@
   align-items: center;
   min-height: 100vh;
   width: 100vw;
-  /* Deep, shifting premium gradient */
   background: linear-gradient(-45deg, #0f172a, #1e293b, #090e17, #172033);
   background-size: 400% 400%;
-  animation: bgShift 20s ease infinite; /* 20-second continuous loop */
+  animation: bgShift 20s ease infinite;
   overflow: hidden;
   position: absolute; 
   top: 0;
@@ -18,7 +17,6 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* Slowly pans the dark background colors */
 @keyframes bgShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -29,7 +27,7 @@
 .glass-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px); /* Slightly more blur for a smoother cinematic glow */
+  filter: blur(80px);
   z-index: 2;
   opacity: 0.5;
 }
@@ -52,7 +50,6 @@
   animation: driftOrb3 22s infinite ease-in-out; 
 }
 
-/* These keyframes use vw/vh to travel across the entire monitor */
 @keyframes driftOrb1 {
   0% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(40vw, 30vh) scale(1.2); }
@@ -74,7 +71,6 @@
   100% { transform: translate(-50%, -50%) scale(1); }
 }
 
-/* ... Keep the rest of your CSS (from "THE MAIN GLASS CARD" downwards) exactly the same! ... */
 /* --- THE MAIN GLASS CARD --- */
 .glass-container {
   width: 90%;
@@ -84,18 +80,13 @@
   border-radius: 20px;
   position: relative;
   z-index: 10;
-  
-  /* The Frost Effect */
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  
-  /* Delicate Borders */
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   border-left: 1px solid rgba(255, 255, 255, 0.2);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
   animation: popIn 0.8s ease-out forwards;
 }
@@ -164,16 +155,10 @@
   margin-top: 5px;
 }
 
-/* Entrance Animation */
 @keyframes popIn {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-@media (max-width: 768px) {
-  .glass-grid { flex-direction: column; }
-}
-
 
 /* --- Login Card Container --- */
 .login-glass-card {
@@ -191,7 +176,6 @@
   text-align: center;
 }
 
-/* --- Back Button --- */
 .back-arrow {
   position: absolute;
   top: 25px;
@@ -209,7 +193,6 @@
   transform: translateX(-5px);
 }
 
-/* --- Header Section --- */
 .role-icon-circle {
   width: 70px;
   height: 70px;
@@ -241,7 +224,6 @@
   margin-bottom: 35px;
 }
 
-/* --- Form Fields --- */
 .input-field-wrapper {
   text-align: left;
   margin-bottom: 20px;
@@ -274,7 +256,6 @@
   box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
 }
 
-/* --- Login Button --- */
 .login-primary-btn {
   width: 100%;
   padding: 15px;
@@ -306,4 +287,70 @@
   margin-top: 30px;
   color: #64748b;
   font-size: 0.8rem;
+}
+
+/* ======================================================
+   MOBILE RESPONSIVE SECTION (New Adjustments)
+   ====================================================== */
+
+@media (max-width: 768px) {
+  /* Prevent scrolling if overlay is active */
+  .glass-overlay {
+    padding: 20px;
+    height: auto;
+    min-height: 100vh;
+    position: fixed; /* Better for mobile overlays */
+  }
+
+  /* Adjust the container padding for mobile */
+  .glass-container {
+    padding: 30px 20px;
+    width: 95%;
+  }
+
+  .glass-title {
+    font-size: 1.8rem;
+  }
+
+  /* Change grid to single column */
+  .glass-grid {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .glass-btn {
+    padding: 20px;
+  }
+
+  .glass-icon {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+  }
+
+  /* Login card adjustments */
+  .login-glass-card {
+    padding: 40px 20px;
+    width: 95%;
+  }
+
+  .login-header h2 {
+    font-size: 1.5rem;
+  }
+
+  /* Orbit animation adjustments for small screens to prevent overflow */
+  .glass-orb {
+    filter: blur(50px);
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .glass-title {
+    font-size: 1.5rem;
+  }
+  
+  .glass-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+  }
 }
