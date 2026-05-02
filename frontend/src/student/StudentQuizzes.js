@@ -49,11 +49,11 @@ const StudentQuizzes = ({ subjectName, user }) => {
 
         if (scheduledTime && now < scheduledTime) return alert(`Opens on: ${scheduledTime.toLocaleString()}`);
         if (hasSubmitted) {
+            setSelectedItem(quiz);
             if (deadlineTime && now > deadlineTime) {
-                setSelectedItem(quiz);
                 setViewMode('review');
             } else {
-                alert("Submitted! Review opens after the deadline.");
+                setViewMode('submitted');
             }
             return;
         }
@@ -80,7 +80,7 @@ const StudentQuizzes = ({ subjectName, user }) => {
                 studentId: user.id, quizId: selectedItem.id,
                 answersJson: JSON.stringify(userAnswers), score: score, attendTime: new Date().toISOString()
             });
-            fetchSubmissions();
+            await fetchSubmissions();
             setViewMode('submitted');
         } catch (error) { alert("Submission failed."); }
     };
@@ -90,6 +90,39 @@ const StudentQuizzes = ({ subjectName, user }) => {
         const s = seconds % 60;
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
+
+    // --- VIEW: SUBMISSION SUCCESS (Score Only) ---
+    if (viewMode === 'submitted' && selectedItem) {
+        const mySub = submissions[selectedItem.id];
+        return (
+            <div className="s-quiz-take-container">
+                <button onClick={() => setViewMode('list')} className="s-btn-back" style={{ background: '#94a3b8', width: 'auto', marginBottom: '20px' }}>
+                    ⬅ Back to List
+                </button>
+                <div className="s-quiz-review-header" style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)' }}>
+                    <div>
+                        <h2 style={{ margin: 0 }}>Quiz Submitted!</h2>
+                        <p style={{ opacity: 0.8 }}>{selectedItem.title}</p>
+                    </div>
+                    <div className="s-quiz-score-circle">
+                        <h2 style={{ margin: 0 }}>{mySub?.score || 0}</h2>
+                        <span style={{ fontSize: '10px' }}>/{selectedItem.marks} Marks</span>
+                    </div>
+                </div>
+                <div className="s-video-q-box" style={{ textAlign: 'center', padding: '40px' }}>
+                    <div style={{ fontSize: '50px', marginBottom: '20px' }}>🎉</div>
+                    <h3>Great Job!</h3>
+                    <p>Your answers have been recorded. You can review the correct answers once the deadline has passed.</p>
+                    <div style={{ marginTop: '20px', fontSize: '14px', color: '#64748b' }}>
+                        <strong>Deadline:</strong> {selectedItem.deadline || "N/A"}
+                    </div>
+                    <button onClick={() => setViewMode('list')} className="s-pill-btn active-quizzes" style={{ marginTop: '30px' }}>
+                        Return to Dashboard
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     // --- VIEW: REVIEW RESULTS ---
     if (viewMode === 'review' && selectedItem) {
@@ -194,7 +227,7 @@ const StudentQuizzes = ({ subjectName, user }) => {
         </div>
 
         <p style={{ margin: '15px 0 0 0', fontSize: '12px', fontWeight: '800', color: hasSub ? '#3498db' : isTooLate ? '#ef4444' : '#10b981' }}>
-            {hasSub ? "VIEW RESULTS" : isTooLate ? "MISSED" : "START QUIZ →"}
+            {hasSub ? `SCORE: ${submissions[item.id]?.score || 0} / ${item.marks}` : isTooLate ? "MISSED" : "START QUIZ →"}
         </p>
     </div>
                 );
