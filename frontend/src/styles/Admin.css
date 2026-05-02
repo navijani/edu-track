@@ -132,19 +132,17 @@
 
 .content-body {
   background: rgba(255, 255, 255, 0.02);
-  /* border: 1px solid rgba(255, 255, 255, 0.05); */
   border-radius: 16px;
   padding: 25px;
-  height: 200%;
 }
 
 /* --- PREMIUN GHOST LOGOUT BUTTON --- */
 .admin-logout-btn {
   width: 100%;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.03); /* Almost transparent */
-  border: 1px solid rgba(244, 63, 94, 0.3); /* Subtle red border */
-  color: #fb7185; /* Soft rose/red text */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #fb7185;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
@@ -153,46 +151,38 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy feel */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
 }
 
-/* The Icon inside the button */
 .admin-logout-btn span {
   font-size: 1.1rem;
   transition: transform 0.3s ease;
 }
 
-/* --- HOVER EFFECTS --- */
 .admin-logout-btn:hover {
-  background: rgba(244, 63, 94, 0.1); /* Slight red tint */
-  border-color: #f43f5e; /* Brighter red border */
+  background: rgba(244, 63, 94, 0.1);
+  border-color: #f43f5e;
   color: #ffffff;
-  transform: translateY(-3px); /* Lift up */
-  
-  /* The Neon Glow */
-  box-shadow: 0 10px 20px rgba(244, 63, 94, 0.3), 
-              0 0 15px rgba(244, 63, 94, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(244, 63, 94, 0.3), 0 0 15px rgba(244, 63, 94, 0.2);
 }
 
 .admin-logout-btn:hover span {
-  transform: translateX(-5px) rotate(-10deg); /* Icon "peeks" out */
+  transform: translateX(-5px) rotate(-10deg);
 }
 
-/* --- CLICK EFFECT --- */
 .admin-logout-btn:active {
   transform: translateY(0);
   background: rgba(244, 63, 94, 0.2);
 }
 
-/* Ensure the footer pushes to the bottom */
 .sidebar-footer {
   margin-top: auto;
   padding-top: 20px;
   border-top: 2px solid rgba(255, 255, 255, 0.05);
 }
-
 
 /* --- Glass Table Styling --- */
 .table-responsive {
@@ -204,7 +194,7 @@
 .glass-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px; /* Gap between rows */
+  border-spacing: 0 8px;
   text-align: left;
 }
 
@@ -352,7 +342,6 @@
   box-sizing: border-box;
 }
 
-
 .form-header {
   text-align: center;
   margin-bottom: 35px;
@@ -393,7 +382,6 @@
   transition: all 0.3s ease;
 }
 
-/* Specific styling for select dropdowns to prevent white background */
 .input-group select option {
   background: #1e293b;
   color: white;
@@ -427,7 +415,7 @@
   box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
 }
 
-/* Animations for appearing fields */
+/* Animations */
 .animated-field {
   animation: slideDown 0.4s ease-out;
 }
@@ -437,13 +425,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 600px) {
-  .input-grid { grid-template-columns: 1fr; }
-}
-
-/* --- AddSubject Specific Styling --- */
-
-/* Centering the container */
+/* AddSubject container centering */
 .add-subject-container {
   display: flex;
   justify-content: center;
@@ -451,38 +433,101 @@
   min-height: 60vh;
 }
 
-/* A more focused, smaller version of the glass card */
 .form-glass-card.compact {
   max-width: 450px;
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* Subtle glow for the subject icon */
-.form-icon {
-  text-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-}
-
-/* Ensure labels stand out */
-.input-group label {
-  margin-bottom: 8px;
-  color: #94a3b8;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Button specific for subject creation (Greenish hue) */
 .add-subject-container .submit-btn {
   background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
-  border: none;
-  margin-top: 40px;
 }
 
-.add-subject-container .submit-btn:hover {
-  box-shadow: 0 10px 20px rgba(45, 212, 191, 0.3);
-  transform: translateY(-2px);
+/* ======================================================
+   MOBILE RESPONSIVE SECTION (English Comments)
+   ====================================================== */
+
+@media (max-width: 768px) {
+  /* Change layout to vertical to stack sidebar and content */
+  .admin-layout {
+    flex-direction: column;
+    width: 98vw;
+    height: auto;
+    min-height: 95vh;
+    overflow-y: auto;
+  }
+
+  /* Adjust sidebar width to full and change padding */
+  .admin-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px;
+  }
+
+  /* Make sidebar menu horizontal or stackable for mobile */
+  .sidebar-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .sidebar-menu li {
+    padding: 10px 15px;
+    font-size: 0.85rem;
+    margin-bottom: 0;
+  }
+
+  /* Main content padding adjustment */
+  .admin-main-content {
+    padding: 20px;
+  }
+
+  /* Header scaling for smaller screens */
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .content-header h1 {
+    font-size: 1.4rem;
+  }
+
+  /* Convert grid columns to a single column for forms */
+  .input-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .submit-btn {
+    grid-column: span 1;
+  }
+
+  /* Adjust modal width for mobile devices */
+  .details-card {
+    width: 90%;
+    padding: 20px;
+  }
+
+  /* Search container stacking */
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input-wrapper {
+    max-width: none;
+  }
 }
 
+/* Very small devices adjustment */
+@media (max-width: 480px) {
+  .sidebar-header h2 {
+    font-size: 1rem;
+  }
+
+  .form-glass-card {
+    padding: 20px;
+  }
+}
