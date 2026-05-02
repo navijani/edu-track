@@ -39,8 +39,12 @@ public class ZoomHandler implements HttpHandler {
                 String endTime = getValue(body, "endTime");
                 String subject = getValue(body, "subject");
                 String teacher = getValue(body, "teacher");
+                String teacherId = getValue(body, "teacherId");
 
                 boolean success = dao.scheduleMeeting(topic, link, date, time, endTime, subject, teacher);
+                if (success) {
+                    new com.edutrack.dao.NotificationDAO().addNotification(teacherId, "All", subject, "Live Session", topic);
+                }
                 response = "{\"success\":" + success + "}";
             } 
             else if (method.equalsIgnoreCase("GET")) {

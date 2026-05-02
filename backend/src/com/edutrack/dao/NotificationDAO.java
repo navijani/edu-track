@@ -28,7 +28,7 @@ public class NotificationDAO {
 
     public String getNotificationsForClassJson(String targetClass) {
         StringBuilder json = new StringBuilder("[");
-        String sql = "SELECT id, teacher_id, subject, content_type, title, created_at FROM notifications WHERE target_class = ? ORDER BY created_at DESC LIMIT 20";
+        String sql = "SELECT id, teacher_id, subject, content_type, title, created_at FROM notifications WHERE target_class = ? OR target_class = 'All' ORDER BY created_at DESC LIMIT 20";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -15,6 +15,70 @@ import React, { useState } from 'react';
  *   - Animated success / error banner after submit
  *   - Spinner on the submit button while the request is in-flight
  */
+// ── Shared inline style object for all password <input> elements ──────────
+const inputStyle = {
+    width: '100%',
+    padding: '14px 16px',
+    border: '2px solid #e2e8f0',
+    borderRadius: '12px',
+    fontSize: '15px',
+    fontFamily: 'inherit',
+    background: 'rgba(255,255,255,0.8)',
+    color: '#1e293b',
+    outline: 'none',
+    transition: 'border-color 0.2s, box-shadow 0.2s',
+    boxSizing: 'border-box',
+};
+
+/**
+ * PasswordField – reusable sub-component that renders a labelled password
+ * input with a show/hide toggle button.
+ */
+const PasswordField = ({ id, label, value, onChange, show, onToggle }) => (
+    <div style={{ marginBottom: '22px' }}>
+        <label
+            htmlFor={id}
+            style={{ display: 'block', fontWeight: 700, fontSize: '13px',
+                     color: '#475569', marginBottom: '8px', letterSpacing: '0.3px' }}
+        >
+            {label}
+        </label>
+
+        <div style={{ position: 'relative' }}>
+            <input
+                id={id}
+                type={show ? 'text' : 'password'}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder={`Enter ${label.toLowerCase()}`}
+                style={{ ...inputStyle, paddingRight: '50px' }}
+                onFocus={(e) => {
+                    e.target.style.borderColor = '#7c5dfa';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(124,93,250,0.15)';
+                }}
+                onBlur={(e) => {
+                    e.target.style.borderColor = '#e2e8f0';
+                    e.target.style.boxShadow = 'none';
+                }}
+            />
+
+            <button
+                type="button"
+                onClick={onToggle}
+                style={{
+                    position: 'absolute', right: '14px', top: '50%',
+                    transform: 'translateY(-50%)', background: 'none',
+                    border: 'none', cursor: 'pointer', fontSize: '18px',
+                    color: '#94a3b8', padding: '0', lineHeight: 1,
+                }}
+                aria-label={show ? 'Hide password' : 'Show password'}
+            >
+                {show ? '🙈' : '👁️'}
+            </button>
+        </div>
+    </div>
+);
+
 const ChangePassword = ({ user }) => {
 
     // ── Form field state ──────────────────────────────────────────────────────
@@ -120,82 +184,7 @@ const ChangePassword = ({ user }) => {
         }
     };
 
-    // ── Shared inline style object for all password <input> elements ──────────
-    const inputStyle = {
-        width: '100%',
-        padding: '14px 16px',
-        border: '2px solid #e2e8f0',
-        borderRadius: '12px',
-        fontSize: '15px',
-        fontFamily: 'inherit',
-        background: 'rgba(255,255,255,0.8)',
-        color: '#1e293b',
-        outline: 'none',
-        transition: 'border-color 0.2s, box-shadow 0.2s',
-        boxSizing: 'border-box',
-    };
 
-    /**
-     * PasswordField – reusable sub-component that renders a labelled password
-     * input with a show/hide toggle button.
-     *
-     * Props:
-     *   id        {string}   Unique HTML id (also used for the <label> htmlFor)
-     *   label     {string}   Human-readable label text shown above the field
-     *   value     {string}   Controlled input value
-     *   onChange  {function} State setter called when the input changes
-     *   show      {boolean}  Whether to reveal the password as plain text
-     *   onToggle  {function} Toggles the show/hide state
-     */
-    const PasswordField = ({ id, label, value, onChange, show, onToggle }) => (
-        <div style={{ marginBottom: '22px' }}>
-            {/* Accessible label linked to the input via htmlFor / id */}
-            <label
-                htmlFor={id}
-                style={{ display: 'block', fontWeight: 700, fontSize: '13px',
-                         color: '#475569', marginBottom: '8px', letterSpacing: '0.3px' }}
-            >
-                {label}
-            </label>
-
-            {/* Wrapper for input + toggle button (relative for absolute positioning) */}
-            <div style={{ position: 'relative' }}>
-                {/* type toggles between 'password' and 'text' based on show prop */}
-                <input
-                    id={id}
-                    type={show ? 'text' : 'password'}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    placeholder={`Enter ${label.toLowerCase()}`}
-                    style={{ ...inputStyle, paddingRight: '50px' }} // room for the eye button
-                    // Purple glow on focus to match the dashboard's colour palette
-                    onFocus={(e) => {
-                        e.target.style.borderColor = '#7c5dfa';
-                        e.target.style.boxShadow = '0 0 0 3px rgba(124,93,250,0.15)';
-                    }}
-                    onBlur={(e) => {
-                        e.target.style.borderColor = '#e2e8f0';
-                        e.target.style.boxShadow = 'none';
-                    }}
-                />
-
-                {/* Show / hide toggle button – positioned inside the input on the right */}
-                <button
-                    type="button"
-                    onClick={onToggle}
-                    style={{
-                        position: 'absolute', right: '14px', top: '50%',
-                        transform: 'translateY(-50%)', background: 'none',
-                        border: 'none', cursor: 'pointer', fontSize: '18px',
-                        color: '#94a3b8', padding: '0', lineHeight: 1,
-                    }}
-                    aria-label={show ? 'Hide password' : 'Show password'}
-                >
-                    {show ? '🙈' : '👁️'}
-                </button>
-            </div>
-        </div>
-    );
 
     /**
      * getStrength – calculates a password strength score (0–4) and returns

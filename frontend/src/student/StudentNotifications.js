@@ -58,6 +58,7 @@ const StudentNotifications = ({ user }) => {
             case 'Video': return '🎥';
             case 'Document': return '📄';
             case 'Quiz': return '📝';
+            case 'Live Session': return '🔴';
             default: return '📌';
         }
     };
