@@ -26,11 +26,15 @@ const AddUser = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://localhost:8080/api/users/register', user);
+      const response = await axios.post('http://localhost:8080/api/users/register', user);
       alert("✨ User registered successfully!");
       setUser({ id: '', name: '', email: '', password: '', role: 'STUDENT', subject: '', childId: '', studentClass: '' });
     } catch (err) {
-      alert("❌ Database error: Ensure Java backend is running.");
+      if (err.response && err.response.status === 409) {
+          alert("❌ Registration failed: User ID or Email already exists.");
+      } else {
+          alert("❌ Registration failed: Please check if the ID or Email is already taken, or ensure the backend is running.");
+      }
     } finally {
       setLoading(false);
     }

@@ -12,6 +12,10 @@ const StudentVideos = ({ subjectName, user }) => {
     const [revealedAnswers, setRevealedAnswers] = useState({});
     const [confirmingIdx, setConfirmingIdx] = useState(null);
     
+    // AI Summary State
+    const [aiSummary, setAiSummary] = useState(null);
+    const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+    
     const [actualWatchedSeconds, setActualWatchedSeconds] = useState(0); 
     const playerRef = useRef(null);
     const intervalRef = useRef(null);
@@ -27,6 +31,8 @@ const StudentVideos = ({ subjectName, user }) => {
         setRevealedAnswers({});
         setSavedAnswers({});
         setConfirmingIdx(null);
+        setAiSummary(null);
+        setIsGeneratingSummary(false);
         
         const existingProgress = videoProgress[selectedItem?.id];
         setActualWatchedSeconds(existingProgress?.watchedSeconds || 0);
@@ -128,6 +134,30 @@ const StudentVideos = ({ subjectName, user }) => {
             setSavedAnswers(prev => ({ ...prev, [idx]: answerText }));
             setRevealedAnswers(prev => ({ ...prev, [idx]: true }));
         } catch (error) { alert("Error saving answer."); }
+    const handleGenerateSummary = async () => {
+        setIsGeneratingSummary(true);
+        setAiSummary(null);
+        
+        try {
+            const payload = {
+                title: selectedItem.title,
+                subject: subjectName,
+                targetClass: user.studentClass
+            };
+            
+            const response = await axios.post('http://localhost:8080/api/ai/summary', payload);
+            
+            if (response.data && response.data.summary) {
+                setAiSummary(response.data.summary);
+            } else {
+                setAiSummary("Sorry, the AI could not generate a summary at this time.");
+            }
+        } catch (error) {
+            console.error("AI Summary Error:", error);
+            setAiSummary("Sorry, an error occurred while connecting to the AI service.");
+        } finally {
+            setIsGeneratingSummary(false);
+        }
     };
 
     const handleCloseVideo = async () => {
@@ -163,6 +193,33 @@ const StudentVideos = ({ subjectName, user }) => {
                 <div className="s-video-frame-wrapper">
                     <div id="youtube-player-container"></div>
                 </div>
+
+                {/* --- AI SUMMARY SECTION --- */}
+                <div className="s-ai-summary-container">
+                    {!aiSummary && !isGeneratingSummary && (
+                        <button onClick={handleGenerateSummary} className="s-ai-generate-btn">
+                            <span className="ai-icon">✨</span> Generate AI Summary
+                        </button>
+                    )}
+
+                    {isGeneratingSummary && (
+                        <div className="s-ai-loading-box">
+                            <div className="ai-pulse-ring"></div>
+                            <p>EduTrack AI is analyzing the video transcript...</p>
+                        </div>
+                    )}
+
+                    {aiSummary && (
+                        <div className="s-ai-result-card">
+                            <div className="ai-result-header">
+                                <span className="ai-icon">🤖</span>
+                                <h4>AI Video Insights</h4>
+                            </div>
+                            <p className="ai-result-text">{aiSummary}</p>
+                        </div>
+                    )}
+                </div>
+                {/* --------------------------- */}
                 
                 <h3 className="t-section-header" style={{ color: '#3498db' }}>Interactive Study Guide</h3>
                 
