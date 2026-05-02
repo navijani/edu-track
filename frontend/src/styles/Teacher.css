@@ -1736,3 +1736,181 @@
     font-size: 15px;
     text-transform: capitalize; /* Makes names like 'janith' look better as 'Janith' */
 /*}*/
+/* --- Mobile Responsiveness --- */
+
+/* For Tablet and smaller screens (max-width: 1024px) */
+@media screen and (max-width: 1024px) {
+  .teacher-layout {
+    width: 98vw;
+    height: 96vh;
+    flex-direction: column; /* Stack sidebar on top of main content */
+  }
+
+  .teacher-sidebar {
+    width: 100%;
+    height: auto;
+    padding: 15px 20px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-direction: row; /* Horizontal sidebar for tablets */
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .t-sidebar-header {
+    margin-bottom: 0;
+  }
+
+  .t-sidebar-menu {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  .t-sidebar-menu li {
+    margin-bottom: 0;
+    padding: 10px 15px;
+    font-size: 0.85rem;
+  }
+
+  .t-logout-btn {
+    width: auto;
+    padding: 8px 15px;
+  }
+
+  .t-stats-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
+  }
+
+  .t-dashboard-main {
+    grid-template-columns: 1fr; /* Stack dashboard cards vertically */
+  }
+}
+
+/* For Mobile Phones (max-width: 768px) */
+@media screen and (max-width: 768px) {
+  .teacher-glass-wrapper {
+    overflow-y: auto; /* Allow the whole page to scroll */
+    align-items: flex-start;
+  }
+
+  .teacher-layout {
+    height: auto; /* Remove fixed height for long scrolling content */
+    min-height: 100vh;
+    border-radius: 0;
+    width: 100vw;
+  }
+
+  .teacher-sidebar {
+    flex-direction: column; /* Stack sidebar items vertically again */
+    gap: 15px;
+  }
+
+  .t-sidebar-menu {
+    width: 100%;
+    overflow-x: auto; /* Allow scrolling menu items horizontally if they overflow */
+    padding-bottom: 5px;
+  }
+
+  .teacher-main-area {
+    padding: 20px; /* Reduce padding for more screen space */
+  }
+
+  .t-welcome h1 {
+    font-size: 1.4rem;
+  }
+
+  .t-stats-grid {
+    grid-template-columns: 1fr; /* Single column for stats */
+  }
+
+  .t-welcome-banner {
+    width: 100%; /* Banner takes full width */
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  /* Adjust Tab Navigation */
+  .t-tab-navigation {
+    padding-left: 0;
+    justify-content: center;
+    flex-wrap: wrap; /* Wrap buttons to next line */
+  }
+
+  .t-tab-navigation button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    flex: 1; /* Buttons grow to fill width */
+  }
+
+  /* Adjust Grid Cards */
+  .t-content-grid {
+    grid-template-columns: 1fr; /* One card per row */
+  }
+
+  /* Adjust Student and Forum Containers */
+  .t-students-container, 
+  .t-forum-container, 
+  .t-zoom-container, 
+  .t-chat-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .t-students-left, .t-forum-left, .t-zoom-left, .t-chat-left {
+    max-width: 100%;
+    width: 100%;
+    position: static; /* Remove sticky behavior on mobile */
+  }
+
+  /* Detail Views */
+  .t-detail-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    padding: 15px;
+  }
+
+  /* Navigation Buttons */
+  .t-detail-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .t-btn-back-pill, .t-btn-delete-pill {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Add Content Nav */
+  .t-add-content-nav {
+    padding-left: 0;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .t-add-nav-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Quiz and Form Headers */
+  .t-addvideo-header, .t-addquiz-header-card, .t-adddoc-header-card {
+    width: 100%;
+  }
+
+  .q-options-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* For very small devices */
+@media screen and (max-width: 480px) {
+    .stat-info h3 {
+        font-size: 1.4rem;
+    }
+    
+    .t-logo-icon {
+        font-size: 1.4rem;
+    }
+}
