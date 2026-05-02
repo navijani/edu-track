@@ -36,10 +36,11 @@ public class ZoomHandler implements HttpHandler {
                 String link = getValue(body, "meetingLink");
                 String date = getValue(body, "meetingDate");
                 String time = getValue(body, "meetingTime");
+                String endTime = getValue(body, "endTime");
                 String subject = getValue(body, "subject");
                 String teacher = getValue(body, "teacher");
 
-                boolean success = dao.scheduleMeeting(topic, link, date, time, subject, teacher);
+                boolean success = dao.scheduleMeeting(topic, link, date, time, endTime, subject, teacher);
                 response = "{\"success\":" + success + "}";
             } 
             else if (method.equalsIgnoreCase("GET")) {

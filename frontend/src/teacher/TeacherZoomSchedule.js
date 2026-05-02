@@ -24,14 +24,14 @@ const TeacherZoomSchedule = ({ user }) => {
     const handleSchedule = async (e) => {
         e.preventDefault();
         const data = {
-            topic, meetingLink, meetingDate, meetingTime,
+            topic, meetingLink, meetingDate, meetingTime, endTime,
             subject: user.subject, teacher: user.name
         };
 
         try {
             const res = await axios.post('http://localhost:8080/api/zoom', data);
             if (res.data.success) {
-                setTopic(''); setMeetingLink(''); setMeetingDate(''); setMeetingTime('');
+                setTopic(''); setMeetingLink(''); setMeetingDate(''); setMeetingTime(''); setEndTime('');
                 fetchMeetings();
             }
         } catch (err) { alert('Error scheduling meeting'); }
@@ -114,7 +114,7 @@ const TeacherZoomSchedule = ({ user }) => {
                                     </div>
                                     <div style={{ marginTop: '10px', color: '#64748b', fontSize: '14px' }}>
                                         <span>📅 {meeting.meetingDate}</span>
-                                        <span style={{ marginLeft: '15px' }}>⏰ {meeting.meetingTime}</span>
+                                        <span style={{ marginLeft: '15px' }}>⏰ {meeting.meetingTime} - {meeting.endTime || '??'}</span>
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '8px' }}>
