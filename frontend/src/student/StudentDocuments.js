@@ -11,6 +11,7 @@ const StudentDocuments = ({ subjectName, user }) => {
     const [savedAnswers, setSavedAnswers] = useState({}); 
     const [revealedAnswers, setRevealedAnswers] = useState({});
     const [hasOpened, setHasOpened] = useState(false);
+    const [confirmingIdx, setConfirmingIdx] = useState(null);
 
     useEffect(() => {
         fetchDocuments();
@@ -22,6 +23,7 @@ const StudentDocuments = ({ subjectName, user }) => {
         setRevealedAnswers({});
         setSavedAnswers({});
         setHasOpened(false);
+        setConfirmingIdx(null);
         if (selectedItem && user) fetchSavedAnswers();
     }, [selectedItem]);
 
@@ -53,8 +55,9 @@ const StudentDocuments = ({ subjectName, user }) => {
 
     const handleSaveAndReveal = async (idx) => {
         const answerText = userAnswers[idx];
-        if (!answerText?.trim()) return alert("Please type an answer first!");
-        if (!window.confirm("Submit answer permanently?")) return;
+        if (!answerText?.trim()) return;
+
+        setConfirmingIdx(null);
 
         try {
             await axios.post('http://localhost:8080/api/answers/document', {
@@ -123,9 +126,26 @@ const StudentDocuments = ({ subjectName, user }) => {
                                 style={{ minHeight: '80px', marginBottom: '15px' }}
                             />
                             {!isSaved ? (
-                                <button onClick={() => handleSaveAndReveal(idx)} className="t-addquiz-btn-add" style={{ background: '#9b59b6' }}>
-                                    Submit & Reveal
-                                </button>
+                                confirmingIdx === idx ? (
+                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                        <span style={{ fontSize: '13px', color: '#e74c3c', fontWeight: 'bold' }}>Submit permanently?</span>
+                                        <button onClick={() => handleSaveAndReveal(idx)} className="t-addquiz-btn-add" style={{ background: '#e74c3c', padding: '8px 16px', margin: 0 }}>
+                                            Yes, Submit
+                                        </button>
+                                        <button onClick={() => setConfirmingIdx(null)} className="t-addquiz-btn-add" style={{ background: '#94a3b8', padding: '8px 16px', margin: 0 }}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button 
+                                        onClick={() => setConfirmingIdx(idx)} 
+                                        className="t-addquiz-btn-add" 
+                                        style={{ background: '#9b59b6', opacity: !userAnswers[idx]?.trim() ? 0.5 : 1, cursor: !userAnswers[idx]?.trim() ? 'not-allowed' : 'pointer' }}
+                                        disabled={!userAnswers[idx]?.trim()}
+                                    >
+                                        Submit & Reveal
+                                    </button>
+                                )
                             ) : (
                                 <span style={{ color: '#10b981', fontWeight: '800', fontSize: '14px' }}>✅ Answer Logged</span>
                             )}

@@ -10,6 +10,7 @@ const StudentVideos = ({ subjectName, user }) => {
     const [userAnswers, setUserAnswers] = useState({});
     const [savedAnswers, setSavedAnswers] = useState({}); 
     const [revealedAnswers, setRevealedAnswers] = useState({});
+    const [confirmingIdx, setConfirmingIdx] = useState(null);
     
     const [actualWatchedSeconds, setActualWatchedSeconds] = useState(0); 
     const playerRef = useRef(null);
@@ -25,6 +26,7 @@ const StudentVideos = ({ subjectName, user }) => {
         setUserAnswers({});
         setRevealedAnswers({});
         setSavedAnswers({});
+        setConfirmingIdx(null);
         
         const existingProgress = videoProgress[selectedItem?.id];
         setActualWatchedSeconds(existingProgress?.watchedSeconds || 0);
@@ -115,8 +117,9 @@ const StudentVideos = ({ subjectName, user }) => {
 
     const handleSaveAndReveal = async (idx) => {
         const answerText = userAnswers[idx];
-        if (!answerText?.trim()) return alert("Type your answer first!");
-        if (!window.confirm("Submit answer permanently?")) return;
+        if (!answerText?.trim()) return;
+
+        setConfirmingIdx(null);
 
         try {
             await axios.post('http://localhost:8080/api/answers/video', {
@@ -177,9 +180,26 @@ const StudentVideos = ({ subjectName, user }) => {
                                 placeholder="Write your notes here..."
                             />
                             {!isSaved ? (
-                                <button onClick={() => handleSaveAndReveal(idx)} className="s-pill-btn active-videos">
-                                    Submit Answer
-                                </button>
+                                confirmingIdx === idx ? (
+                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                        <span style={{ fontSize: '13px', color: '#e74c3c', fontWeight: 'bold' }}>Submit permanently?</span>
+                                        <button onClick={() => handleSaveAndReveal(idx)} className="s-pill-btn" style={{ background: '#e74c3c', border: 'none', padding: '8px 16px' }}>
+                                            Yes, Submit
+                                        </button>
+                                        <button onClick={() => setConfirmingIdx(null)} className="s-pill-btn" style={{ background: '#94a3b8', border: 'none', padding: '8px 16px' }}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button 
+                                        onClick={() => setConfirmingIdx(idx)} 
+                                        className="s-pill-btn active-videos"
+                                        disabled={!userAnswers[idx]?.trim()}
+                                        style={{ opacity: !userAnswers[idx]?.trim() ? 0.5 : 1, cursor: !userAnswers[idx]?.trim() ? 'not-allowed' : 'pointer' }}
+                                    >
+                                        Submit Answer
+                                    </button>
+                                )
                             ) : (
                                 <span style={{ color: '#10b981', fontWeight: '800', fontSize: '14px' }}>✅ Answer Logged</span>
                             )}
