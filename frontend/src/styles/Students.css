@@ -1183,4 +1183,126 @@
     border-radius: 50%;
     animation: cpSpin 0.9s linear infinite; /* reuses existing cpSpin keyframe */
 }
-
+
+/* ============================================================
+   MOBILE RESPONSIVENESS (Responsive Adjustments)
+   ============================================================ */
+
+@media screen and (max-width: 1024px) {
+    /* Adjust main grid for tablets */
+    .s-dash-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Reduce sidebar width slightly */
+    .s-sidebar {
+        width: 220px;
+        min-width: 220px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    /* Stack the sidebar and main content */
+    .s-dashboard-layout {
+        flex-direction: column;
+    }
+
+    .s-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        min-width: unset;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .s-nav-list {
+        display: flex;
+        overflow-x: auto; /* Allow horizontal scroll for menu items on mobile */
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .s-nav-item {
+        margin-bottom: 0;
+        white-space: nowrap;
+        padding: 10px 15px;
+    }
+
+    .s-sidebar-header {
+        padding: 20px;
+    }
+
+    .s-sidebar-footer {
+        display: none; /* Hide footer on mobile or move to menu */
+    }
+
+    /* Content Area Padding */
+    .s-main-content {
+        padding: 20px;
+    }
+
+    /* Stat Cards stacking */
+    .s-dash-container .flex-container { /* Assuming a flex wrapper around cards */
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Profile Hero Card adjustments */
+    .up-hero-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 25px;
+    }
+
+    .up-hero-meta {
+        justify-content: center;
+    }
+
+    /* Grid Adjustments */
+    .s-subjects-grid, .s-video-grid, .s-quiz-grid, .s-doc-grid, .up-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Change Password Card */
+    .cp-card {
+        padding: 25px;
+    }
+
+    .cp-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Quiz/Video Detail View */
+    .s-video-viewer-container, .s-quiz-take-container, .s-doc-viewer-container {
+        padding: 15px;
+    }
+
+    .s-quiz-review-header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .s-welcome-text {
+        font-size: 1.5rem;
+    }
+
+    .s-stat-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .s-pill-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .up-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+    }
+}
