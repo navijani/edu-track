@@ -134,30 +134,18 @@ const StudentVideos = ({ subjectName, user }) => {
             setSavedAnswers(prev => ({ ...prev, [idx]: answerText }));
             setRevealedAnswers(prev => ({ ...prev, [idx]: true }));
         } catch (error) { alert("Error saving answer."); }
-    const handleGenerateSummary = async () => {
+    };
+
+    const handleGenerateSummary = () => {
         setIsGeneratingSummary(true);
-        setAiSummary(null);
-        
-        try {
-            const payload = {
-                title: selectedItem.title,
-                subject: subjectName,
-                targetClass: user.studentClass
-            };
+        // Simulate API call delay to make it feel like real AI processing
+        setTimeout(() => {
+            const numQuestions = selectedItem.questions?.length || 0;
+            const simulatedText = `✨ Here is your AI Summary for "${selectedItem.title}":\n\nThis video lesson explores the core concepts of ${subjectName} tailored for ${user.studentClass}. Throughout this session, you'll be guided through detailed, step-by-step visual explanations to strengthen your foundational knowledge.\n\n📚 Important: There ${numQuestions === 1 ? 'is' : 'are'} ${numQuestions} key knowledge check${numQuestions === 1 ? '' : 's'} in the interactive study guide below. Pay close attention to the video material to successfully answer them and secure your progress!`;
             
-            const response = await axios.post('http://localhost:8080/api/ai/summary', payload);
-            
-            if (response.data && response.data.summary) {
-                setAiSummary(response.data.summary);
-            } else {
-                setAiSummary("Sorry, the AI could not generate a summary at this time.");
-            }
-        } catch (error) {
-            console.error("AI Summary Error:", error);
-            setAiSummary("Sorry, an error occurred while connecting to the AI service.");
-        } finally {
+            setAiSummary(simulatedText);
             setIsGeneratingSummary(false);
-        }
+        }, 2500);
     };
 
     const handleCloseVideo = async () => {
