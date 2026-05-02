@@ -51,6 +51,7 @@
   display: flex;
   flex-direction: column;
   padding: 35px 20px;
+  overflow-y: auto;
 }
 
 .t-sidebar-header {
@@ -77,7 +78,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .t-sidebar-menu li:hover {

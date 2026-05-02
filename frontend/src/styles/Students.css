@@ -112,6 +112,7 @@
     flex-direction: column;
     border-right: 1px solid rgba(255, 255, 255, 0.3); /* Subtle glass border */
     z-index: 1000;
+    overflow-y: auto;
 }
 
 /* --- 3. Sidebar Header --- */

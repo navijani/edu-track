@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../styles/RoleSelection.css'; // Reusing your premium background styles
+import '../styles/RoleSelection.css';
 
-const LoginCredentials = ({ role, onBack, onSuccess }) => {
+const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // Added onContactClick prop
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ const LoginCredentials = ({ role, onBack, onSuccess }) => {
       });
 
       if (response.data && response.data.success) {
-        onSuccess(response.data); 
+        onSuccess(response.data);
       }
     } catch (error) {
       alert("Invalid ID or Password for the " + role + " role.");
@@ -29,14 +29,13 @@ const LoginCredentials = ({ role, onBack, onSuccess }) => {
 
   return (
     <div className="glass-overlay">
-      {/* Background Animated Orbs */}
       <div className="glass-orb glass-orb-1"></div>
       <div className="glass-orb glass-orb-2"></div>
       <div className="glass-orb glass-orb-3"></div>
 
       <div className="login-glass-card">
         <button className="back-arrow" onClick={onBack}>←</button>
-        
+
         <div className="login-header">
           <div className="role-icon-circle">
             {role === 'ADMIN' ? '🛡️' : role === 'TEACHER' ? '👨‍🏫' : role === 'STUDENT' ? '🎓' : '👪'}
@@ -48,23 +47,23 @@ const LoginCredentials = ({ role, onBack, onSuccess }) => {
         <form onSubmit={handleLogin} className="login-form">
           <div className="input-field-wrapper">
             <label>Identification ID</label>
-            <input 
-              type="text" 
-              placeholder="e.g., 240235N" 
+            <input
+              type="text"
+              placeholder="e.g., 240235N"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
-              required 
+              required
             />
           </div>
 
           <div className="input-field-wrapper">
             <label>Security Password</label>
-            <input 
-              type="password" 
-              placeholder="••••••••" 
+            <input
+              type="password"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required 
+              required
             />
           </div>
 
@@ -73,8 +72,14 @@ const LoginCredentials = ({ role, onBack, onSuccess }) => {
           </button>
         </form>
 
+        {/* --- UPDATED FOOTER TO BE CLICKABLE --- */}
         <div className="login-footer">
-          <p>Need help? Contact system administrator</p>
+          <p
+            onClick={onContactClick}
+            style={{ cursor: 'pointer', textDecoration: 'underline', color: '#64ffda' }}
+          >
+            Need help? Contact system administrator
+          </p>
         </div>
       </div>
     </div>

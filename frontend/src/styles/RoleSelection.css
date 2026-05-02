@@ -10,7 +10,7 @@
   background-size: 400% 400%;
   animation: bgShift 20s ease infinite;
   overflow: hidden;
-  position: absolute; 
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
@@ -18,9 +18,17 @@
 }
 
 @keyframes bgShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* --- 2. THE LONG-RUNNING FLOATING ORBS --- */
@@ -32,43 +40,85 @@
   opacity: 0.5;
 }
 
-.glass-orb-1 { 
-  width: 350px; height: 350px; background: #3b82f6; 
-  top: -10%; left: -10%; 
-  animation: driftOrb1 25s infinite ease-in-out; 
+.glass-orb-1 {
+  width: 350px;
+  height: 350px;
+  background: #3b82f6;
+  top: -10%;
+  left: -10%;
+  animation: driftOrb1 25s infinite ease-in-out;
 }
 
-.glass-orb-2 { 
-  width: 300px; height: 300px; background: #8b5cf6; 
-  bottom: -10%; right: -10%; 
-  animation: driftOrb2 30s infinite ease-in-out; 
+.glass-orb-2 {
+  width: 300px;
+  height: 300px;
+  background: #8b5cf6;
+  bottom: -10%;
+  right: -10%;
+  animation: driftOrb2 30s infinite ease-in-out;
 }
 
-.glass-orb-3 { 
-  width: 250px; height: 250px; background: #06b6d4; 
-  top: 50%; left: 50%; 
-  animation: driftOrb3 22s infinite ease-in-out; 
+.glass-orb-3 {
+  width: 250px;
+  height: 250px;
+  background: #06b6d4;
+  top: 50%;
+  left: 50%;
+  animation: driftOrb3 22s infinite ease-in-out;
 }
 
 @keyframes driftOrb1 {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(40vw, 30vh) scale(1.2); }
-  66% { transform: translate(20vw, 60vh) scale(0.8); }
-  100% { transform: translate(0, 0) scale(1); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(40vw, 30vh) scale(1.2);
+  }
+
+  66% {
+    transform: translate(20vw, 60vh) scale(0.8);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
 }
 
 @keyframes driftOrb2 {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-30vw, -40vh) scale(1.3); }
-  66% { transform: translate(-60vw, -20vh) scale(0.9); }
-  100% { transform: translate(0, 0) scale(1); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(-30vw, -40vh) scale(1.3);
+  }
+
+  66% {
+    transform: translate(-60vw, -20vh) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
 }
 
 @keyframes driftOrb3 {
-  0% { transform: translate(-50%, -50%) scale(1); }
-  33% { transform: translate(30vw, -30vh) scale(0.8); }
-  66% { transform: translate(-30vw, 30vh) scale(1.4); }
-  100% { transform: translate(-50%, -50%) scale(1); }
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  33% {
+    transform: translate(30vw, -30vh) scale(0.8);
+  }
+
+  66% {
+    transform: translate(-30vw, 30vh) scale(1.4);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 /* --- THE MAIN GLASS CARD --- */
@@ -156,8 +206,15 @@
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* --- Login Card Container --- */
@@ -294,12 +351,14 @@
    ====================================================== */
 
 @media (max-width: 768px) {
+
   /* Prevent scrolling if overlay is active */
   .glass-overlay {
     padding: 20px;
     height: auto;
     min-height: 100vh;
-    position: fixed; /* Better for mobile overlays */
+    position: fixed;
+    /* Better for mobile overlays */
   }
 
   /* Adjust the container padding for mobile */
@@ -348,9 +407,23 @@
   .glass-title {
     font-size: 1.5rem;
   }
-  
+
   .glass-subtitle {
     font-size: 0.95rem;
     margin-bottom: 25px;
   }
+}
+
+/* Add this to your existing RoleSelection.css */
+.contact-list div:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: translateX(5px);
+  transition: all 0.3s ease;
+  border-color: rgba(100, 255, 218, 0.3) !important;
+}
+
+.login-glass-card {
+  /* Ensure the card has the blur effect */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 }
