@@ -2,10 +2,14 @@ package com.edutrack;
 import com.sun.net.httpserver.HttpServer;
 import java.net.InetSocketAddress;
 
+// AppConfig Singleton provides the server port (no hardcoded values here)
+
 public class Main {
     public static void main(String[] args) throws Exception {
         // Create server on port 8080
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        // SINGLETON PATTERN: Read server port from AppConfig (no hardcoded 8080)
+        int port = AppConfig.getInstance().getServerPort();
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         
         // Route for adding subjects
         server.createContext("/api/subjects", new SubjectHandler());
@@ -58,7 +62,7 @@ public class Main {
         server.createContext("/api/teacher/parents", new TeacherParentHandler());
         
         server.setExecutor(null);
-        System.out.println("EduTrack Backend started on port 8080...");
+        System.out.println("EduTrack Backend started on port " + port + "...");
         server.start();
     }
 }
