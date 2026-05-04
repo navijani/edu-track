@@ -58,7 +58,12 @@ const StudentQuizzes = ({ subjectName, user }) => {
             }
             return;
         }
-        if (deadlineTime && now > deadlineTime) return alert("Deadline passed.");
+        if (deadlineTime && now > deadlineTime) {
+            // Deadline passed: open ranklist regardless of whether the student submitted
+            setSelectedItem(quiz);
+            setViewMode('ranklist');
+            return;
+        }
 
         if (!window.confirm(`Start quiz? You have ${quiz.duration} minutes.`)) return;
 
@@ -232,17 +237,20 @@ const StudentQuizzes = ({ subjectName, user }) => {
                     <div 
         key={index} 
         onClick={() => handleQuizClick(item)} 
-        className={`s-quiz-card ${isTooLate && !hasSub ? 'missed' : ''}`} // Added conditional class
+        className={`s-quiz-card`}
         style={{ 
-            opacity: isTooEarly ? 0.6 : 1, // Missed cards usually don't need low opacity if they have a 'Missed' label
+            opacity: isTooEarly ? 0.6 : 1,
+            cursor: isTooEarly ? 'not-allowed' : 'pointer',
+            border: isTooLate ? '2px solid #fde68a' : undefined,
         }}
     >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h4 style={{ margin: 0 }}>{item.title}</h4>
-            <span style={{ fontSize: '20px' }}>{hasSub ? '✅' : isTooEarly ? '🔒' : '📝'}</span>
+            <span style={{ fontSize: '20px' }}>
+                {hasSub ? '✅' : isTooEarly ? '🔒' : isTooLate ? '🏆' : '📝'}
+            </span>
         </div>
 
-        {/* This is that light grey/green box from your screenshot */}
         <div className="t-addquiz-dropdown-area" style={{ marginTop: '15px', background: '#f8fafc' }}>
             <div style={{ fontSize: '11px', color: '#64748b' }}>
                 <div><strong>Opens:</strong> {item.scheduledDate || "N/A"}</div>
@@ -250,8 +258,13 @@ const StudentQuizzes = ({ subjectName, user }) => {
             </div>
         </div>
 
-        <p style={{ margin: '15px 0 0 0', fontSize: '12px', fontWeight: '800', color: hasSub ? '#3498db' : isTooLate ? '#ef4444' : '#10b981' }}>
-            {hasSub ? `SCORE: ${submissions[item.id]?.score || 0} / ${item.marks}` : isTooLate ? "MISSED" : "START QUIZ →"}
+        <p style={{ margin: '15px 0 0 0', fontSize: '12px', fontWeight: '800',
+            color: hasSub
+                ? (isTooLate ? '#f59e0b' : '#3498db')
+                : isTooLate ? '#d97706' : '#10b981' }}>
+            {hasSub
+                ? (isTooLate ? `🏆 SCORE: ${submissions[item.id]?.score || 0} / ${item.marks} — VIEW RANKLIST` : `SCORE: ${submissions[item.id]?.score || 0} / ${item.marks}`)
+                : isTooLate ? '🏆 VIEW RANKLIST' : 'START QUIZ →'}
         </p>
     </div>
                 );
