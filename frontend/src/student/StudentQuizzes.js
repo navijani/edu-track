@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import QuizRanklist from '../components/QuizRanklist';
 
 const StudentQuizzes = ({ subjectName, user }) => {
     const [contentList, setContentList] = useState([]);
@@ -91,6 +92,19 @@ const StudentQuizzes = ({ subjectName, user }) => {
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
 
+    // --- VIEW: RANKLIST ---
+    if (viewMode === 'ranklist' && selectedItem) {
+        return (
+            <QuizRanklist
+                quizId={selectedItem.id}
+                quizTitle={selectedItem.title}
+                totalMarks={selectedItem.marks}
+                currentUserId={user.id}
+                onClose={() => setViewMode('list')}
+            />
+        );
+    }
+
     // --- VIEW: SUBMISSION SUCCESS (Score Only) ---
     if (viewMode === 'submitted' && selectedItem) {
         const mySub = submissions[selectedItem.id];
@@ -116,9 +130,14 @@ const StudentQuizzes = ({ subjectName, user }) => {
                     <div style={{ marginTop: '20px', fontSize: '14px', color: '#64748b' }}>
                         <strong>Deadline:</strong> {selectedItem.deadline || "N/A"}
                     </div>
-                    <button onClick={() => setViewMode('list')} className="s-pill-btn active-quizzes" style={{ marginTop: '30px' }}>
-                        Return to Dashboard
-                    </button>
+                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '30px' }}>
+                        <button onClick={() => setViewMode('list')} className="s-pill-btn active-quizzes">
+                            Return to Dashboard
+                        </button>
+                        <button onClick={() => setViewMode('ranklist')} className="s-pill-btn" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: 'white' }}>
+                            🏆 View Ranklist
+                        </button>
+                    </div>
                 </div>
             </div>
         );
@@ -158,6 +177,11 @@ const StudentQuizzes = ({ subjectName, user }) => {
                         </div>
                     );
                 })}
+                <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    <button onClick={() => setViewMode('ranklist')} className="s-pill-btn" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: 'white', margin: '0 auto' }}>
+                        🏆 View Class Ranklist
+                    </button>
+                </div>
             </div>
         );
     }

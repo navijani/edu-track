@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChatWindow from '../components/ChatWindow';
 import UserProfile from '../components/UserProfile';
+import QuizRanklist from '../components/QuizRanklist';
 import '../styles/Parent.css'; // Make sure to create this file
 
 const ParentDashboard = ({ user, onLogout }) => {
@@ -11,6 +12,7 @@ const ParentDashboard = ({ user, onLogout }) => {
     const [teachers, setTeachers] = useState([]);
     const [selectedTeacher, setSelectedTeacher] = useState(null);
     const [teacherError, setTeacherError] = useState('');
+    const [selectedRanklistQuiz, setSelectedRanklistQuiz] = useState(null);
 
     useEffect(() => {
         const fetchProgress = async () => {
@@ -62,6 +64,7 @@ const ParentDashboard = ({ user, onLogout }) => {
                         {/* Tabs */}
                         <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginBottom: '30px', flexWrap: 'wrap' }}>
                             <button className={`p-tab-btn ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>📊 Progress</button>
+                            <button className={`p-tab-btn ${activeTab === 'ranklist' ? 'active' : ''}`} onClick={() => { setActiveTab('ranklist'); setSelectedRanklistQuiz(null); }}>🏆 Quiz Ranklist</button>
                             <button className={`p-tab-btn ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>💬 Teacher Chat</button>
                             <button className={`p-tab-btn ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>👤 My Profile</button>
                         </div>
@@ -120,6 +123,50 @@ const ParentDashboard = ({ user, onLogout }) => {
                                         ))
                                     }
                                 </div>
+                            </div>
+                        )}
+
+                        {/* RANKLIST TAB */}
+                        {activeTab === 'ranklist' && (
+                            <div>
+                                {selectedRanklistQuiz ? (
+                                    <QuizRanklist
+                                        quizId={selectedRanklistQuiz.id}
+                                        quizTitle={selectedRanklistQuiz.title}
+                                        totalMarks={selectedRanklistQuiz.total}
+                                        currentUserId={data.childId}
+                                        onClose={() => setSelectedRanklistQuiz(null)}
+                                    />
+                                ) : (
+                                    <div style={{ background: 'white', borderRadius: '20px', padding: '30px', boxShadow: '0 10px 40px rgba(0,0,0,0.06)' }}>
+                                        <h3 style={{ color: '#1e293b', marginTop: 0 }}>🏆 Select a Quiz to View the Ranklist</h3>
+                                        <p style={{ color: '#64748b', marginBottom: '20px' }}>See how {data.childName} ranks among their class.</p>
+                                        {data.quizzes.length === 0 ? (
+                                            <p style={{ color: '#94a3b8' }}>No quiz attempts found for {data.childName} yet.</p>
+                                        ) : (
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                                {data.quizzes.map((q, i) => (
+                                                    <div
+                                                        key={i}
+                                                        onClick={() => setSelectedRanklistQuiz(q)}
+                                                        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', background: '#f8fafc', borderRadius: '14px', border: '2px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.2s' }}
+                                                        onMouseEnter={e => e.currentTarget.style.borderColor = '#f59e0b'}
+                                                        onMouseLeave={e => e.currentTarget.style.borderColor = '#e2e8f0'}
+                                                    >
+                                                        <div>
+                                                            <strong style={{ color: '#1e293b' }}>{q.title}</strong>
+                                                            <div style={{ fontSize: '12px', color: '#64748b' }}>{q.subject}</div>
+                                                        </div>
+                                                        <div style={{ textAlign: 'right' }}>
+                                                            <div style={{ fontWeight: 800, color: '#059669' }}>{q.score}/{q.total}</div>
+                                                            <div style={{ fontSize: '12px', color: '#f59e0b', fontWeight: 700 }}>View Rankings →</div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         )}
 

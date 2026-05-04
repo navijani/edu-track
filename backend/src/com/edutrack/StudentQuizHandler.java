@@ -22,17 +22,23 @@ public class StudentQuizHandler extends BaseHandler {
     @Override
     protected void handleRequest(HttpExchange exchange) throws IOException {
 
-        // GET: Fetch all past submissions for the student to lock the UI
+        // GET: Route by query parameter
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             String query = exchange.getRequestURI().getQuery();
             if (query != null && query.startsWith("studentId=")) {
+                // Fetch all past submissions for a student
                 String studentId = query.split("=")[1];
                 sendResponse(exchange, 200, submissionDAO.getSubmissionsByStudentJson(studentId));
+            } else if (query != null && query.startsWith("quizId=")) {
+                // Fetch the ranklist for a specific quiz
+                int quizId = Integer.parseInt(query.split("=")[1]);
+                sendResponse(exchange, 200, submissionDAO.getRanklistByQuizJson(quizId));
             } else {
                 sendResponse(exchange, 400, "{}");
             }
             return;
         }
+
 
         // POST: Save a new graded quiz submission
         if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {

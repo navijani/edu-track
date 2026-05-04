@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Teacher.css';
+import QuizRanklist from '../components/QuizRanklist';
 
 const TeacherContents = ({ user }) => {
   const [activeTab, setActiveTab] = useState('videos');
   const [contentList, setContentList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [showRanklist, setShowRanklist] = useState(false);
 
   useEffect(() => {
     setSelectedItem(null);
+    setShowRanklist(false);
     fetchContent(activeTab);
   }, [activeTab]);
 
@@ -91,9 +94,17 @@ const TeacherContents = ({ user }) => {
             ))
           )}
         </div>
+      ) : showRanklist && selectedItem ? (
+        <QuizRanklist
+          quizId={selectedItem.id}
+          quizTitle={selectedItem.title}
+          totalMarks={selectedItem.marks}
+          onClose={() => setShowRanklist(false)}
+        />
       ) : (
         <div className={`t-wide-detail-container animated-fade-in ${activeTab}-theme`}>
           {/* By adding ${activeTab}-theme here, the title inside will turn blue/purple/green */}
+
 
           {/* Enhanced Navigation Buttons */}
           <div className="t-detail-nav">
@@ -129,6 +140,10 @@ const TeacherContents = ({ user }) => {
                   <strong>📅 {formatDateTime(selectedItem.scheduledDate).date}</strong>
                   <br />
                   <strong>⏰ {formatDateTime(selectedItem.scheduledDate).time}</strong>
+                </div>
+                <div className="meta-tile wide" style={{ background: 'linear-gradient(135deg, #fef3c7, #fde68a)', cursor: 'pointer' }} onClick={() => setShowRanklist(true)}>
+                  <span>🏆 Student Ranklist</span>
+                  <strong style={{ color: '#92400e' }}>Click to View Rankings →</strong>
                 </div>
               </div>
             )}
