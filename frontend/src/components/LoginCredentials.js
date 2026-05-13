@@ -6,10 +6,12 @@ const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // A
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(''); // Clear previous error
     try {
       // Local authentication fallback for master ADMIN
       if (role === 'ADMIN' && (userId === 'admin' || userId === '2004@gmail.com') && password === '123') {
@@ -26,9 +28,11 @@ const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // A
 
       if (response.data && response.data.success) {
         onSuccess(response.data);
+      } else {
+        setError(response.data.message || "Authentication failed. Please check your credentials.");
       }
-    } catch (error) {
-      alert("Invalid ID or Password for the " + role + " role.");
+    } catch (err) {
+      setError("Invalid ID or Password for the " + role + " role.");
     } finally {
       setLoading(false);
     }
@@ -58,7 +62,10 @@ const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // A
               type="text"
               placeholder="e.g., 240235N"
               value={userId}
-              onChange={(e) => setUserId(e.target.value)}
+              onChange={(e) => {
+                setUserId(e.target.value);
+                if (error) setError(''); // Clear error on type
+              }}
               required
             />
           </div>
@@ -69,10 +76,15 @@ const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // A
               type="password"
               placeholder="••••••••"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) setError(''); // Clear error on type
+              }}
               required
             />
           </div>
+
+          {error && <div className="login-error-msg">⚠️ {error}</div>}
 
           <button type="submit" className="login-primary-btn" disabled={loading}>
             {loading ? 'Authenticating...' : 'Sign In'}

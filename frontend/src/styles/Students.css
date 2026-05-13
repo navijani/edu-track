@@ -164,7 +164,7 @@
 }
 /* --- Sidebar Footer (Logout) --- */
 .s-sidebar-footer {
-    padding: 30px;
+    padding: 20px;
 }
 
 .s-btn-logout {
@@ -1304,18 +1304,27 @@
     .s-sidebar {
         width: 100%;
         height: auto;
-        position: relative;
+        position: sticky;
+        top: 0;
         min-width: unset;
+        flex-direction: row;
+        align-items: center;
+        padding: 5px 15px;
         border-right: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        z-index: 1001;
     }
 
     .s-nav-list {
         display: flex;
-        overflow-x: auto; /* Allow horizontal scroll for menu items on mobile */
-        padding: 10px;
-        gap: 10px;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 5px 10px;
+        gap: 8px;
+        flex-grow: 1;
+        scrollbar-width: none;
     }
+    .s-nav-list::-webkit-scrollbar { display: none; }
 
     .s-nav-item {
         margin-bottom: 0;
@@ -1324,11 +1333,33 @@
     }
 
     .s-sidebar-header {
-        padding: 20px;
+        padding: 10px;
+        text-align: left;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        margin-right: 10px;
+    }
+
+    .s-logo-text {
+        font-size: 1.1rem;
+    }
+
+    .s-sidebar-header p {
+        display: none; /* Hide 'STUDENT PORTAL' text on small screens */
     }
 
     .s-sidebar-footer {
-        display: none; /* Hide footer on mobile or move to menu */
+        display: block; 
+        padding: 0 0 0 10px;
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
+        margin-left: auto;
+    }
+
+    .s-btn-logout {
+        padding: 8px 15px;
+        font-size: 13px;
+        border-radius: 12px;
+        width: auto;
+        white-space: nowrap;
     }
 
     /* Content Area Padding */

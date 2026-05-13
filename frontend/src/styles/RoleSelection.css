@@ -427,3 +427,21 @@
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
 }
+
+.login-error-msg {
+  background: rgba(231, 76, 60, 0.1);
+  color: #ff7675;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
