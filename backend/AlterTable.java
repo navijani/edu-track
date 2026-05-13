@@ -8,7 +8,9 @@ public class AlterTable {
         
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(url, "avnadmin", "YOUR_AIVEN_PASSWORD_HERE");
+            String envPassword = System.getenv("DB_PASSWORD");
+            String passwordToUse = (envPassword != null) ? envPassword : "YOUR_AIVEN_PASSWORD_HERE";
+            Connection conn = DriverManager.getConnection(url, "avnadmin", passwordToUse);
             Statement stmt = conn.createStatement();
             
             try {
