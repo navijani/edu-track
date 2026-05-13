@@ -11,9 +11,9 @@ const AddUser = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resSub = await axios.get('http://localhost:8080/api/subjects');
+        const resSub = await axios.get('https://edu-track-backend.onrender.com/api/subjects');
         setSubjects(resSub.data);
-        const resStu = await axios.get('http://localhost:8080/api/teacher/students');
+        const resStu = await axios.get('https://edu-track-backend.onrender.com/api/teacher/students');
         setStudents(resStu.data);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -26,11 +26,15 @@ const AddUser = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://localhost:8080/api/users/register', user);
+      const response = await axios.post('https://edu-track-backend.onrender.com/api/users/register', user);
       alert("✨ User registered successfully!");
       setUser({ id: '', name: '', email: '', password: '', role: 'STUDENT', subject: '', childId: '', studentClass: '' });
     } catch (err) {
-      alert("❌ Database error: Ensure Java backend is running.");
+      if (err.response && err.response.status === 409) {
+          alert("❌ Registration failed: User ID or Email already exists.");
+      } else {
+          alert("❌ Registration failed: Please check if the ID or Email is already taken, or ensure the backend is running.");
+      }
     } finally {
       setLoading(false);
     }
@@ -91,11 +95,11 @@ const AddUser = () => {
 
             <div className="input-group">
               <label>System Role</label>
-              {/* When the role changes, reset all role-specific fields (subject, childId, studentClass) to avoid stale data */}
               <select value={user.role} onChange={(e) => setUser({ ...user, role: e.target.value, subject: '', childId: '', studentClass: '' })}>
                 <option value="STUDENT">Student</option>
                 <option value="TEACHER">Teacher</option>
                 <option value="PARENT">Parent</option>
+                <option value="ADMIN">Admin</option>
               </select>
             </div>
 

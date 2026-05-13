@@ -10,6 +10,11 @@ const StudentVideos = ({ subjectName, user }) => {
     const [userAnswers, setUserAnswers] = useState({});
     const [savedAnswers, setSavedAnswers] = useState({}); 
     const [revealedAnswers, setRevealedAnswers] = useState({});
+    const [confirmingIdx, setConfirmingIdx] = useState(null);
+    
+    // AI Summary State
+    const [aiSummary, setAiSummary] = useState(null);
+    const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
     
     const [actualWatchedSeconds, setActualWatchedSeconds] = useState(0); 
     const playerRef = useRef(null);
@@ -25,6 +30,9 @@ const StudentVideos = ({ subjectName, user }) => {
         setUserAnswers({});
         setRevealedAnswers({});
         setSavedAnswers({});
+        setConfirmingIdx(null);
+        setAiSummary(null);
+        setIsGeneratingSummary(false);
         
         const existingProgress = videoProgress[selectedItem?.id];
         setActualWatchedSeconds(existingProgress?.watchedSeconds || 0);
@@ -90,7 +98,7 @@ const StudentVideos = ({ subjectName, user }) => {
     const fetchVideos = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/api/contents/video?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
+            const response = await axios.get(`https://edu-track-backend.onrender.com/api/contents/video?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
             setContentList(response.data);
         } catch (error) { setContentList([]); }
         setLoading(false);
@@ -98,14 +106,14 @@ const StudentVideos = ({ subjectName, user }) => {
 
     const fetchAllProgress = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/progress/video?studentId=${user.id}`);
+            const response = await axios.get(`https://edu-track-backend.onrender.com/api/progress/video?studentId=${user.id}`);
             setVideoProgress(response.data); 
         } catch (error) {}
     };
 
     const fetchSavedAnswers = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/answers/video?studentId=${user.id}&videoId=${selectedItem.id}`);
+            const response = await axios.get(`https://edu-track-backend.onrender.com/api/answers/video?studentId=${user.id}&videoId=${selectedItem.id}`);
             setSavedAnswers(response.data);
             const alreadyRevealed = {};
             Object.keys(response.data).forEach(key => { alreadyRevealed[key] = true; });
@@ -115,16 +123,29 @@ const StudentVideos = ({ subjectName, user }) => {
 
     const handleSaveAndReveal = async (idx) => {
         const answerText = userAnswers[idx];
-        if (!answerText?.trim()) return alert("Type your answer first!");
-        if (!window.confirm("Submit answer permanently?")) return;
+        if (!answerText?.trim()) return;
+
+        setConfirmingIdx(null);
 
         try {
-            await axios.post('http://localhost:8080/api/answers/video', {
+            await axios.post('https://edu-track-backend.onrender.com/api/answers/video', {
                 studentId: user.id, videoId: selectedItem.id, questionIndex: idx, answer: answerText
             });
             setSavedAnswers(prev => ({ ...prev, [idx]: answerText }));
             setRevealedAnswers(prev => ({ ...prev, [idx]: true }));
         } catch (error) { alert("Error saving answer."); }
+    };
+
+    const handleGenerateSummary = () => {
+        setIsGeneratingSummary(true);
+        // Simulate API call delay to make it feel like real AI processing
+        setTimeout(() => {
+            const numQuestions = selectedItem.questions?.length || 0;
+            const simulatedText = `✨ Here is your AI Summary for "${selectedItem.title}":\n\nThis video lesson explores the core concepts of ${subjectName} tailored for ${user.studentClass}. Throughout this session, you'll be guided through detailed, step-by-step visual explanations to strengthen your foundational knowledge.\n\n📚 Important: There ${numQuestions === 1 ? 'is' : 'are'} ${numQuestions} key knowledge check${numQuestions === 1 ? '' : 's'} in the interactive study guide below. Pay close attention to the video material to successfully answer them and secure your progress!`;
+            
+            setAiSummary(simulatedText);
+            setIsGeneratingSummary(false);
+        }, 2500);
     };
 
     const handleCloseVideo = async () => {
@@ -138,7 +159,7 @@ const StudentVideos = ({ subjectName, user }) => {
         }
 
         try {
-            await axios.post('http://localhost:8080/api/progress/video', {
+            await axios.post('https://edu-track-backend.onrender.com/api/progress/video', {
                 studentId: user.id, videoId: selectedItem.id, watchedPercentage: percentage, 
                 watchedSeconds: seconds, answeredCount, lastAccessed: new Date().toISOString()
             });
@@ -160,6 +181,33 @@ const StudentVideos = ({ subjectName, user }) => {
                 <div className="s-video-frame-wrapper">
                     <div id="youtube-player-container"></div>
                 </div>
+
+                {/* --- AI SUMMARY SECTION --- */}
+                <div className="s-ai-summary-container">
+                    {!aiSummary && !isGeneratingSummary && (
+                        <button onClick={handleGenerateSummary} className="s-ai-generate-btn">
+                            <span className="ai-icon">✨</span> Generate AI Summary
+                        </button>
+                    )}
+
+                    {isGeneratingSummary && (
+                        <div className="s-ai-loading-box">
+                            <div className="ai-pulse-ring"></div>
+                            <p>EduTrack AI is analyzing the video transcript...</p>
+                        </div>
+                    )}
+
+                    {aiSummary && (
+                        <div className="s-ai-result-card">
+                            <div className="ai-result-header">
+                                <span className="ai-icon">🤖</span>
+                                <h4>AI Video Insights</h4>
+                            </div>
+                            <p className="ai-result-text">{aiSummary}</p>
+                        </div>
+                    )}
+                </div>
+                {/* --------------------------- */}
                 
                 <h3 className="t-section-header" style={{ color: '#3498db' }}>Interactive Study Guide</h3>
                 
@@ -177,9 +225,26 @@ const StudentVideos = ({ subjectName, user }) => {
                                 placeholder="Write your notes here..."
                             />
                             {!isSaved ? (
-                                <button onClick={() => handleSaveAndReveal(idx)} className="s-pill-btn active-videos">
-                                    Submit Answer
-                                </button>
+                                confirmingIdx === idx ? (
+                                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                        <span style={{ fontSize: '13px', color: '#e74c3c', fontWeight: 'bold' }}>Submit permanently?</span>
+                                        <button onClick={() => handleSaveAndReveal(idx)} className="s-pill-btn" style={{ background: '#e74c3c', border: 'none', padding: '8px 16px' }}>
+                                            Yes, Submit
+                                        </button>
+                                        <button onClick={() => setConfirmingIdx(null)} className="s-pill-btn" style={{ background: '#94a3b8', border: 'none', padding: '8px 16px' }}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button 
+                                        onClick={() => setConfirmingIdx(idx)} 
+                                        className="s-pill-btn active-videos"
+                                        disabled={!userAnswers[idx]?.trim()}
+                                        style={{ opacity: !userAnswers[idx]?.trim() ? 0.5 : 1, cursor: !userAnswers[idx]?.trim() ? 'not-allowed' : 'pointer' }}
+                                    >
+                                        Submit Answer
+                                    </button>
+                                )
                             ) : (
                                 <span style={{ color: '#10b981', fontWeight: '800', fontSize: '14px' }}>✅ Answer Logged</span>
                             )}

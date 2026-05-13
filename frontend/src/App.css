@@ -1,7 +1,7 @@
+/* --- Original Desktop Styles (Provided by User) --- */
 .App {
   font-family: sans-serif;
   text-align: center;
-  
 }
 
 * {
@@ -17,7 +17,6 @@ body, html {
   height: 100%;
 }
 
-
 .intro-container,
 .role-container,
 .dashboard-container {
@@ -27,6 +26,7 @@ body, html {
   border: 1px solid #ddd;
   border-radius: 10px;
 }
+
 .btn-primary {
   padding: 15px 30px;
   font-size: 1.2rem;
@@ -36,22 +36,26 @@ body, html {
   border: none;
   border-radius: 5px;
 }
+
 .role-grid {
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin-top: 20px;
 }
+
 .role-grid button {
   padding: 15px;
   font-size: 1.1rem;
   cursor: pointer;
 }
+
 .features {
   display: grid;
   gap: 10px;
   margin-top: 20px;
 }
+
 .features button {
   padding: 20px;
   background: #f8f9fa;
@@ -131,4 +135,49 @@ body, html {
   color: #666 !important;
   font-size: 0.9rem;
   text-decoration: underline;
+}
+
+/* ======================================================
+   MOBILE RESPONSIVE SECTION (Screen width 768px or less)
+   ====================================================== */
+
+@media screen and (max-width: 768px) {
+  /* Set containers to occupy full width on small screens */
+  .intro-container,
+  .role-container,
+  .dashboard-container,
+  .admin-panel,
+  .login-credentials-container {
+    width: 90%;
+    max-width: none;
+    margin: 20px auto;
+    padding: 20px;
+  }
+
+  /* Reset absolute position of the admin button to avoid overlapping content */
+  .admin-login-corner {
+    position: relative;
+    top: 0;
+    right: 0;
+    text-align: right;
+    margin-bottom: 10px;
+    padding-right: 5%;
+  }
+
+  /* Make all main buttons full width for better touch accessibility */
+  .btn-primary,
+  .role-grid button,
+  .features button,
+  .login-credentials-container button {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 15px;
+  }
+
+  /* Adjust font sizes and padding for input fields on mobile */
+  .login-credentials-container input,
+  .admin-form input {
+    font-size: 1rem;
+    padding: 12px;
+  }
 }

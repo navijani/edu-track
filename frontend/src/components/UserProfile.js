@@ -62,7 +62,7 @@ const UserProfile = ({ user }) => {
         const fetchProfile = async () => {
             try {
                 // Call the ProfileHandler endpoint with the logged-in user's ID
-                const res  = await fetch(`http://localhost:8080/api/users/profile?userId=${user.id}`);
+                const res  = await fetch(`https://edu-track-backend.onrender.com/api/users/profile?userId=${user.id}`);
                 const data = await res.json();
 
                 if (data.error) {

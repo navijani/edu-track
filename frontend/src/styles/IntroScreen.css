@@ -11,10 +11,9 @@
   position: relative;
   font-family: 'Plus Jakarta Sans', sans-serif;
   
-  /* The moving background gradient */
   background: linear-gradient(-45deg, #0f172a, #1e293b, #090e17, #172033);
   background-size: 400% 400%;
-  animation: bgShift 20s ease infinite; /* 20-second infinite loop */
+  animation: bgShift 20s ease infinite;
 }
 
 @keyframes bgShift {
@@ -24,11 +23,10 @@
 }
 
 /* --- 2. THE FLOATING ORBS --- */
-/* --- 2. THE LONG-RUNNING ORBS --- */
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px); /* Increased blur for a smoother glow */
+  filter: blur(80px);
   z-index: 1;
   opacity: 0.5;
 }
@@ -39,7 +37,6 @@
   background: #3b82f6; 
   top: -10%;
   left: -10%;
-  /* 25 seconds, infinite loop, smooth easing */
   animation: driftOrb1 25s infinite ease-in-out;
 }
 
@@ -49,7 +46,6 @@
   background: #8b5cf6; 
   bottom: -10%;
   right: -10%;
-  /* 30 seconds, infinite loop */
   animation: driftOrb2 30s infinite ease-in-out;
 }
 
@@ -59,12 +55,8 @@
   background: #06b6d4; 
   top: 50%;
   left: 50%;
-  /* 22 seconds, infinite loop */
   animation: driftOrb3 22s infinite ease-in-out;
 }
-
-/* --- LONG RUNNING KEYFRAMES --- */
-/* The orbs now travel across the entire screen using viewport width/height (vw/vh) */
 
 @keyframes driftOrb1 {
   0% { transform: translate(0, 0) scale(1); }
@@ -97,9 +89,8 @@
   position: relative;
   z-index: 10;
   
-  /* FIX: Added a subtle dark tint (rgba 0,0,0, 0.2) to make white text pop */
   background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%), rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(25px); /* Increased blur slightly for better contrast */
+  backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   
   border-top: 1px solid rgba(255, 255, 255, 0.25);
@@ -128,9 +119,7 @@
 }
 
 .logo-title {
-  /* FIX: Apply the heavy, modern font to the title */
   font-family: 'Outfit', sans-serif; 
-  
   font-size: 3.2rem;
   font-weight: 800;
   margin: 0 0 10px 0;
@@ -140,17 +129,17 @@
 }
 
 .subtitle {
-  color: #f1f5f9; /* FIX: Much brighter text color */
+  color: #f1f5f9;
   font-size: 1.05rem;
   line-height: 1.8;
   margin-bottom: 40px;
   font-weight: 400;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* FIX: Added shadow to subtitle */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .subtitle .highlight {
   color: #ffffff;
-  font-weight: 700; /* FIX: Made the highlight bolder */
+  font-weight: 700;
   display: block;
   margin-top: 5px;
   font-size: 1.15rem;
@@ -164,15 +153,15 @@
   justify-content: center;
   gap: 10px;
   width: 100%;
-  background: rgba(255, 255, 255, 0.15); /* FIX: Made button slightly more solid */
+  background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: #ffffff;
   padding: 16px;
   border-radius: 12px;
   font-size: 1.1rem;
-  font-weight: 700; /* FIX: Bolder button text */
+  font-weight: 700;
   letter-spacing: 0.5px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* FIX: Shadow on button text */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
@@ -182,9 +171,8 @@
   transition: transform 0.3s ease;
 }
 
-/* Hover Effects */
 .btn-glass-login:hover {
-  background: rgba(255, 255, 255, 0.25); /* Brighter on hover */
+  background: rgba(255, 255, 255, 0.25);
   border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
@@ -212,4 +200,64 @@
 @keyframes contentGlideIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ======================================================
+   MOBILE RESPONSIVE SECTION (English Comments)
+   ====================================================== */
+
+@media (max-width: 768px) {
+  /* Prevent horizontal scrolling caused by animated orbs */
+  .intro-overlay {
+    padding: 20px;
+    align-items: center;
+  }
+
+  /* Scale down the logo for smaller screens */
+  .logo-title {
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+  }
+
+  /* Adjust card padding and ensure it fits the width */
+  .glass-card {
+    padding: 40px 25px;
+    width: 100%;
+  }
+
+  /* Slightly reduce subtitle font size for better flow */
+  .subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+  }
+
+  .subtitle .highlight {
+    font-size: 1rem;
+  }
+
+  /* Resize the icon wrapper for mobile */
+  .icon-wrap {
+    font-size: 2rem;
+  }
+  
+  /* Shrink orbs slightly so they don't overpower the screen */
+  .orb {
+    filter: blur(60px);
+  }
+  
+  .orb-1 { width: 200px; height: 200px; }
+  .orb-2 { width: 180px; height: 180px; }
+  .orb-3 { width: 150px; height: 150px; }
+}
+
+/* Extra small mobile adjustments */
+@media (max-width: 480px) {
+  .logo-title {
+    font-size: 1.8rem;
+  }
+  
+  .btn-glass-login {
+    font-size: 1rem;
+    padding: 14px;
+  }
 }

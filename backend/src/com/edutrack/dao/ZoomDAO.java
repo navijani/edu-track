@@ -5,12 +5,12 @@ import java.sql.*;
 
 public class ZoomDAO {
 
-    public boolean scheduleMeeting(String topic, String link, String date, String time, String subject, String teacher) throws Exception {
-    // Combine date and time to create an 'expires_at' (Setting it to 2 hours after start)
-    String expiresAt = date + " " + time; 
+    public boolean scheduleMeeting(String topic, String link, String date, String time, String endTime, String subject, String teacher) throws Exception {
+    // Combine date and endTime to create an 'expires_at'
+    String expiresAt = date + " " + endTime + ":00"; 
     
     String sql = "INSERT INTO zoom_meetings (topic, meeting_link, meeting_date, meeting_time, subject, teacher_name, expires_at) " +
-                 "VALUES (?, ?, ?, ?, ?, ?, DATE_ADD(?, INTERVAL 2 HOUR))";
+                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
     try (Connection conn = DBConnection.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql)) {
         ps.setString(1, topic);
@@ -37,12 +37,20 @@ public class ZoomDAO {
             boolean first = true;
             while (rs.next()) {
                 if (!first) json.append(",");
+                
+                String expiresAt = rs.getString("expires_at");
+                String endTime = "";
+                if (expiresAt != null && expiresAt.length() >= 16) {
+                    endTime = expiresAt.substring(11, 16);
+                }
+                
                 json.append("{")
                     .append("\"id\":").append(rs.getInt("id")).append(",")
                     .append("\"topic\":\"").append(escape(rs.getString("topic"))).append("\",")
                     .append("\"meetingLink\":\"").append(escape(rs.getString("meeting_link"))).append("\",")
                     .append("\"meetingDate\":\"").append(rs.getString("meeting_date")).append("\",")
                     .append("\"meetingTime\":\"").append(rs.getString("meeting_time")).append("\",")
+                    .append("\"endTime\":\"").append(endTime).append("\",")
                     .append("\"teacher\":\"").append(escape(rs.getString("teacher_name"))).append("\"")
                     .append("}");
                 first = false;

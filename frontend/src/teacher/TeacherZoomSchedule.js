@@ -12,7 +12,7 @@ const TeacherZoomSchedule = ({ user }) => {
 
     const fetchMeetings = useCallback(async () => {
         try {
-            const res = await axios.get(`http://localhost:8080/api/zoom?subject=${user.subject}`);
+            const res = await axios.get(`https://edu-track-backend.onrender.com/api/zoom?subject=${user.subject}`);
             setScheduledMeetings(res.data);
         } catch (err) { console.error(err); }
     }, [user.subject]);
@@ -24,14 +24,14 @@ const TeacherZoomSchedule = ({ user }) => {
     const handleSchedule = async (e) => {
         e.preventDefault();
         const data = {
-            topic, meetingLink, meetingDate, meetingTime,
-            subject: user.subject, teacher: user.name
+            topic, meetingLink, meetingDate, meetingTime, endTime,
+            subject: user.subject, teacher: user.name, teacherId: user.id
         };
 
         try {
-            const res = await axios.post('http://localhost:8080/api/zoom', data);
+            const res = await axios.post('https://edu-track-backend.onrender.com/api/zoom', data);
             if (res.data.success) {
-                setTopic(''); setMeetingLink(''); setMeetingDate(''); setMeetingTime('');
+                setTopic(''); setMeetingLink(''); setMeetingDate(''); setMeetingTime(''); setEndTime('');
                 fetchMeetings();
             }
         } catch (err) { alert('Error scheduling meeting'); }
@@ -40,7 +40,7 @@ const TeacherZoomSchedule = ({ user }) => {
     const deleteMeeting = async (id) => {
         if (!window.confirm("Cancel this meeting?")) return;
         try {
-            const res = await axios.delete(`http://localhost:8080/api/zoom?id=${id}`);
+            const res = await axios.delete(`https://edu-track-backend.onrender.com/api/zoom?id=${id}`);
             if (res.data.success) fetchMeetings();
         } catch (err) { alert("Error deleting meeting"); }
     };
@@ -114,7 +114,7 @@ const TeacherZoomSchedule = ({ user }) => {
                                     </div>
                                     <div style={{ marginTop: '10px', color: '#64748b', fontSize: '14px' }}>
                                         <span>📅 {meeting.meetingDate}</span>
-                                        <span style={{ marginLeft: '15px' }}>⏰ {meeting.meetingTime}</span>
+                                        <span style={{ marginLeft: '15px' }}>⏰ {meeting.meetingTime} - {meeting.endTime || '??'}</span>
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '8px' }}>

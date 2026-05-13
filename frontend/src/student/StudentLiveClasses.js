@@ -11,10 +11,12 @@ const StudentLiveClasses = ({ user }) => {
     useEffect(() => {
         const fetchAllMeetings = async () => {
             try {
-                const studentSubjects = user.enrolledSubjects ;
+                // Fetch all subjects since user.enrolledSubjects is not provided by backend
+                const subRes = await axios.get('https://edu-track-backend.onrender.com/api/subjects');
+                const studentSubjects = subRes.data.map(sub => sub.title);
 
                 const requests = studentSubjects.map(sub => 
-                    axios.get(`http://localhost:8080/api/zoom?subject=${encodeURIComponent(sub)}`)
+                    axios.get(`https://edu-track-backend.onrender.com/api/zoom?subject=${encodeURIComponent(sub)}`)
                 );
                 const results = await Promise.all(requests);
                 const allMeetings = results.flatMap(res => res.data);

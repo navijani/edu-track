@@ -79,17 +79,92 @@
 /* Container for the Chat area in the Parent Portal */
 .p-chat-right-content {
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center;     /* Centers vertically */
-    height: 100%;            /* Fills the 600px height we set in the JS */
+    justify-content: center;
+    align-items: center;
+    height: 100%;
     width: 100%;
-    background-color: #ffffff; /* Clean white background */
-    border-radius: 0 24px 24px 0; /* Matches the parent rounding */
+    background-color: #ffffff;
+    border-radius: 0 24px 24px 0;
 }
 
-/* Limits the width of the actual chat box so it doesn't look too stretched */
+/* Limits the width of the actual chat box */
 .p-chat-window-wrapper {
     width: 100%;
-    max-width: 600px; /* Adjust this to make the chat box wider or narrower */
-    height: 90%;      /* Gives some breathing room at top/bottom */
+    max-width: 600px;
+    height: 90%;
+}
+
+/* ======================================================
+   MOBILE RESPONSIVE SECTION
+   ====================================================== */
+
+@media screen and (max-width: 768px) {
+    /* Adjust container padding for mobile */
+    .p-portal-container {
+        padding: 15px;
+    }
+
+    /* Stack Navbar items */
+    .p-navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* Scale down the Hero Card */
+    .p-hero-card {
+        padding: 25px 20px;
+        margin: 20px auto;
+        width: 100%;
+    }
+
+    /* Tab buttons scrollable or stacked */
+    .p-tab-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 10px;
+        padding-bottom: 10px;
+        justify-content: flex-start;
+    }
+
+    .p-tab-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        white-space: nowrap; /* Prevents text wrapping in buttons */
+    }
+
+    /* Make Stat cards full width on mobile */
+    .p-stat-card {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    /* Adjust progress rows for narrow screens */
+    .p-progress-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    /* Chat content adjustment */
+    .p-chat-right-content {
+        border-radius: 24px; /* Full rounding on mobile */
+        min-height: 400px;
+    }
+
+    .p-chat-window-wrapper {
+        width: 95%;
+    }
+}
+
+/* Small mobile devices */
+@media screen and (max-width: 480px) {
+    .p-navbar {
+        font-size: 0.9rem;
+    }
+
+    .p-hero-card h2 {
+        font-size: 1.2rem;
+    }
 }

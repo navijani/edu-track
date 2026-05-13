@@ -7,7 +7,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class TeacherStudentHandler implements HttpHandler {
     private final TeacherStudentDAO dao = new TeacherStudentDAO();

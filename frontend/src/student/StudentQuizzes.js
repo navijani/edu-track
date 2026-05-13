@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import QuizRanklist from '../components/QuizRanklist';
 
 const StudentQuizzes = ({ subjectName, user }) => {
     const [contentList, setContentList] = useState([]);
@@ -28,7 +29,7 @@ const StudentQuizzes = ({ subjectName, user }) => {
     const fetchQuizzes = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/api/contents/quiz?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
+            const response = await axios.get(`https://edu-track-backend.onrender.com/api/contents/quiz?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
             setContentList(response.data);
         } catch (error) { setContentList([]); }
         setLoading(false);
@@ -36,7 +37,7 @@ const StudentQuizzes = ({ subjectName, user }) => {
 
     const fetchSubmissions = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/answers/quiz?studentId=${user.id}`);
+            const response = await axios.get(`https://edu-track-backend.onrender.com/api/answers/quiz?studentId=${user.id}`);
             setSubmissions(response.data); 
         } catch (error) {}
     };
@@ -49,15 +50,20 @@ const StudentQuizzes = ({ subjectName, user }) => {
 
         if (scheduledTime && now < scheduledTime) return alert(`Opens on: ${scheduledTime.toLocaleString()}`);
         if (hasSubmitted) {
+            setSelectedItem(quiz);
             if (deadlineTime && now > deadlineTime) {
-                setSelectedItem(quiz);
                 setViewMode('review');
             } else {
-                alert("Submitted! Review opens after the deadline.");
+                setViewMode('submitted');
             }
             return;
         }
-        if (deadlineTime && now > deadlineTime) return alert("Deadline passed.");
+        if (deadlineTime && now > deadlineTime) {
+            // Deadline passed: open ranklist regardless of whether the student submitted
+            setSelectedItem(quiz);
+            setViewMode('ranklist');
+            return;
+        }
 
         if (!window.confirm(`Start quiz? You have ${quiz.duration} minutes.`)) return;
 
@@ -76,11 +82,11 @@ const StudentQuizzes = ({ subjectName, user }) => {
         
         const score = Math.round((correctCount / selectedItem.questions.length) * selectedItem.marks);
         try {
-            await axios.post('http://localhost:8080/api/answers/quiz', {
+            await axios.post('https://edu-track-backend.onrender.com/api/answers/quiz', {
                 studentId: user.id, quizId: selectedItem.id,
                 answersJson: JSON.stringify(userAnswers), score: score, attendTime: new Date().toISOString()
             });
-            fetchSubmissions();
+            await fetchSubmissions();
             setViewMode('submitted');
         } catch (error) { alert("Submission failed."); }
     };
@@ -90,6 +96,57 @@ const StudentQuizzes = ({ subjectName, user }) => {
         const s = seconds % 60;
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
+
+    // --- VIEW: RANKLIST ---
+    if (viewMode === 'ranklist' && selectedItem) {
+        return (
+            <QuizRanklist
+                quizId={selectedItem.id}
+                quizTitle={selectedItem.title}
+                totalMarks={selectedItem.marks}
+                currentUserId={user.id}
+                onClose={() => setViewMode('list')}
+            />
+        );
+    }
+
+    // --- VIEW: SUBMISSION SUCCESS (Score Only) ---
+    if (viewMode === 'submitted' && selectedItem) {
+        const mySub = submissions[selectedItem.id];
+        return (
+            <div className="s-quiz-take-container">
+                <button onClick={() => setViewMode('list')} className="s-btn-back" style={{ background: '#94a3b8', width: 'auto', marginBottom: '20px' }}>
+                    ⬅ Back to List
+                </button>
+                <div className="s-quiz-review-header" style={{ background: 'linear-gradient(135deg, #34d399 0%, #10b981 100%)' }}>
+                    <div>
+                        <h2 style={{ margin: 0 }}>Quiz Submitted!</h2>
+                        <p style={{ opacity: 0.8 }}>{selectedItem.title}</p>
+                    </div>
+                    <div className="s-quiz-score-circle">
+                        <h2 style={{ margin: 0 }}>{mySub?.score || 0}</h2>
+                        <span style={{ fontSize: '10px' }}>/{selectedItem.marks} Marks</span>
+                    </div>
+                </div>
+                <div className="s-video-q-box" style={{ textAlign: 'center', padding: '40px' }}>
+                    <div style={{ fontSize: '50px', marginBottom: '20px' }}>🎉</div>
+                    <h3>Great Job!</h3>
+                    <p>Your answers have been recorded. You can review the correct answers once the deadline has passed.</p>
+                    <div style={{ marginTop: '20px', fontSize: '14px', color: '#64748b' }}>
+                        <strong>Deadline:</strong> {selectedItem.deadline || "N/A"}
+                    </div>
+                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '30px' }}>
+                        <button onClick={() => setViewMode('list')} className="s-pill-btn active-quizzes">
+                            Return to Dashboard
+                        </button>
+                        <button onClick={() => setViewMode('ranklist')} className="s-pill-btn" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: 'white' }}>
+                            🏆 View Ranklist
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     // --- VIEW: REVIEW RESULTS ---
     if (viewMode === 'review' && selectedItem) {
@@ -125,6 +182,11 @@ const StudentQuizzes = ({ subjectName, user }) => {
                         </div>
                     );
                 })}
+                <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    <button onClick={() => setViewMode('ranklist')} className="s-pill-btn" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: 'white', margin: '0 auto' }}>
+                        🏆 View Class Ranklist
+                    </button>
+                </div>
             </div>
         );
     }
@@ -175,17 +237,20 @@ const StudentQuizzes = ({ subjectName, user }) => {
                     <div 
         key={index} 
         onClick={() => handleQuizClick(item)} 
-        className={`s-quiz-card ${isTooLate && !hasSub ? 'missed' : ''}`} // Added conditional class
+        className={`s-quiz-card`}
         style={{ 
-            opacity: isTooEarly ? 0.6 : 1, // Missed cards usually don't need low opacity if they have a 'Missed' label
+            opacity: isTooEarly ? 0.6 : 1,
+            cursor: isTooEarly ? 'not-allowed' : 'pointer',
+            border: isTooLate ? '2px solid #fde68a' : undefined,
         }}
     >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h4 style={{ margin: 0 }}>{item.title}</h4>
-            <span style={{ fontSize: '20px' }}>{hasSub ? '✅' : isTooEarly ? '🔒' : '📝'}</span>
+            <span style={{ fontSize: '20px' }}>
+                {hasSub ? '✅' : isTooEarly ? '🔒' : isTooLate ? '🏆' : '📝'}
+            </span>
         </div>
 
-        {/* This is that light grey/green box from your screenshot */}
         <div className="t-addquiz-dropdown-area" style={{ marginTop: '15px', background: '#f8fafc' }}>
             <div style={{ fontSize: '11px', color: '#64748b' }}>
                 <div><strong>Opens:</strong> {item.scheduledDate || "N/A"}</div>
@@ -193,8 +258,13 @@ const StudentQuizzes = ({ subjectName, user }) => {
             </div>
         </div>
 
-        <p style={{ margin: '15px 0 0 0', fontSize: '12px', fontWeight: '800', color: hasSub ? '#3498db' : isTooLate ? '#ef4444' : '#10b981' }}>
-            {hasSub ? "VIEW RESULTS" : isTooLate ? "MISSED" : "START QUIZ →"}
+        <p style={{ margin: '15px 0 0 0', fontSize: '12px', fontWeight: '800',
+            color: hasSub
+                ? (isTooLate ? '#f59e0b' : '#3498db')
+                : isTooLate ? '#d97706' : '#10b981' }}>
+            {hasSub
+                ? (isTooLate ? `🏆 SCORE: ${submissions[item.id]?.score || 0} / ${item.marks} — VIEW RANKLIST` : `SCORE: ${submissions[item.id]?.score || 0} / ${item.marks}`)
+                : isTooLate ? '🏆 VIEW RANKLIST' : 'START QUIZ →'}
         </p>
     </div>
                 );
