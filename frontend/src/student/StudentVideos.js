@@ -98,7 +98,7 @@ const StudentVideos = ({ subjectName, user }) => {
     const fetchVideos = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`https://edu-track-backend.onrender.com/api/contents/video?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
+            const response = await axios.get(`https://edu-track-c6ml.onrender.com/api/contents/video?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
             setContentList(response.data);
         } catch (error) { setContentList([]); }
         setLoading(false);
@@ -106,14 +106,14 @@ const StudentVideos = ({ subjectName, user }) => {
 
     const fetchAllProgress = async () => {
         try {
-            const response = await axios.get(`https://edu-track-backend.onrender.com/api/progress/video?studentId=${user.id}`);
+            const response = await axios.get(`https://edu-track-c6ml.onrender.com/api/progress/video?studentId=${user.id}`);
             setVideoProgress(response.data); 
         } catch (error) {}
     };
 
     const fetchSavedAnswers = async () => {
         try {
-            const response = await axios.get(`https://edu-track-backend.onrender.com/api/answers/video?studentId=${user.id}&videoId=${selectedItem.id}`);
+            const response = await axios.get(`https://edu-track-c6ml.onrender.com/api/answers/video?studentId=${user.id}&videoId=${selectedItem.id}`);
             setSavedAnswers(response.data);
             const alreadyRevealed = {};
             Object.keys(response.data).forEach(key => { alreadyRevealed[key] = true; });
@@ -128,7 +128,7 @@ const StudentVideos = ({ subjectName, user }) => {
         setConfirmingIdx(null);
 
         try {
-            await axios.post('https://edu-track-backend.onrender.com/api/answers/video', {
+            await axios.post('https://edu-track-c6ml.onrender.com/api/answers/video', {
                 studentId: user.id, videoId: selectedItem.id, questionIndex: idx, answer: answerText
             });
             setSavedAnswers(prev => ({ ...prev, [idx]: answerText }));
@@ -159,7 +159,7 @@ const StudentVideos = ({ subjectName, user }) => {
         }
 
         try {
-            await axios.post('https://edu-track-backend.onrender.com/api/progress/video', {
+            await axios.post('https://edu-track-c6ml.onrender.com/api/progress/video', {
                 studentId: user.id, videoId: selectedItem.id, watchedPercentage: percentage, 
                 watchedSeconds: seconds, answeredCount, lastAccessed: new Date().toISOString()
             });

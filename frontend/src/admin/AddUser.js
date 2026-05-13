@@ -11,9 +11,9 @@ const AddUser = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resSub = await axios.get('https://edu-track-backend.onrender.com/api/subjects');
+        const resSub = await axios.get('https://edu-track-c6ml.onrender.com/api/subjects');
         setSubjects(resSub.data);
-        const resStu = await axios.get('https://edu-track-backend.onrender.com/api/teacher/students');
+        const resStu = await axios.get('https://edu-track-c6ml.onrender.com/api/teacher/students');
         setStudents(resStu.data);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -26,7 +26,7 @@ const AddUser = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('https://edu-track-backend.onrender.com/api/users/register', user);
+      const response = await axios.post('https://edu-track-c6ml.onrender.com/api/users/register', user);
       alert("✨ User registered successfully!");
       setUser({ id: '', name: '', email: '', password: '', role: 'STUDENT', subject: '', childId: '', studentClass: '' });
     } catch (err) {

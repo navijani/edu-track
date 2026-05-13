@@ -9,7 +9,7 @@ const TeacherMessages = ({ user }) => {
     const fetchPosts = useCallback(async () => {
         if (!user.subject) return;
         try {
-            const res = await axios.get(`https://edu-track-backend.onrender.com/api/forum?subject=${encodeURIComponent(user.subject)}`);
+            const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/forum?subject=${encodeURIComponent(user.subject)}`);
             setPosts(res.data);
         } catch (err) { console.error(err); }
     }, [user.subject]);
@@ -20,7 +20,7 @@ const TeacherMessages = ({ user }) => {
         e.preventDefault();
         if (!newMsg.trim()) return;
         try {
-            await axios.post('https://edu-track-backend.onrender.com/api/forum', {
+            await axios.post('https://edu-track-c6ml.onrender.com/api/forum', {
                 name: user.name, 
                 role: 'teacher', 
                 subject: user.subject, 

@@ -11,7 +11,7 @@ const TeacherStudents = ({ user }) => {
     useEffect(() => {
         const fetchStudents = async () => {
             try {
-                const res = await axios.get('https://edu-track-backend.onrender.com/api/teacher/students');
+                const res = await axios.get('https://edu-track-c6ml.onrender.com/api/teacher/students');
                 setStudents(res.data);
             } catch (err) { console.error(err); }
         };
@@ -23,7 +23,7 @@ const TeacherStudents = ({ user }) => {
             if (!selectedStudent || !user.subject) return;
             setLoadingDetails(true);
             try {
-                const res = await axios.get(`https://edu-track-backend.onrender.com/api/teacher/students?studentId=${selectedStudent.id}&subject=${encodeURIComponent(user.subject)}`);
+                const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/teacher/students?studentId=${selectedStudent.id}&subject=${encodeURIComponent(user.subject)}`);
                 setStudentDetails(res.data);
             } catch (err) { console.error(err); }
             setLoadingDetails(false);

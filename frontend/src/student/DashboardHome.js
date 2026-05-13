@@ -9,7 +9,7 @@ const DashboardHome = ({ user }) => {
     useEffect(() => {
         const fetchDashboard = async () => {
             try {
-                const res = await axios.get(`https://edu-track-backend.onrender.com/api/student/dashboard?studentId=${user.id}`);
+                const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/student/dashboard?studentId=${user.id}`);
                 setData(res.data);
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);

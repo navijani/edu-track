@@ -10,7 +10,7 @@ const TeacherDashboardHome = ({ user }) => {
         const fetchStats = async () => {
             if (!user.subject) return;
             try {
-                const res = await axios.get(`https://edu-track-backend.onrender.com/api/teacher/dashboard?subject=${encodeURIComponent(user.subject)}`);
+                const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/teacher/dashboard?subject=${encodeURIComponent(user.subject)}`);
                 setStats(res.data);
             } catch (err) {
                 console.error("Error fetching stats:", err);

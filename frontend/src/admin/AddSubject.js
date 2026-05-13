@@ -15,7 +15,7 @@ const AddSubject = () => {
 
     setLoading(true);
     try {
-      await axios.post('https://edu-track-backend.onrender.com/api/subjects', subject);
+      await axios.post('https://edu-track-c6ml.onrender.com/api/subjects', subject);
       alert("📚 Subject successfully added to the curriculum!");
       setSubject({ code: '', title: '' }); // Clear form
     } catch (err) {

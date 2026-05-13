@@ -12,7 +12,7 @@ const StudentForum = ({ user }) => {
     useEffect(() => {
         const fetchSubjects = async () => {
             try {
-                const res = await axios.get('https://edu-track-backend.onrender.com/api/subjects');
+                const res = await axios.get('https://edu-track-c6ml.onrender.com/api/subjects');
                 setSubjects(res.data);
                 if (res.data.length > 0) setSelectedSubject(res.data[0].title);
             } catch (err) { console.error("Error fetching subjects", err); }
@@ -24,7 +24,7 @@ const StudentForum = ({ user }) => {
     const fetchPosts = async () => {
         if (!selectedSubject) return;
         try {
-            const res = await axios.get(`https://edu-track-backend.onrender.com/api/forum?subject=${selectedSubject}`);
+            const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/forum?subject=${selectedSubject}`);
             setPosts(res.data);
         } catch (err) { console.error(err); }
     };
@@ -38,7 +38,7 @@ const StudentForum = ({ user }) => {
         e.preventDefault();
         if (!newMsg.trim()) return;
         try {
-            await axios.post('https://edu-track-backend.onrender.com/api/forum', {
+            await axios.post('https://edu-track-c6ml.onrender.com/api/forum', {
                 name: user.name, 
                 role: user.role.toLowerCase(), 
                 subject: selectedSubject, 

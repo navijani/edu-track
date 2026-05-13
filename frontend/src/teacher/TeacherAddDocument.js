@@ -43,7 +43,7 @@ const TeacherAddDocument = ({ user }) => {
         };
 
         try {
-            await axios.post('https://edu-track-backend.onrender.com/api/contents/document', payload);
+            await axios.post('https://edu-track-c6ml.onrender.com/api/contents/document', payload);
             setStatus('✅ Document saved successfully!');
             setTitle('');
             setDocumentUrl('');

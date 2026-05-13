@@ -17,7 +17,7 @@ const ParentDashboard = ({ user, onLogout }) => {
     useEffect(() => {
         const fetchProgress = async () => {
             try {
-                const res = await axios.get(`https://edu-track-backend.onrender.com/api/parent/dashboard?parentId=${user.id}`);
+                const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/parent/dashboard?parentId=${user.id}`);
                 if (res.data.error) setError(res.data.error);
                 else setData(res.data);
             } catch (err) { setError("Server connection failed."); }
@@ -28,7 +28,7 @@ const ParentDashboard = ({ user, onLogout }) => {
     useEffect(() => {
         const fetchTeachers = async () => {
             try {
-                const res = await axios.get('https://edu-track-backend.onrender.com/api/parent/teachers');
+                const res = await axios.get('https://edu-track-c6ml.onrender.com/api/parent/teachers');
                 setTeachers(res.data);
             } catch (err) { 
                 setTeacherError("⚠️ Backend Routing Error: Check Main.java"); 

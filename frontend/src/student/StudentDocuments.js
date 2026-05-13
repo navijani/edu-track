@@ -30,7 +30,7 @@ const StudentDocuments = ({ subjectName, user }) => {
     const fetchDocuments = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`https://edu-track-backend.onrender.com/api/contents/document?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
+            const response = await axios.get(`https://edu-track-c6ml.onrender.com/api/contents/document?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
             setContentList(response.data);
         } catch (error) { setContentList([]); }
         setLoading(false);
@@ -38,14 +38,14 @@ const StudentDocuments = ({ subjectName, user }) => {
 
     const fetchAllProgress = async () => {
         try {
-            const response = await axios.get(`https://edu-track-backend.onrender.com/api/progress/document?studentId=${user.id}`);
+            const response = await axios.get(`https://edu-track-c6ml.onrender.com/api/progress/document?studentId=${user.id}`);
             setDocumentProgress(response.data); 
         } catch (error) {}
     };
 
     const fetchSavedAnswers = async () => {
         try {
-            const response = await axios.get(`https://edu-track-backend.onrender.com/api/answers/document?studentId=${user.id}&documentId=${selectedItem.id}`);
+            const response = await axios.get(`https://edu-track-c6ml.onrender.com/api/answers/document?studentId=${user.id}&documentId=${selectedItem.id}`);
             setSavedAnswers(response.data);
             const alreadyRevealed = {};
             Object.keys(response.data).forEach(key => { alreadyRevealed[key] = true; });
@@ -60,7 +60,7 @@ const StudentDocuments = ({ subjectName, user }) => {
         setConfirmingIdx(null);
 
         try {
-            await axios.post('https://edu-track-backend.onrender.com/api/answers/document', {
+            await axios.post('https://edu-track-c6ml.onrender.com/api/answers/document', {
                 studentId: user.id,
                 documentId: selectedItem.id,
                 questionIndex: idx,
@@ -82,7 +82,7 @@ const StudentDocuments = ({ subjectName, user }) => {
         }));
 
         try {
-            await axios.post('https://edu-track-backend.onrender.com/api/progress/document', {
+            await axios.post('https://edu-track-c6ml.onrender.com/api/progress/document', {
                 studentId: user.id,
                 documentId: selectedItem.id,
                 watchedPercentage: percentage,

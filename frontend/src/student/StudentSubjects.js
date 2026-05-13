@@ -11,7 +11,7 @@ const StudentSubjects = ({ onSelectSubject }) => {
 
     const fetchSubjects = async () => {
         try {
-            const response = await axios.get('https://edu-track-backend.onrender.com/api/subjects'); 
+            const response = await axios.get('https://edu-track-c6ml.onrender.com/api/subjects'); 
             setSubjects(response.data);
         } catch (error) {
             console.error("Error fetching subjects:", error);
