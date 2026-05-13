@@ -35,7 +35,8 @@ public class AppConfig {
         String envPassword = System.getenv("DB_PASSWORD");
         this.dbPassword = (envPassword != null) ? envPassword : "YOUR_AIVEN_PASSWORD_HERE"; 
 
-        this.serverPort = 8080;
+        String envPort = System.getenv("PORT");
+        this.serverPort = (envPort != null) ? Integer.parseInt(envPort) : 8080;
     }
 
     /**
