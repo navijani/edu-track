@@ -32,7 +32,7 @@ const StudentNotifications = ({ user }) => {
     const fetchNotifications = async () => {
         if (!user || !user.studentClass) return;
         try {
-            const response = await axios.get(`http://localhost:8080/api/notifications?targetClass=${encodeURIComponent(user.studentClass)}`);
+            const response = await axios.get(`https://edu-track-backend.onrender.com/api/notifications?targetClass=${encodeURIComponent(user.studentClass)}`);
             const fetchedData = response.data;
             
             // Just for demonstration, we consider all fetched items as "unread" until dropdown is opened

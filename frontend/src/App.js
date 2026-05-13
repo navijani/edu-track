@@ -20,7 +20,8 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
   const handleAdminAuth = () => {
-    setScreen('admin-login');
+    setUserRole('ADMIN');
+    setScreen('login-entry');
   };
 
   const handleLogout = () => {
@@ -70,18 +71,7 @@ function App() {
         <ContactUs onBack={handleBackToRole} />
       )}
 
-      {/* Admin Login Screen */}
-      {screen === 'admin-login' && (
-        <AdminLogin
-          onBack={() => setScreen('role')}
-          onSuccess={() => setScreen('admin-dashboard')}
-        />
-      )}
 
-      {/* Admin Dashboard */}
-      {screen === 'admin-dashboard' && (
-        <AdminDashboard onLogout={handleLogout} />
-      )}
 
       {/* Login Credentials Screen */}
       {screen === 'login-entry' && (
@@ -105,6 +95,8 @@ function App() {
             <StudentDashboard user={currentUser} onLogout={handleLogout} />
           ) : userRole.toUpperCase() === 'PARENT' ? (
             <ParentDashboard user={currentUser} onLogout={handleLogout} />
+          ) : userRole.toUpperCase() === 'ADMIN' ? (
+            <AdminDashboard onLogout={handleLogout} />
           ) : (
             <Dashboard role={userRole} user={currentUser} onLogout={handleLogout} />
           )}

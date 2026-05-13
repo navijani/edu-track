@@ -15,7 +15,7 @@ const StudentProgress = ({ user }) => {
 
     const fetchSummary = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/progress/summary?studentId=${user.id}`);
+            const response = await axios.get(`https://edu-track-backend.onrender.com/api/progress/summary?studentId=${user.id}`);
             setData(response.data);
         } catch (error) {
             console.error("Error fetching progress summary:", error);

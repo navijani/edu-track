@@ -59,7 +59,7 @@ const TeacherAddQuiz = ({ user }) => {
       questions
     };
     try {
-      await axios.post('http://localhost:8080/api/contents/quiz', payload);
+      await axios.post('https://edu-track-backend.onrender.com/api/contents/quiz', payload);
       setStatus('✅ Quiz saved successfully!');
       setTitle(''); setDuration(''); setScheduledDate(''); setDeadline(''); setTotalMarks(''); setTargetClass('');
       setQuestions([{ question: '', imageUrl: '', options: ['', ''], correctAnswer: '' }]);

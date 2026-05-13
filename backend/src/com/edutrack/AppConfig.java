@@ -28,9 +28,13 @@ public class AppConfig {
      * All configuration values are defined here.
      */
     private AppConfig() {
-        this.dbUrl      = "jdbc:mysql://localhost:3306/studentdb";
-        this.dbUser     = "root";
-        this.dbPassword = "";
+        this.dbUrl      = "jdbc:mysql://edu-track-edu-track.l.aivencloud.com:26238/defaultdb?sslMode=REQUIRED";
+        this.dbUser     = "avnadmin";
+        
+        // Use Environment Variable for the password so it stays secure
+        String envPassword = System.getenv("DB_PASSWORD");
+        this.dbPassword = (envPassword != null) ? envPassword : "YOUR_AIVEN_PASSWORD_HERE"; 
+
         this.serverPort = 8080;
     }
 
