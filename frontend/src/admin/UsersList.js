@@ -9,7 +9,7 @@ const UsersList = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/api/users/register');
+      const res = await axios.get('https://edu-track-backend.onrender.com/api/users/register');
       setUsers(res.data);
     } catch (err) {
       console.error("Error fetching users:", err);
@@ -33,7 +33,7 @@ const UsersList = () => {
   const handleDelete = async (id) => {
     if (window.confirm(`Are you sure you want to delete user ${id}?`)) {
       try {
-        await axios.delete(`http://localhost:8080/api/users/register?id=${id}`);
+        await axios.delete(`https://edu-track-backend.onrender.com/api/users/register?id=${id}`);
         fetchUsers();
         if (selectedUser && selectedUser.id === id) setSelectedUser(null);
       } catch (err) {

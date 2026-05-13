@@ -10,7 +10,7 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
     const fetchMessages = async () => {
         if (!parentId || !teacherId) return;
         try {
-            const res = await axios.get(`http://localhost:8080/api/chat?parentId=${parentId}&teacherId=${teacherId}`);
+            const res = await axios.get(`https://edu-track-backend.onrender.com/api/chat?parentId=${parentId}&teacherId=${teacherId}`);
             setMessages(res.data);
         } catch (err) {
             console.error("Error fetching chat:", err);
@@ -34,7 +34,7 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
         if (!newMsg.trim()) return;
 
         try {
-            await axios.post('http://localhost:8080/api/chat', {
+            await axios.post('https://edu-track-backend.onrender.com/api/chat', {
                 parentId: parentId,
                 teacherId: teacherId,
                 senderId: currentUser.id,

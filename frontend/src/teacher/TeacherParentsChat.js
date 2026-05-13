@@ -11,7 +11,7 @@ const TeacherParentsChat = ({ user }) => {
     useEffect(() => {
         const fetchParents = async () => {
             try {
-                const res = await axios.get('http://localhost:8080/api/teacher/parents');
+                const res = await axios.get('https://edu-track-backend.onrender.com/api/teacher/parents');
                 setParents(res.data);
             } catch (err) {
                 console.error("Error fetching parents:", err);

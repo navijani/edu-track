@@ -29,7 +29,7 @@ const StudentQuizzes = ({ subjectName, user }) => {
     const fetchQuizzes = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/api/contents/quiz?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
+            const response = await axios.get(`https://edu-track-backend.onrender.com/api/contents/quiz?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
             setContentList(response.data);
         } catch (error) { setContentList([]); }
         setLoading(false);
@@ -37,7 +37,7 @@ const StudentQuizzes = ({ subjectName, user }) => {
 
     const fetchSubmissions = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/answers/quiz?studentId=${user.id}`);
+            const response = await axios.get(`https://edu-track-backend.onrender.com/api/answers/quiz?studentId=${user.id}`);
             setSubmissions(response.data); 
         } catch (error) {}
     };
@@ -82,7 +82,7 @@ const StudentQuizzes = ({ subjectName, user }) => {
         
         const score = Math.round((correctCount / selectedItem.questions.length) * selectedItem.marks);
         try {
-            await axios.post('http://localhost:8080/api/answers/quiz', {
+            await axios.post('https://edu-track-backend.onrender.com/api/answers/quiz', {
                 studentId: user.id, quizId: selectedItem.id,
                 answersJson: JSON.stringify(userAnswers), score: score, attendTime: new Date().toISOString()
             });

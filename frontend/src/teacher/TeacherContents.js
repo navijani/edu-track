@@ -19,7 +19,7 @@ const TeacherContents = ({ user }) => {
   const fetchContent = async (type) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/api/contents/${type}?teacherId=${user.id}`);
+      const response = await axios.get(`https://edu-track-backend.onrender.com/api/contents/${type}?teacherId=${user.id}`);
       setContentList(response.data);
     } catch (error) {
       console.error("Error fetching content:", error);
@@ -31,7 +31,7 @@ const TeacherContents = ({ user }) => {
   const handleDelete = async () => {
     if (!window.confirm(`Are you sure you want to delete this ${activeTab.slice(0, -1)}?`)) return;
     try {
-      await axios.delete(`http://localhost:8080/api/contents/${activeTab.slice(0, -1)}?id=${selectedItem.id}`);
+      await axios.delete(`https://edu-track-backend.onrender.com/api/contents/${activeTab.slice(0, -1)}?id=${selectedItem.id}`);
       setSelectedItem(null);
       fetchContent(activeTab);
     } catch (error) {

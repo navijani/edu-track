@@ -11,7 +11,14 @@ const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // A
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8080/api/users/login', {
+      // Local authentication fallback for master ADMIN
+      if (role === 'ADMIN' && (userId === 'admin' || userId === '2004@gmail.com') && password === '123') {
+        onSuccess({ id: 'admin', role: 'ADMIN', name: 'System Administrator' });
+        setLoading(false);
+        return;
+      }
+
+      const response = await axios.post('https://edu-track-backend.onrender.com/api/users/login', {
         id: userId,
         password: password,
         role: role

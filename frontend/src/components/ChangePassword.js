@@ -152,7 +152,7 @@ const ChangePassword = ({ user }) => {
         // ── API call ─────────────────────────────────────────────────────────
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:8080/api/users/change-password', {
+            const res = await fetch('https://edu-track-backend.onrender.com/api/users/change-password', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

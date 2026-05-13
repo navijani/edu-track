@@ -12,7 +12,7 @@ const TeacherZoomSchedule = ({ user }) => {
 
     const fetchMeetings = useCallback(async () => {
         try {
-            const res = await axios.get(`http://localhost:8080/api/zoom?subject=${user.subject}`);
+            const res = await axios.get(`https://edu-track-backend.onrender.com/api/zoom?subject=${user.subject}`);
             setScheduledMeetings(res.data);
         } catch (err) { console.error(err); }
     }, [user.subject]);
@@ -29,7 +29,7 @@ const TeacherZoomSchedule = ({ user }) => {
         };
 
         try {
-            const res = await axios.post('http://localhost:8080/api/zoom', data);
+            const res = await axios.post('https://edu-track-backend.onrender.com/api/zoom', data);
             if (res.data.success) {
                 setTopic(''); setMeetingLink(''); setMeetingDate(''); setMeetingTime(''); setEndTime('');
                 fetchMeetings();
@@ -40,7 +40,7 @@ const TeacherZoomSchedule = ({ user }) => {
     const deleteMeeting = async (id) => {
         if (!window.confirm("Cancel this meeting?")) return;
         try {
-            const res = await axios.delete(`http://localhost:8080/api/zoom?id=${id}`);
+            const res = await axios.delete(`https://edu-track-backend.onrender.com/api/zoom?id=${id}`);
             if (res.data.success) fetchMeetings();
         } catch (err) { alert("Error deleting meeting"); }
     };

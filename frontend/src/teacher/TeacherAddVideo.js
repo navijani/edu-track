@@ -49,7 +49,7 @@ const TeacherAddVideo = ({ user }) => {
 
         try {
             // We will need to build this Java endpoint next!
-            await axios.post('http://localhost:8080/api/contents/video', payload);
+            await axios.post('https://edu-track-backend.onrender.com/api/contents/video', payload);
             setStatus('✅ Video and questions saved successfully!');
             setTitle('');
             setVideoUrl('');

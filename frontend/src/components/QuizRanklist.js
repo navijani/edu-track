@@ -19,7 +19,7 @@ const QuizRanklist = ({ quizId, quizTitle, totalMarks, currentUserId, onClose })
         const fetchRanklist = async () => {
             setLoading(true);
             try {
-                const res = await axios.get(`http://localhost:8080/api/answers/quiz?quizId=${quizId}`);
+                const res = await axios.get(`https://edu-track-backend.onrender.com/api/answers/quiz?quizId=${quizId}`);
                 setRanklist(res.data);
             } catch (e) {
                 setRanklist([]);
