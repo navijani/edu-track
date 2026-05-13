@@ -62,7 +62,7 @@ const ParentDashboard = ({ user, onLogout }) => {
                         </div>
 
                         {/* Tabs */}
-                        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginBottom: '30px', flexWrap: 'wrap' }}>
+                        <div className="p-tab-container" style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginBottom: '30px', flexWrap: 'wrap' }}>
                             <button className={`p-tab-btn ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>📊 Progress</button>
                             <button className={`p-tab-btn ${activeTab === 'ranklist' ? 'active' : ''}`} onClick={() => { setActiveTab('ranklist'); setSelectedRanklistQuiz(null); }}>🏆 Quiz Ranklist</button>
                             <button className={`p-tab-btn ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>💬 Teacher Chat</button>

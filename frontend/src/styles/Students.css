@@ -1364,14 +1364,34 @@
 
     /* Content Area Padding */
     .s-main-content {
+        padding: 15px;
+    }
+
+    /* Stats Grid stacking */
+    .s-stats-grid {
+        flex-direction: column;
+        gap: 15px !important;
+    }
+
+    .s-stat-card {
         padding: 20px;
     }
 
-    /* Stat Cards stacking */
-    .s-dash-container .flex-container { /* Assuming a flex wrapper around cards */
+    /* Subject Header for Content View */
+    .s-subject-header {
         flex-direction: column;
+        align-items: flex-start !important;
         gap: 15px;
     }
+
+    /* Tabs Horizontal Scroll */
+    .s-material-tabs {
+        overflow-x: auto;
+        padding-bottom: 5px;
+        justify-content: flex-start;
+        scrollbar-width: none;
+    }
+    .s-material-tabs::-webkit-scrollbar { display: none; }
 
     /* Profile Hero Card adjustments */
     .up-hero-card {
@@ -1385,8 +1405,19 @@
     }
 
     /* Grid Adjustments */
-    .s-subjects-grid, .s-video-grid, .s-quiz-grid, .s-doc-grid, .up-grid {
-        grid-template-columns: 1fr;
+    .s-subjects-grid, .s-video-grid, .s-quiz-grid, .s-doc-grid, .up-grid, .s-dash-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+
+    /* Video Player responsive */
+    #youtube-player-container {
+        height: 250px !important;
+    }
+
+    /* AI Summary responsiveness */
+    .s-ai-result-card {
+        padding: 15px;
     }
 
     /* Change Password Card */

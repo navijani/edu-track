@@ -223,17 +223,19 @@
     width: 100%;
     min-width: 100%;
     height: auto;         /* No longer full-height */
-    position: static;     /* Not sticky on mobile */
+    position: sticky;     /* STICKY on mobile */
+    top: 0;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;    /* Prevents wrapping to multiple lines */
     align-items: center;
     gap: 6px;
-    padding: 10px 12px;
+    padding: 8px 15px;
     border-right: none;
     border-bottom: 1px solid rgba(255,255,255,0.3);
     overflow-x: auto;
     overflow-y: visible;
     scrollbar-width: none;
+    z-index: 1100;        /* Above main area */
   }
   .teacher-sidebar::-webkit-scrollbar { display: none; }
 
@@ -307,7 +309,7 @@
   .teacher-main-area {
     height: auto;
     overflow-y: visible;
-    padding: 16px;
+    padding: 20px 15px;
   }
 
   .t-content-header {

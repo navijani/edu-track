@@ -11,7 +11,7 @@ const StudentSubjectContent = ({ subject, user, onBack }) => {
         <div className="s-subject-content-card animated-fade-in">
             
             {/* Top Navigation & Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+            <div className="s-subject-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
                 <button 
                     onClick={onBack} 
                     className="s-btn-logout" 

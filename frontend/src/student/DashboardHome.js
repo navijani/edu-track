@@ -35,7 +35,7 @@ const DashboardHome = ({ user }) => {
         </p>
 
             {/* QUICK STATS */}
-            <div style={{ display: 'flex', gap: '20px', marginBottom: '30px' }}>
+            <div className="s-stats-grid" style={{ display: 'flex', gap: '20px', marginBottom: '30px' }}>
     <div className="s-stat-card blue-glow">
         <h3>{data.totalSubjects}</h3>
         <p>Enrolled Subjects</p>
