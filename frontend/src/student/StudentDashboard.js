@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // ── Page-level imports ────────────────────────────────────────────────────────
 import StudentSubjects      from './StudentSubjects';       // Subject card grid
@@ -39,14 +39,85 @@ import '../styles/Students.css'; // All student-specific CSS classes (s-* and up
  */
 const StudentDashboard = ({ user, onLogout }) => {
 
-    // `activeTab` controls which component is rendered in the main content area.
-    // Defaults to 'dashboard' so the overview is shown on first load.
     const [activeTab, setActiveTab] = useState('dashboard');
-
-    // `selectedSubject` is only used inside the 'subjects' tab.
-    // When null, the subject grid is shown; when set to a subject object,
-    // the per-subject content viewer (<StudentSubjectContent>) is shown instead.
     const [selectedSubject, setSelectedSubject] = useState(null);
+
+    // ── SYNC TABS WITH URL HASH (Back/Forward Button Support) ──────────────────
+    useEffect(() => {
+        /**
+         * Parses the current window.location.hash to set the initial component state.
+         * Expected hash formats:
+         *   #/dashboard
+         *   #/subjects
+         *   #/subjects/details?name=Mathematics
+         */
+        const handleHashChange = () => {
+            const hash = window.location.hash.replace('#/', '');
+            if (!hash) {
+                setActiveTab('dashboard');
+                setSelectedSubject(null);
+                return;
+            }
+
+            // Split into path and query (if any)
+            // e.g. "subjects/details?name=Math" -> ["subjects", "details?name=Math"]
+            const parts = hash.split('/');
+            const tab = parts[0];
+            
+            setActiveTab(tab);
+
+            // If we are in the subjects tab and have a sub-path for details
+            if (tab === 'subjects' && parts[1] && parts[1].startsWith('details')) {
+                const params = new URLSearchParams(parts[1].split('?')[1]);
+                const subjectName = params.get('name');
+                if (subjectName) {
+                    // We only have the name in the URL, but the components expect a subject object.
+                    // For now, we'll restore the state if possible or keep it as a partial object.
+                    setSelectedSubject({ name: decodeURIComponent(subjectName) });
+                }
+            } else {
+                setSelectedSubject(null);
+            }
+        };
+
+        // Listen for browser navigation (back/forward)
+        window.addEventListener('hashchange', handleHashChange);
+        
+        // Run once on mount to handle direct links
+        handleHashChange();
+
+        return () => window.removeEventListener('hashchange', handleHashChange);
+    }, []);
+
+    /**
+     * Updates the URL hash to match the current component state.
+     */
+    const updateHash = (tab, subject = null) => {
+        let newHash = `#/${tab}`;
+        if (subject && tab === 'subjects') {
+            newHash += `/details?name=${encodeURIComponent(subject.name)}`;
+        }
+        window.location.hash = newHash;
+    };
+
+    // Helper to change tab AND update URL
+    const changeTab = (id) => {
+        setActiveTab(id);
+        setSelectedSubject(null);
+        updateHash(id);
+    };
+
+    // Helper to select subject AND update URL
+    const selectSubject = (sub) => {
+        setSelectedSubject(sub);
+        updateHash('subjects', sub);
+    };
+
+    // Helper to go back from subject AND update URL
+    const clearSubject = () => {
+        setSelectedSubject(null);
+        updateHash('subjects');
+    };
 
     /**
      * NavItem – reusable sidebar navigation list item.
@@ -64,10 +135,7 @@ const StudentDashboard = ({ user, onLogout }) => {
     const NavItem = ({ id, icon, label }) => (
         <li
             className={`s-nav-item ${activeTab === id ? 'active' : ''}`}
-            onClick={() => {
-                setActiveTab(id);
-                setSelectedSubject(null); // always reset drill-down on tab change
-            }}
+            onClick={() => changeTab(id)}
         >
             <span style={{ fontSize: '18px' }}>{icon}</span> 
             {label}
@@ -100,7 +168,7 @@ const StudentDashboard = ({ user, onLogout }) => {
                 </ul>
 
                 {/* Logout button pinned to the bottom of the sidebar */}
-                <div className="s-sidebar-footer" style={{ padding: '20px' }}>
+                <div className="s-sidebar-footer">
                     <button className="s-btn-logout" onClick={onLogout}>
                         🚪 Logout
                     </button>
@@ -138,7 +206,7 @@ const StudentDashboard = ({ user, onLogout }) => {
                                 <StudentSubjectContent
                                     subject={selectedSubject}
                                     user={user}
-                                    onBack={() => setSelectedSubject(null)}
+                                    onBack={clearSubject}
                                 />
                             ) : (
                                 /*
@@ -147,7 +215,7 @@ const StudentDashboard = ({ user, onLogout }) => {
                                  * and triggers the content viewer render above.
                                  */
                                 <StudentSubjects
-                                    onSelectSubject={(sub) => setSelectedSubject(sub)}
+                                    onSelectSubject={selectSubject}
                                 />
                             )}
                         </div>

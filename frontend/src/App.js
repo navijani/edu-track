@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import IntroScreen from './components/IntroScreen';
 import RoleSelection from './components/RoleSelection';
 import LoginCredentials from './components/LoginCredentials';
@@ -13,32 +13,87 @@ import ContactUs from './components/ContactUs';
 import './App.css';
 
 function App() {
+  // Initialize state from localStorage if available to persist session on refresh
   const [screen, setScreen] = useState('intro');
-  const [userRole, setUserRole] = useState('');
+  const [userRole, setUserRole] = useState(() => localStorage.getItem('eduRole') || '');
+  const [currentUser, setCurrentUser] = useState(() => {
+    const savedUser = localStorage.getItem('eduUser');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
-  // Store the actual user data after a successful login
-  const [currentUser, setCurrentUser] = useState(null);
+  // Sync session data to localStorage whenever it changes
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem('eduUser', JSON.stringify(currentUser));
+      localStorage.setItem('eduRole', userRole);
+    } else {
+      localStorage.removeItem('eduUser');
+      localStorage.removeItem('eduRole');
+    }
+  }, [currentUser, userRole]);
+
+  // ── ROUTING LOGIC (Back/Forward Support) ──────────────────────────────────
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#/', '');
+      if (!hash || hash === 'intro') {
+        setScreen('intro');
+      } else if (hash === 'role') {
+        setScreen('role');
+      } else if (hash === 'contact') {
+        setScreen('contact');
+      } else if (hash.startsWith('login')) {
+        // e.g. #/login?role=STUDENT
+        const params = new URLSearchParams(hash.split('?')[1]);
+        const role = params.get('role');
+        if (role) setUserRole(role.toUpperCase());
+        setScreen('login-entry');
+      } else if (hash.startsWith('dashboard')) {
+        // If user is logged in, show dashboard. Otherwise, redirect to intro.
+        if (currentUser) {
+          setScreen('dashboard');
+        } else {
+          navigate('intro');
+        }
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange(); // Initial sync
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [currentUser]); // Re-run if currentUser changes (for dashboard access)
+
+  const navigate = (to, params = {}) => {
+    let newHash = `#/${to}`;
+    if (Object.keys(params).length > 0) {
+      const query = new URLSearchParams(params).toString();
+      newHash += `?${query}`;
+    }
+    window.location.hash = newHash;
+  };
 
   const handleAdminAuth = () => {
     setUserRole('ADMIN');
-    setScreen('login-entry');
+    navigate('login-entry', { role: 'ADMIN' });
   };
 
   const handleLogout = () => {
-    setScreen('intro');
     setCurrentUser(null);
     setUserRole('');
+    localStorage.removeItem('eduUser');
+    localStorage.removeItem('eduRole');
+    navigate('intro');
   };
 
-  // Function to go back to the role selection from contact page
   const handleBackToRole = () => {
-    setScreen('role');
+    navigate('role');
   };
 
   return (
     <div className="App">
       {/* Introduction Screen */}
-      {screen === 'intro' && <IntroScreen onLogin={() => setScreen('role')} />}
+      {screen === 'intro' && <IntroScreen onLogin={() => navigate('role')} />}
 
       {/* Role Selection Screen */}
       {screen === 'role' && (
@@ -51,15 +106,15 @@ function App() {
 
           <RoleSelection onSelect={(role) => {
             setUserRole(role);
-            setScreen('login-entry');
+            navigate('login-entry', { role });
           }}
-            onContactClick={() => setScreen('contact')}
+            onContactClick={() => navigate('contact')}
           />
 
           {/* Contact Administration Button at the bottom of Role Selection */}
           <div style={{ marginTop: '20px', textAlign: 'center' }}>
             <p>If you need some help, contact the administration panel.</p>
-            <button className="contact-btn" onClick={() => setScreen('contact')}>
+            <button className="contact-btn" onClick={() => navigate('contact')}>
               Contact Us
             </button>
           </div>
@@ -77,11 +132,11 @@ function App() {
       {screen === 'login-entry' && (
         <LoginCredentials
           role={userRole}
-          onBack={() => setScreen('role')}
-          onContactClick={() => setScreen('contact')}
+          onBack={() => navigate('role')}
+          onContactClick={() => navigate('contact')}
           onSuccess={(userData) => {
             setCurrentUser(userData);
-            setScreen('dashboard');
+            navigate('dashboard');
           }}
         />
       )}
