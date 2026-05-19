@@ -37,6 +37,22 @@ public class LoginHandler implements HttpHandler {
                 String role = body.split("\"role\":\"")[1].split("\"")[0];
 
                 // 2. Use the DAO to authenticate (Abstraction)
+                if ("ADMIN".equalsIgnoreCase(role)) {
+                    com.edutrack.dao.AdminDAO adminDAO = new com.edutrack.dao.AdminDAO();
+                    com.edutrack.models.Admin admin = adminDAO.authenticateAdmin(id, password);
+                    
+                    if (admin != null) {
+                        String jsonResponse = String.format(
+                                "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"email\":\"%s\", \"id\":\"%s\", \"token\":\"placeholder_token_structure\"}",
+                                admin.getRole(), admin.getName(), admin.getEmail(), admin.getId());
+                        sendResponse(exchange, 200, jsonResponse);
+                    } else {
+                        String error = "{\"success\":false, \"message\":\"Invalid credentials\"}";
+                        sendResponse(exchange, 401, error);
+                    }
+                    return;
+                }
+
                 User authenticatedUser = userDAO.authenticateUser(id, password, role);
 
                 if (authenticatedUser != null) {
@@ -58,7 +74,7 @@ public class LoginHandler implements HttpHandler {
                     // Added \"studentClass\":\"%s\" to the JSON string payload so the frontend React application
                     // can save it to its local user state and use it to fetch class-specific contents.
                     String jsonResponse = String.format(
-                            "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"studentClass\":\"%s\", \"id\":\"%s\"}",
+                            "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"studentClass\":\"%s\", \"id\":\"%s\", \"token\":\"placeholder_token_structure\"}",
                             authenticatedUser.getRole(), authenticatedUser.getName(), subject, studentClass,
                             authenticatedUser.getId());
 
