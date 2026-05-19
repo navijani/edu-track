@@ -50,7 +50,8 @@ function App() {
         setScreen('login-entry');
       } else if (hash.startsWith('dashboard')) {
         // If user is logged in, show dashboard. Otherwise, redirect to intro.
-        if (currentUser) {
+        const savedUser = localStorage.getItem('eduUser');
+        if (currentUser || savedUser) {
           setScreen('dashboard');
         } else {
           navigate('intro');
@@ -136,7 +137,13 @@ function App() {
           onContactClick={() => navigate('contact')}
           onSuccess={(userData) => {
             setCurrentUser(userData);
-            navigate('dashboard');
+            localStorage.setItem('eduUser', JSON.stringify(userData));
+            localStorage.setItem('eduRole', userRole);
+            // Directly set the screen instead of navigating via hash to avoid
+            // the stale-closure race condition where handleHashChange reads the
+            // old currentUser=null before React has processed the state update.
+            setScreen('dashboard');
+            window.location.hash = '#/dashboard';
           }}
         />
       )}
