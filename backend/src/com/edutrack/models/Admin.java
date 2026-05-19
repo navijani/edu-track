@@ -4,7 +4,7 @@ public class Admin extends User {
     private String role;
     
     public Admin(String id, String email, String name, String role) {
-        super(id, name, email, "", role, "");
+        super(id, name, email, "", role);
         this.role = role;
     }
 

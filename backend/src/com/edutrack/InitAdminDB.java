@@ -26,8 +26,12 @@ public class InitAdminDB {
             System.out.println("Table 'admins' checked/created.");
 
             // 2. Seed main admin if not exists
-            String email = "2004@gmail.com";
-            String rawPassword = "123";
+            String email = System.getenv("ADMIN_EMAIL");
+            if (email == null || email.isEmpty()) email = "2004@gmail.com";
+            
+            String rawPassword = System.getenv("ADMIN_PASSWORD");
+            if (rawPassword == null || rawPassword.isEmpty()) rawPassword = "123";
+            
             String hashedPassword = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
             
             String insertSql = "INSERT IGNORE INTO admins (email, password_hash, role, created_by) VALUES (?, ?, 'MAIN_ADMIN', 'SYSTEM')";

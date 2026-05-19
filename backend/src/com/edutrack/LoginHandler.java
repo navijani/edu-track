@@ -43,7 +43,7 @@ public class LoginHandler implements HttpHandler {
                     
                     if (admin != null) {
                         String jsonResponse = String.format(
-                                "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"email\":\"%s\", \"id\":\"%s\", \"token\":\"placeholder_token_structure\"}",
+                                "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"email\":\"%s\", \"id\":\"%s\"}",
                                 admin.getRole(), admin.getName(), admin.getEmail(), admin.getId());
                         sendResponse(exchange, 200, jsonResponse);
                     } else {
@@ -74,7 +74,7 @@ public class LoginHandler implements HttpHandler {
                     // Added \"studentClass\":\"%s\" to the JSON string payload so the frontend React application
                     // can save it to its local user state and use it to fetch class-specific contents.
                     String jsonResponse = String.format(
-                            "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"studentClass\":\"%s\", \"id\":\"%s\", \"token\":\"placeholder_token_structure\"}",
+                            "{\"success\":true, \"role\":\"%s\", \"name\":\"%s\", \"subject\":\"%s\", \"studentClass\":\"%s\", \"id\":\"%s\"}",
                             authenticatedUser.getRole(), authenticatedUser.getName(), subject, studentClass,
                             authenticatedUser.getId());
 

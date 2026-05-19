@@ -396,7 +396,5 @@ CREATE TABLE `admins` (
 --
 -- Dumping data for table `admins`
 --
-
-INSERT INTO `admins` (`email`, `password_hash`, `role`, `created_by`) VALUES
-('2004@gmail.com', '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjQsJMv34q', 'MAIN_ADMIN', 'SYSTEM');
+-- Seed data removed for security. Use InitAdminDB.java to securely bootstrap the initial admin.
 

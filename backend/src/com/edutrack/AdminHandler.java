@@ -108,16 +108,18 @@ public class AdminHandler implements HttpHandler {
 
         @Override
         public void execute(HttpExchange exchange) throws IOException {
+            // Note: In a production system, we must verify the Authorization token here
+            // to ensure the caller is allowed to create admins.
             try {
                 InputStream is = exchange.getRequestBody();
                 String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 
                 String email = extractValue(body, "email");
                 String password = extractValue(body, "password");
-                String role = extractValue(body, "role");
                 String createdBy = extractValue(body, "createdBy");
                 
-                if (role.isEmpty()) role = "ADMIN";
+                // Enforce ADMIN role to prevent privilege escalation via API
+                String role = "ADMIN";
 
                 if (adminDAO.addAdmin(email, password, role, createdBy)) {
                     sendResponse(exchange, 200, "{\"success\":true, \"message\":\"Admin created successfully\"}");
@@ -140,6 +142,7 @@ public class AdminHandler implements HttpHandler {
 
         @Override
         public void execute(HttpExchange exchange) throws IOException {
+            // Note: In a production system, we must verify the Authorization token here
             String query = exchange.getRequestURI().getQuery();
             if (query != null && query.contains("email=")) {
                 String[] params = query.split("&");
@@ -149,8 +152,13 @@ public class AdminHandler implements HttpHandler {
                 for (String param : params) {
                     String[] pair = param.split("=");
                     if (pair.length == 2) {
-                        if (pair[0].equals("email")) targetEmail = pair[1];
-                        if (pair[0].equals("currentUser")) currentUserEmail = pair[1];
+                        try {
+                            String decodedValue = java.net.URLDecoder.decode(pair[1], StandardCharsets.UTF_8.name());
+                            if (pair[0].equals("email")) targetEmail = decodedValue;
+                            if (pair[0].equals("currentUser")) currentUserEmail = decodedValue;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 

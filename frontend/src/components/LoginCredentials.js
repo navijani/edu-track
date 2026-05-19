@@ -20,9 +20,6 @@ const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // A
       });
 
       if (response.data && response.data.success) {
-        if (response.data.token) {
-          localStorage.setItem('eduToken', response.data.token);
-        }
         onSuccess(response.data);
       } else {
         setError(response.data.message || "Authentication failed. Please check your credentials.");
