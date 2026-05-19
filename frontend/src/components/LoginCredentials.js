@@ -13,13 +13,6 @@ const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // A
     setLoading(true);
     setError(''); // Clear previous error
     try {
-      // Local authentication fallback for master ADMIN
-      if (role === 'ADMIN' && (userId === 'admin' || userId === '2004@gmail.com') && password === '123') {
-        onSuccess({ id: 'admin', role: 'ADMIN', name: 'System Administrator' });
-        setLoading(false);
-        return;
-      }
-
       const response = await axios.post('https://edu-track-c6ml.onrender.com/api/users/login', {
         id: userId,
         password: password,
@@ -27,6 +20,9 @@ const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // A
       });
 
       if (response.data && response.data.success) {
+        if (response.data.token) {
+          localStorage.setItem('eduToken', response.data.token);
+        }
         onSuccess(response.data);
       } else {
         setError(response.data.message || "Authentication failed. Please check your credentials.");
