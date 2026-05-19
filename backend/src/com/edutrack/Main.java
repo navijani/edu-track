@@ -19,6 +19,9 @@ public class Main {
 
         server.createContext("/api/users/login", new LoginHandler());
 
+        // Route for admins CRUD
+        server.createContext("/api/admins", new AdminHandler());
+
         server.createContext("/api/users/change-password", new ChangePasswordHandler());
 
         server.createContext("/api/users/profile", new ProfileHandler());
