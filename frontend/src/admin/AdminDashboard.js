@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import AddUser from './AddUser';
 import AddSubject from './AddSubject';
 import UsersList from './UsersList';
+import ManageAdmins from './ManageAdmins'; // Added ManageAdmins import
 import '../styles/Admin.css';
-
 
 const AdminDashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('viewUsers');
@@ -43,6 +43,13 @@ const AdminDashboard = ({ onLogout }) => {
             >
               <span className="menu-icon">📚</span> Manage Subjects
             </li>
+
+            <li
+              className={activeTab === 'manageAdmins' ? 'active' : ''}
+              onClick={() => setActiveTab('manageAdmins')}
+            >
+              <span className="menu-icon">🛡️</span> Manage Admins
+            </li>
           </ul>
 
           <div className="sidebar-footer">
@@ -55,8 +62,11 @@ const AdminDashboard = ({ onLogout }) => {
         {/* Main Content Area */}
         <main className="admin-main-content">
           <header className="content-header">
-            <h1>{activeTab === 'viewUsers' ? 'User Management' :
-              activeTab === 'users' ? 'Onboard New User' : 'Subject Directory'}</h1>
+            <h1>
+              {activeTab === 'viewUsers' ? 'User Management' :
+               activeTab === 'users' ? 'Onboard New User' : 
+               activeTab === 'manageAdmins' ? 'Manage Administrators' : 'Subject Directory'}
+            </h1>
             <div className="admin-status">System Active</div>
           </header>
 
@@ -64,6 +74,7 @@ const AdminDashboard = ({ onLogout }) => {
             {activeTab === 'viewUsers' && <UsersList />}
             {activeTab === 'users' && <AddUser />}
             {activeTab === 'subjects' && <AddSubject />}
+            {activeTab === 'manageAdmins' && <ManageAdmins />}
           </div>
         </main>
       </div>
