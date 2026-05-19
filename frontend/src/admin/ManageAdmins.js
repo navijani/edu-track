@@ -194,16 +194,7 @@ const ManageAdmins = () => {
                   required 
                 />
               </div>
-              <div className="input-group">
-                <label>Admin Role</label>
-                <select 
-                  value={newAdmin.role}
-                  onChange={(e) => setNewAdmin({...newAdmin, role: e.target.value})}
-                >
-                  <option value="ADMIN">Standard Admin</option>
-                  <option value="MAIN_ADMIN">Main Admin</option>
-                </select>
-              </div>
+
               <div className="modal-actions">
                 <button type="button" className="cancel-btn" onClick={() => setShowAddModal(false)}>Cancel</button>
                 <button type="submit" className="confirm-btn">Create Account</button>
