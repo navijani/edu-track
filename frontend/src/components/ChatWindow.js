@@ -17,6 +17,8 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
         }
     };
 
+    const messagesAreaRef = useRef(null);
+
     // Auto-refresh chat every 3 seconds for a "Live" feel
     useEffect(() => {
         fetchMessages();
@@ -26,7 +28,9 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
 
     // Auto-scroll to the bottom when a new message arrives
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (messagesAreaRef.current) {
+            messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight;
+        }
     }, [messages]);
 
     const handleSend = async (e) => {
@@ -60,7 +64,7 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
             </div>
 
             {/* Chat Messages Area */}
-            <div style={styles.messagesArea}>
+            <div style={styles.messagesArea} ref={messagesAreaRef}>
                 {messages.length === 0 ? (
                     <div style={styles.emptyState}>No messages yet. Say hello! 👋</div>
                 ) : (
