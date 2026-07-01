@@ -6,6 +6,7 @@ const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState(''); // ✨ New Search State
   const [selectedUser, setSelectedUser] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null); // ✨ Delete Modal State
 
   const fetchUsers = async () => {
     try {
@@ -30,15 +31,19 @@ const UsersList = () => {
     );
   });
 
-  const handleDelete = async (id) => {
-    if (window.confirm(`Are you sure you want to delete user ${id}?`)) {
-      try {
-        await axios.delete(`https://edu-track-c6ml.onrender.com/api/users/register?id=${id}`);
-        fetchUsers();
-        if (selectedUser && selectedUser.id === id) setSelectedUser(null);
-      } catch (err) {
-        console.error("Error deleting user:", err);
-      }
+  const handleDeleteClick = (user) => {
+    setUserToDelete(user);
+  };
+
+  const confirmDelete = async () => {
+    if (!userToDelete) return;
+    try {
+      await axios.delete(`https://edu-track-c6ml.onrender.com/api/users/register?id=${userToDelete.id}`);
+      fetchUsers();
+      if (selectedUser && selectedUser.id === userToDelete.id) setSelectedUser(null);
+      setUserToDelete(null);
+    } catch (err) {
+      console.error("Error deleting user:", err);
     }
   };
 
@@ -96,6 +101,25 @@ const UsersList = () => {
         </div>
       )}
 
+      {/* --- DELETE CONFIRMATION MODAL --- */}
+      {userToDelete && (
+        <div className="admin-modal-overlay">
+          <div className="admin-modal delete-modal">
+            <div className="modal-header">
+              <h3>Delete User</h3>
+              <button className="close-modal" onClick={() => setUserToDelete(null)}>×</button>
+            </div>
+            <p style={{ color: '#8892b0', marginTop: '10px', fontSize: '0.95rem', lineHeight: '1.5' }}>
+              Are you sure you want to delete user <strong>{userToDelete.name}</strong> ({userToDelete.id})? This action cannot be undone.
+            </p>
+            <div className="modal-actions">
+              <button className="cancel-btn" onClick={() => setUserToDelete(null)}>Cancel</button>
+              <button className="danger-btn" onClick={confirmDelete}>Yes, Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* --- TABLE SECTION (Now uses filteredUsers) --- */}
       <div className="table-responsive">
         <table className="glass-table">
@@ -120,7 +144,7 @@ const UsersList = () => {
                   </td>
                   <td className="actions-cell">
                     <button className="action-btn view" onClick={() => setSelectedUser(user)}>👁️ View</button>
-                    <button className="action-btn delete" onClick={() => handleDelete(user.id)}>🗑️ Delete</button>
+                    <button className="action-btn delete" onClick={() => handleDeleteClick(user)}>🗑️ Delete</button>
                   </td>
                 </tr>
               ))
