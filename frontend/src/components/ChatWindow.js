@@ -12,8 +12,14 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
         if (!parentId || !teacherId || !currentUser) return;
         try {
             const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/chat?parentId=${parentId}&teacherId=${teacherId}&viewerId=${currentUser.id}`);
+            let data = res.data;
+            if (typeof data === 'string') {
+                try { data = JSON.parse(data); } catch (e) { data = []; }
+            }
+            if (!Array.isArray(data)) data = [];
+            
             // Deduplicate by message ID just in case there are identical IDs from strict mode or rapid firing
-            const uniqueMessages = Array.from(new Map(res.data.map(msg => [msg.id, msg])).values());
+            const uniqueMessages = Array.from(new Map(data.map(msg => [msg.id, msg])).values());
             setMessages(uniqueMessages);
         } catch (err) {
             console.error("Error fetching chat:", err);
@@ -35,6 +41,7 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
 
     // Auto-refresh chat every 3 seconds for a "Live" feel
     useEffect(() => {
+        setMessages([]); // Clear chat immediately when changing recipient
         fetchMessages();
         const interval = setInterval(fetchMessages, 3000);
         return () => clearInterval(interval);
