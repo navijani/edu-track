@@ -5,6 +5,27 @@ import java.sql.*;
 
 public class ChatDAO {
 
+    public ChatDAO() {
+        createTableIfNotExists();
+    }
+
+    private void createTableIfNotExists() {
+        String sql = "CREATE TABLE IF NOT EXISTS chat_messages (" +
+                     "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                     "parent_id VARCHAR(50) NOT NULL, " +
+                     "teacher_id VARCHAR(50) NOT NULL, " +
+                     "sender_id VARCHAR(50) NOT NULL, " +
+                     "sender_name VARCHAR(100), " +
+                     "message TEXT NOT NULL, " +
+                     "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (Exception e) {
+            System.out.println("Error creating chat_messages table: " + e.getMessage());
+        }
+    }
+
     public boolean sendMessage(String parentId, String teacherId, String senderId, String senderName, String message) {
         String sql = "INSERT INTO chat_messages (parent_id, teacher_id, sender_id, sender_name, message) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();

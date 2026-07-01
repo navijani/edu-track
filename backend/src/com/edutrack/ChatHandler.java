@@ -60,8 +60,17 @@ public class ChatHandler implements HttpHandler {
             if (keyIndex == -1) return "";
             int colonIndex = json.indexOf(":", keyIndex);
             int valueStart = json.indexOf("\"", colonIndex) + 1;
-            int valueEnd = json.indexOf("\"", valueStart);
-            return json.substring(valueStart, valueEnd);
+            int valueEnd = valueStart;
+            while (valueEnd < json.length()) {
+                if (json.charAt(valueEnd) == '"' && json.charAt(valueEnd - 1) != '\\') {
+                    break;
+                }
+                valueEnd++;
+            }
+            return json.substring(valueStart, valueEnd)
+                       .replace("\\\"", "\"")
+                       .replace("\\n", "\n")
+                       .replace("\\\\", "\\");
         } catch (Exception e) { return ""; }
     }
 }
