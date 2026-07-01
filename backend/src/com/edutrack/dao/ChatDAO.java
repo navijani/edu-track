@@ -14,9 +14,15 @@ public class ChatDAO {
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute("ALTER TABLE chat_messages ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
-        } catch (Exception e) {
-            System.out.println("Upgrade skipped: " + e.getMessage());
-        }
+        } catch (Exception e) {}
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("ALTER TABLE chat_messages ADD COLUMN deleted_by_parent BOOLEAN DEFAULT FALSE");
+        } catch (Exception e) {}
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("ALTER TABLE chat_messages ADD COLUMN deleted_by_teacher BOOLEAN DEFAULT FALSE");
+        } catch (Exception e) {}
     }
 
     private void createTableIfNotExists() {
@@ -27,7 +33,9 @@ public class ChatDAO {
                      "sender_id VARCHAR(50) NOT NULL, " +
                      "sender_name VARCHAR(100), " +
                      "message TEXT NOT NULL, " +
-                     "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
+                     "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                     "deleted_by_parent BOOLEAN DEFAULT FALSE, " +
+                     "deleted_by_teacher BOOLEAN DEFAULT FALSE)";
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
@@ -52,10 +60,25 @@ public class ChatDAO {
         }
     }
 
-    public String getMessagesJson(String parentId, String teacherId) {
+    public boolean clearChat(String parentId, String teacherId, String clearerId) {
+        String columnToUpdate = clearerId.equals(parentId) ? "deleted_by_parent" : "deleted_by_teacher";
+        String sql = "UPDATE chat_messages SET " + columnToUpdate + " = TRUE WHERE parent_id = ? AND teacher_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, parentId);
+            ps.setString(2, teacherId);
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+            return false; 
+        }
+    }
+
+    public String getMessagesJson(String parentId, String teacherId, String viewerId) {
         StringBuilder json = new StringBuilder("[");
-        // Fetches the conversation and sorts it oldest to newest
-        String sql = "SELECT * FROM chat_messages WHERE parent_id = ? AND teacher_id = ? ORDER BY created_at ASC";
+        String filterColumn = viewerId.equals(parentId) ? "deleted_by_parent" : "deleted_by_teacher";
+        String sql = "SELECT * FROM chat_messages WHERE parent_id = ? AND teacher_id = ? AND " + filterColumn + " = FALSE ORDER BY created_at ASC";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -78,6 +101,30 @@ public class ChatDAO {
         } catch (Exception e) { 
             e.printStackTrace(); 
             return "[{\"message\":\"ERROR: " + escape(e.getMessage()) + "\"}]";
+        }
+        return json.append("]").toString();
+    }
+
+    public String dumpChat() {
+        StringBuilder json = new StringBuilder("[");
+        String sql = "SELECT * FROM chat_messages";
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            boolean first = true;
+            while (rs.next()) {
+                if (!first) json.append(",");
+                json.append("{")
+                    .append("\"id\":").append(rs.getInt("id")).append(",")
+                    .append("\"parentId\":\"").append(escape(rs.getString("parent_id"))).append("\",")
+                    .append("\"teacherId\":\"").append(escape(rs.getString("teacher_id"))).append("\",")
+                    .append("\"senderId\":\"").append(rs.getString("sender_id")).append("\",")
+                    .append("\"message\":\"").append(escape(rs.getString("message"))).append("\"")
+                    .append("}");
+                first = false;
+            }
+        } catch (Exception e) { 
+            return "[{\"error\":\"" + escape(e.getMessage()) + "\"}]";
         }
         return json.append("]").toString();
     }

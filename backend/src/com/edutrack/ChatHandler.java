@@ -11,18 +11,15 @@ public class ChatHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
-
-        if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
-            exchange.sendResponseHeaders(204, -1);
-            exchange.close(); 
-            return;
-        }
 
         String response = "[]";
         try {
-            if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+            if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+                exchange.sendResponseHeaders(204, -1);
+                return;
+            } else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
                 // Save a new message
                 String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                 String parentId = extractValue(body, "parentId");
@@ -34,13 +31,26 @@ public class ChatHandler implements HttpHandler {
                 boolean success = dao.sendMessage(parentId, teacherId, senderId, senderName, message);
                 response = "{\"success\":" + success + "}";
                 
+            } else if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
+                // Clear chat
+                String query = exchange.getRequestURI().getQuery();
+                if (query != null && query.contains("parentId=") && query.contains("teacherId=") && query.contains("clearerId=")) {
+                    String parentId = query.split("parentId=")[1].split("&")[0];
+                    String teacherId = query.split("teacherId=")[1].split("&")[0];
+                    String clearerId = query.split("clearerId=")[1].split("&")[0];
+                    boolean success = dao.clearChat(parentId, teacherId, clearerId);
+                    response = "{\"success\":" + success + "}";
+                }
             } else if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
                 // Fetch chat history
                 String query = exchange.getRequestURI().getQuery();
-                if (query != null && query.contains("parentId=") && query.contains("teacherId=")) {
+                if (query != null && query.contains("dump=true")) {
+                    response = dao.dumpChat();
+                } else if (query != null && query.contains("parentId=") && query.contains("teacherId=") && query.contains("viewerId=")) {
                     String parentId = query.split("parentId=")[1].split("&")[0];
                     String teacherId = query.split("teacherId=")[1].split("&")[0];
-                    response = dao.getMessagesJson(parentId, teacherId);
+                    String viewerId = query.split("viewerId=")[1].split("&")[0];
+                    response = dao.getMessagesJson(parentId, teacherId, viewerId);
                 }
             }
         } catch (Exception e) {
