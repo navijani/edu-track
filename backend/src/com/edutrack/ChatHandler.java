@@ -59,18 +59,34 @@ public class ChatHandler implements HttpHandler {
             int keyIndex = json.indexOf("\"" + key + "\"");
             if (keyIndex == -1) return "";
             int colonIndex = json.indexOf(":", keyIndex);
-            int valueStart = json.indexOf("\"", colonIndex) + 1;
-            int valueEnd = valueStart;
-            while (valueEnd < json.length()) {
-                if (json.charAt(valueEnd) == '"' && json.charAt(valueEnd - 1) != '\\') {
-                    break;
-                }
-                valueEnd++;
+            int valueStart = colonIndex + 1;
+            while (valueStart < json.length() && Character.isWhitespace(json.charAt(valueStart))) {
+                valueStart++;
             }
-            return json.substring(valueStart, valueEnd)
-                       .replace("\\\"", "\"")
-                       .replace("\\n", "\n")
-                       .replace("\\\\", "\\");
+            if (json.charAt(valueStart) == '"') {
+                valueStart++;
+                int valueEnd = valueStart;
+                while (valueEnd < json.length()) {
+                    if (json.charAt(valueEnd) == '"' && json.charAt(valueEnd - 1) != '\\') {
+                        break;
+                    }
+                    valueEnd++;
+                }
+                return json.substring(valueStart, valueEnd)
+                           .replace("\\\"", "\"")
+                           .replace("\\n", "\n")
+                           .replace("\\\\", "\\");
+            } else {
+                int valueEnd = valueStart;
+                while (valueEnd < json.length()) {
+                    char c = json.charAt(valueEnd);
+                    if (c == ',' || c == '}' || c == ']' || Character.isWhitespace(c)) {
+                        break;
+                    }
+                    valueEnd++;
+                }
+                return json.substring(valueStart, valueEnd);
+            }
         } catch (Exception e) { return ""; }
     }
 }
