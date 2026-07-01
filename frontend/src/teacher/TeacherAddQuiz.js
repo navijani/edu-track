@@ -47,6 +47,22 @@ const TeacherAddQuiz = ({ user }) => {
       setStatus('❌ Please fill all Quiz Settings including Target Class.');
       return;
     }
+
+    const startDate = new Date(scheduledDate);
+    const endDate = new Date(deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of today
+
+    if (startDate < today) {
+      setStatus('❌ Start Date cannot be in the past.');
+      return;
+    }
+
+    if (endDate <= startDate) {
+      setStatus('❌ Deadline must be after the Start Date.');
+      return;
+    }
+
     const payload = {
       teacherId: user.id,
       subject: user.subject,
@@ -111,11 +127,23 @@ const TeacherAddQuiz = ({ user }) => {
         <div style={{ display: 'flex', gap: '15px' }}>
           <div style={{ flex: 1 }}>
             <label style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981' }}>Start Date:</label>
-            <input type="datetime-local" className="t-addquiz-input" value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} />
+            <input 
+              type="datetime-local" 
+              className="t-addquiz-input" 
+              value={scheduledDate} 
+              min={new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
+              onChange={(e) => setScheduledDate(e.target.value)} 
+            />
           </div>
           <div style={{ flex: 1 }}>
             <label style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981' }}>Deadline:</label>
-            <input type="datetime-local" className="t-addquiz-input" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
+            <input 
+              type="datetime-local" 
+              className="t-addquiz-input" 
+              value={deadline} 
+              min={scheduledDate || new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
+              onChange={(e) => setDeadline(e.target.value)} 
+            />
           </div>
         </div>
       </div>
