@@ -203,6 +203,7 @@ const ParentDashboard = ({ user, onLogout }) => {
                                         <div className="p-chat-right-content">
                                             <div className="p-chat-window-wrapper">
                                                 <ChatWindow 
+                                                    key={selectedTeacher.id}
                                                     currentUser={user} 
                                                     partnerName={`${selectedTeacher.name} (${selectedTeacher.subject})`} 
                                                     parentId={user.id} 

@@ -109,7 +109,7 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
                                         {msg.message}
                                     </p>
                                     <span style={{ fontSize: '10px', color: '#95a5a6', float: 'right', marginLeft: '15px' }}>
-                                        {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {new Date(msg.timestamp.replace(' ', 'T') + 'Z').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
                             </div>

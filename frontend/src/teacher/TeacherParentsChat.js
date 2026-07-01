@@ -79,6 +79,7 @@ const TeacherParentsChat = ({ user }) => {
                 ) : (
                     <div style={{ height: '100%', padding: '20px' }}>
                         <ChatWindow 
+                            key={selectedParent.id}
                             currentUser={user} 
                             partnerName={`${selectedParent.name} (Parent of ${selectedParent.childName})`} 
                             parentId={selectedParent.id} 
