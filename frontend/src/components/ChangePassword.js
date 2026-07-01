@@ -239,10 +239,47 @@ const ChangePassword = ({ user }) => {
                 {/* Gradient divider line */}
                 <div className="cp-divider" />
 
-                {/* ── Alert banner – shown after submit (success or error) ── */}
+                {/* ── Modal Alert – shown after submit (success or error) ── */}
                 {status && (
-                    <div className={`cp-alert cp-alert-${status}`}>
-                        {message}
+                    <div style={{
+                        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                        backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(5px)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        zIndex: 9999, padding: '20px'
+                    }}>
+                        <div style={{
+                            background: 'white', borderRadius: '24px', padding: '40px 30px',
+                            maxWidth: '400px', width: '100%', textAlign: 'center',
+                            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)'
+                        }}>
+                            <div style={{
+                                width: '80px', height: '80px', borderRadius: '50%',
+                                background: status === 'success' ? '#d1fae5' : '#fee2e2',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                margin: '0 auto 20px', fontSize: '40px'
+                            }}>
+                                {status === 'success' ? '✅' : '❌'}
+                            </div>
+                            <h2 style={{ margin: '0 0 10px 0', color: '#1e293b', fontSize: '1.6rem', fontWeight: 800 }}>
+                                {status === 'success' ? 'Success!' : 'Oops!'}
+                            </h2>
+                            <p style={{ margin: '0 0 30px 0', color: '#64748b', fontSize: '1.05rem', lineHeight: '1.6' }}>
+                                {message}
+                            </p>
+                            <button
+                                onClick={() => { setStatus(null); setMessage(''); }}
+                                style={{
+                                    width: '100%', padding: '16px', borderRadius: '14px',
+                                    border: 'none', background: status === 'success' ? '#10b981' : '#ef4444',
+                                    color: 'white', fontSize: '1.05rem', fontWeight: 'bold',
+                                    cursor: 'pointer', transition: 'opacity 0.2s'
+                                }}
+                                onMouseOver={(e) => e.target.style.opacity = 0.9}
+                                onMouseOut={(e) => e.target.style.opacity = 1}
+                            >
+                                {status === 'success' ? 'Continue' : 'Try Again'}
+                            </button>
+                        </div>
                     </div>
                 )}
 
