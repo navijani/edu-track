@@ -35,11 +35,11 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
 
         try {
             await axios.post('https://edu-track-c6ml.onrender.com/api/chat', {
-                parentId: parentId,
-                teacherId: teacherId,
-                senderId: currentUser.id,
-                senderName: currentUser.name,
-                message: newMsg
+                parentId: String(parentId),
+                teacherId: String(teacherId),
+                senderId: String(currentUser.id),
+                senderName: String(currentUser.name),
+                message: String(newMsg)
             });
             setNewMsg('');
             fetchMessages(); // Instantly update UI
