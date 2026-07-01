@@ -49,7 +49,14 @@ const QuizRanklist = ({ quizId, quizTitle, totalMarks, currentUserId, onClose })
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
                 <div>
                     <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.4rem' }}>🏆 Quiz Ranklist</h2>
-                    <p style={{ margin: '4px 0 0 0', color: '#64748b', fontWeight: 600 }}>{quizTitle}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '4px' }}>
+                        <p style={{ margin: 0, color: '#64748b', fontWeight: 600 }}>{quizTitle}</p>
+                        {!loading && ranklist.length > 0 && (
+                            <span style={{ background: '#e2e8f0', color: '#475569', padding: '3px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 700 }}>
+                                {ranklist.length} Attempt{ranklist.length !== 1 ? 's' : ''}
+                            </span>
+                        )}
+                    </div>
                 </div>
                 <button
                     onClick={onClose}
