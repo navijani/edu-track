@@ -4,16 +4,30 @@ import axios from 'axios';
 const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
     const [messages, setMessages] = useState([]);
     const [newMsg, setNewMsg] = useState('');
+    const [isSending, setIsSending] = useState(false);
     const messagesEndRef = useRef(null);
 
     // Fetch messages from the database
     const fetchMessages = async () => {
-        if (!parentId || !teacherId) return;
+        if (!parentId || !teacherId || !currentUser) return;
         try {
-            const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/chat?parentId=${parentId}&teacherId=${teacherId}`);
-            setMessages(res.data);
+            const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/chat?parentId=${parentId}&teacherId=${teacherId}&viewerId=${currentUser.id}`);
+            // Deduplicate by message ID just in case there are identical IDs from strict mode or rapid firing
+            const uniqueMessages = Array.from(new Map(res.data.map(msg => [msg.id, msg])).values());
+            setMessages(uniqueMessages);
         } catch (err) {
             console.error("Error fetching chat:", err);
+        }
+    };
+
+    const handleClearChat = async () => {
+        if (!window.confirm("Are you sure you want to clear this chat? This only deletes it for you.")) return;
+        try {
+            await axios.delete(`https://edu-track-c6ml.onrender.com/api/chat?parentId=${parentId}&teacherId=${teacherId}&clearerId=${currentUser.id}`);
+            setMessages([]);
+        } catch (err) {
+            console.error("Error clearing chat:", err);
+            alert("Could not clear chat.");
         }
     };
 
@@ -24,7 +38,7 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
         fetchMessages();
         const interval = setInterval(fetchMessages, 3000);
         return () => clearInterval(interval);
-    }, [parentId, teacherId]);
+    }, [parentId, teacherId, currentUser]);
 
     // Auto-scroll to the bottom when a new message arrives
     useEffect(() => {
@@ -35,8 +49,9 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
 
     const handleSend = async (e) => {
         e.preventDefault();
-        if (!newMsg.trim()) return;
-
+        if (!newMsg.trim() || isSending) return;
+        
+        setIsSending(true);
         try {
             await axios.post('https://edu-track-c6ml.onrender.com/api/chat', {
                 parentId: String(parentId),
@@ -49,6 +64,8 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
             fetchMessages(); // Instantly update UI
         } catch (err) {
             alert("Network error: Could not send message.");
+        } finally {
+            setIsSending(false);
         }
     };
 
@@ -57,10 +74,11 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
             {/* Chat Header */}
             <div style={styles.header}>
                 <div style={styles.avatar}>{partnerName.charAt(0).toUpperCase()}</div>
-                <div>
+                <div style={{ flex: 1 }}>
                     <h3 style={{ margin: 0, color: '#2c3e50', fontSize: '16px' }}>{partnerName}</h3>
                     <span style={{ fontSize: '12px', color: '#2ecc71' }}>● Online</span>
                 </div>
+                <button onClick={handleClearChat} style={styles.clearBtn} title="Clear Chat for me">🗑️</button>
             </div>
 
             {/* Chat Messages Area */}
@@ -69,7 +87,7 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
                     <div style={styles.emptyState}>No messages yet. Say hello! 👋</div>
                 ) : (
                     messages.map((msg, index) => {
-                        const isMe = msg.senderId === currentUser.id;
+                        const isMe = String(msg.senderId) === String(currentUser.id);
                         return (
                             <div key={index} style={{
                                 ...styles.messageWrapper,
@@ -102,8 +120,9 @@ const ChatWindow = ({ currentUser, partnerName, parentId, teacherId }) => {
                     onChange={(e) => setNewMsg(e.target.value)}
                     placeholder="Type a message..."
                     style={styles.input}
+                    disabled={isSending}
                 />
-                <button type="submit" style={styles.sendBtn}>➤</button>
+                <button type="submit" style={{...styles.sendBtn, opacity: isSending ? 0.5 : 1}} disabled={isSending}>➤</button>
             </form>
         </div>
     );
@@ -119,6 +138,7 @@ const styles = {
     inputArea: { display: 'flex', padding: '15px', backgroundColor: '#f0f2f5', gap: '10px' },
     input: { flex: 1, padding: '12px 15px', borderRadius: '25px', border: 'none', outline: 'none', fontSize: '15px' },
     sendBtn: { width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#00a884', color: 'white', border: 'none', fontSize: '18px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'rotate(-45deg)', transition: 'background 0.2s' },
+    clearBtn: { backgroundColor: 'transparent', border: 'none', cursor: 'pointer', fontSize: '18px', padding: '5px' },
     emptyState: { textAlign: 'center', color: '#7f8c8d', fontStyle: 'italic', marginTop: 'auto', marginBottom: 'auto' }
 };
 
