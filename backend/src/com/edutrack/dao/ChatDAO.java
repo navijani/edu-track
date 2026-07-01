@@ -7,6 +7,16 @@ public class ChatDAO {
 
     public ChatDAO() {
         createTableIfNotExists();
+        upgradeTable();
+    }
+
+    private void upgradeTable() {
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute("ALTER TABLE chat_messages ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP");
+        } catch (Exception e) {
+            System.out.println("Upgrade skipped: " + e.getMessage());
+        }
     }
 
     private void createTableIfNotExists() {
