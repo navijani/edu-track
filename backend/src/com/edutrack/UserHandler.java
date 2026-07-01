@@ -25,6 +25,7 @@ public class UserHandler implements HttpHandler {
         strategies = new HashMap<>();
         strategies.put("GET", new UserGetStrategy(userDAO));
         strategies.put("POST", new UserPostStrategy(userDAO));
+        strategies.put("PUT", new UserPutStrategy(userDAO));
         strategies.put("DELETE", new UserDeleteStrategy(userDAO));
         strategies.put("OPTIONS", new OptionsStrategy());
     }
@@ -38,7 +39,7 @@ public class UserHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         // Set CORS headers to allow cross-origin requests from the React frontend
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
 
         String method = exchange.getRequestMethod().toUpperCase();
@@ -163,6 +164,50 @@ public class UserHandler implements HttpHandler {
                 }
             } catch (Exception e) {
                 System.out.println("CRASH: Server threw an error during registration.\n");
+                e.printStackTrace();
+                sendResponse(exchange, 500, "{\"success\":false}");
+            }
+        }
+    }
+
+    /**
+     * Strategy for handling PUT requests (User Update).
+     */
+    class UserPutStrategy extends BaseStrategy {
+        private final UserDAO userDAO;
+
+        public UserPutStrategy(UserDAO userDAO) {
+            this.userDAO = userDAO;
+        }
+
+        @Override
+        public void execute(HttpExchange exchange) throws IOException {
+            try {
+                InputStream is = exchange.getRequestBody();
+                String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+
+                System.out.println("\n--- UPDATE USER ATTEMPT ---");
+                System.out.println("Received Payload: " + body);
+
+                String id = extractValue(body, "id");
+                String name = extractValue(body, "name");
+                String email = extractValue(body, "email");
+                String role = extractValue(body, "role");
+                String subject = extractValue(body, "subject");
+                String childId = extractValue(body, "childId");
+                String studentClass = extractValue(body, "studentClass");
+
+                User updatedUser = UserFactory.createUser(id, name, email, "", role, subject, studentClass);
+
+                if (userDAO.updateUser(updatedUser, childId)) {
+                    System.out.println("SUCCESS: User " + name + " updated in database.\n");
+                    sendResponse(exchange, 200, "{\"success\":true}");
+                } else {
+                    System.out.println("FAIL: Database rejected update.\n");
+                    sendResponse(exchange, 500, "{\"success\":false}");
+                }
+            } catch (Exception e) {
+                System.out.println("CRASH: Server threw an error during update.\n");
                 e.printStackTrace();
                 sendResponse(exchange, 500, "{\"success\":false}");
             }

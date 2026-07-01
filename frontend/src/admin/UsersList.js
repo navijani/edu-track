@@ -7,6 +7,10 @@ const UsersList = () => {
   const [searchTerm, setSearchTerm] = useState(''); // ✨ New Search State
   const [selectedUser, setSelectedUser] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null); // ✨ Delete Modal State
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    id: '', name: '', email: '', role: '', subject: '', childId: '', studentClass: ''
+  });
 
   const fetchUsers = async () => {
     try {
@@ -44,6 +48,34 @@ const UsersList = () => {
       setUserToDelete(null);
     } catch (err) {
       console.error("Error deleting user:", err);
+    }
+  };
+
+  const handleEditClick = (user) => {
+    setUserToEdit(user);
+    setEditFormData({
+      id: user.id,
+      name: user.name || '',
+      email: user.email || '',
+      role: user.role || '',
+      subject: user.subject || '',
+      childId: user.childId || '',
+      studentClass: user.studentClass || ''
+    });
+  };
+
+  const handleEditChange = (e) => {
+    setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
+  };
+
+  const submitEdit = async () => {
+    try {
+      await axios.put(`https://edu-track-c6ml.onrender.com/api/users/register`, editFormData);
+      fetchUsers();
+      setUserToEdit(null);
+    } catch (err) {
+      console.error("Error updating user:", err);
+      alert("Failed to update user. The backend might not support this yet.");
     }
   };
 
@@ -120,6 +152,56 @@ const UsersList = () => {
         </div>
       )}
 
+      {/* --- EDIT USER MODAL --- */}
+      {userToEdit && (
+        <div className="admin-modal-overlay">
+          <div className="admin-modal" style={{ maxWidth: '500px' }}>
+            <div className="modal-header">
+              <h3>Edit User: {userToEdit.id}</h3>
+              <button className="close-modal" onClick={() => setUserToEdit(null)}>×</button>
+            </div>
+            <div className="input-group">
+              <label>Name</label>
+              <input type="text" name="name" value={editFormData.name} onChange={handleEditChange} />
+            </div>
+            <div className="input-group">
+              <label>Email</label>
+              <input type="email" name="email" value={editFormData.email} onChange={handleEditChange} />
+            </div>
+            <div className="input-group">
+              <label>Role</label>
+              <select name="role" value={editFormData.role.toLowerCase()} onChange={handleEditChange}>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="parent">Parent</option>
+              </select>
+            </div>
+            {editFormData.role.toLowerCase() === 'teacher' && (
+              <div className="input-group">
+                <label>Subject</label>
+                <input type="text" name="subject" value={editFormData.subject} onChange={handleEditChange} />
+              </div>
+            )}
+            {editFormData.role.toLowerCase() === 'student' && (
+              <div className="input-group">
+                <label>Class</label>
+                <input type="text" name="studentClass" value={editFormData.studentClass} onChange={handleEditChange} />
+              </div>
+            )}
+            {editFormData.role.toLowerCase() === 'parent' && (
+              <div className="input-group">
+                <label>Child ID</label>
+                <input type="text" name="childId" value={editFormData.childId} onChange={handleEditChange} />
+              </div>
+            )}
+            <div className="modal-actions">
+              <button className="cancel-btn" onClick={() => setUserToEdit(null)}>Cancel</button>
+              <button className="confirm-btn" onClick={submitEdit}>Save Changes</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* --- TABLE SECTION (Now uses filteredUsers) --- */}
       <div className="table-responsive">
         <table className="glass-table">
@@ -144,6 +226,7 @@ const UsersList = () => {
                   </td>
                   <td className="actions-cell">
                     <button className="action-btn view" onClick={() => setSelectedUser(user)}>👁️ View</button>
+                    <button className="action-btn" style={{ color: '#0ea5e9', marginLeft: '15px' }} onClick={() => handleEditClick(user)}>✏️ Edit</button>
                     <button className="action-btn delete" onClick={() => handleDeleteClick(user)}>🗑️ Delete</button>
                   </td>
                 </tr>

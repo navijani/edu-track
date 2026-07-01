@@ -68,6 +68,52 @@ public class UserDAO {
     }
 
     /**
+     * Updates an existing user in the database.
+     * 
+     * @param user    The User object with updated details
+     * @param childId The ID of the associated child (if the user is a Parent)
+     * @return true if the user was successfully updated, false otherwise
+     */
+    public boolean updateUser(User user, String childId) {
+        String sql = "UPDATE users SET name = ?, email = ?, role = ?, subject = ?, child_id = ?, student_class = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, user.getName());
+            pstmt.setString(2, user.getEmail());
+            pstmt.setString(3, user.getRole());
+
+            // Handle Teacher Subject
+            if (user instanceof Teacher) {
+                pstmt.setString(4, ((Teacher) user).getSubject());
+            } else {
+                pstmt.setNull(4, Types.VARCHAR);
+            }
+
+            // Handle Parent childId
+            if (childId != null && !childId.trim().isEmpty()) {
+                pstmt.setString(5, childId);
+            } else {
+                pstmt.setNull(5, Types.VARCHAR);
+            }
+
+            // Handle Student Class
+            if (user instanceof com.edutrack.models.Student) {
+                pstmt.setString(6, ((com.edutrack.models.Student) user).getStudentClass());
+            } else {
+                pstmt.setNull(6, Types.VARCHAR);
+            }
+
+            pstmt.setString(7, user.getId());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * Deletes a user from the database by their unique ID.
      * 
      * @param id The unique identifier of the user to delete
