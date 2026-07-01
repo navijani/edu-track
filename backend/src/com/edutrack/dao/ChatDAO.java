@@ -67,6 +67,7 @@ public class ChatDAO {
             }
         } catch (Exception e) { 
             e.printStackTrace(); 
+            return "[{\"message\":\"ERROR: " + escape(e.getMessage()) + "\"}]";
         }
         return json.append("]").toString();
     }
