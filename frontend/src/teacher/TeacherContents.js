@@ -19,7 +19,9 @@ const TeacherContents = ({ user }) => {
   const fetchContent = async (type) => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://edu-track-c6ml.onrender.com/api/contents/${type}?teacherId=${user.id}`);
+      // Map plural tab names to singular API endpoints
+      const endpoint = type === 'quizzes' ? 'quiz' : type === 'documents' ? 'document' : 'video';
+      const response = await axios.get(`https://edu-track-c6ml.onrender.com/api/contents/${endpoint}?teacherId=${user.id}`);
       setContentList(response.data);
     } catch (error) {
       console.error("Error fetching content:", error);
@@ -31,7 +33,8 @@ const TeacherContents = ({ user }) => {
   const handleDelete = async () => {
     if (!window.confirm(`Are you sure you want to delete this ${activeTab.slice(0, -1)}?`)) return;
     try {
-      await axios.delete(`https://edu-track-c6ml.onrender.com/api/contents/${activeTab.slice(0, -1)}?id=${selectedItem.id}`);
+      const endpoint = activeTab === 'quizzes' ? 'quiz' : activeTab === 'documents' ? 'document' : 'video';
+      await axios.delete(`https://edu-track-c6ml.onrender.com/api/contents/${endpoint}?id=${selectedItem.id}`);
       setSelectedItem(null);
       fetchContent(activeTab);
     } catch (error) {
