@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import '../styles/Teacher.css'; // Using the indigo-themed styles
+import Loader from '../components/Loader';
 
 const TeacherDashboardHome = ({ user }) => {
     const [stats, setStats] = useState(null);
@@ -19,7 +20,7 @@ const TeacherDashboardHome = ({ user }) => {
         fetchStats();
     }, [user.subject]);
 
-    if (!stats) return <div className="t-loading">Initializing Teacher Portal...</div>;
+    if (!stats) return <Loader text="Initializing Teacher Portal..." />;
 
     const chartData = [
         { name: 'Videos', count: stats.totalVideos, color: '#63aff2' },
