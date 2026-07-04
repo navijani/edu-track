@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import Loader from '../components/Loader';
 import '../styles/Students.css';
 
 const DashboardHome = ({ user }) => {
@@ -18,11 +19,7 @@ const DashboardHome = ({ user }) => {
         fetchDashboard();
     }, [user.id]);
 
-    if (!data) return (
-        <div className="t-empty-state" style={{ height: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <p>Gathering your academic overview...</p>
-        </div>
-    );
+    if (!data) return <Loader text="Gathering your academic overview..." />;
 
     return (
         <div className="s-dash-container">

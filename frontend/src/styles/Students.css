@@ -85,7 +85,7 @@
     text-align: left;
 }
 
-/* --- The Transparent Glass Sidebar --- */
+/* --- The Beautiful Glass Sidebar --- */
 .s-sidebar {
     width: 280px;
     min-width: 280px;
@@ -94,23 +94,48 @@
     position: sticky;
     top: 0;
     
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    
-    color: #475569;
+    background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%); /* Deep rich indigo/purple */
+    color: #cbd5e1;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid rgba(226, 232, 240, 0.8);
     z-index: 1000;
     overflow-y: auto;
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+    box-shadow: 10px 0 30px rgba(30, 27, 75, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* --- Sidebar Header --- */
 .s-sidebar-header {
-    padding: 40px 30px 25px;
+    padding: 45px 30px 30px;
     text-align: left;
+    position: relative;
+}
+
+.s-sidebar-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 30px;
+    right: 30px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+}
+
+.s-logo-text {
+    margin: 0;
+    font-weight: 900;
+    font-size: 2rem;
+    background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.s-sidebar-header p {
+    color: #818cf8 !important;
+    letter-spacing: 1.5px;
+    margin-top: 5px !important;
 }
 
 .s-logo-text {
@@ -126,72 +151,88 @@
 /* --- Navigation Items --- */
 .s-nav-list {
     list-style: none;
-    padding: 0 20px;
+    padding: 20px 20px;
     margin: 0;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .s-nav-item {
-    padding: 14px 20px;
-    margin-bottom: 8px;
+    padding: 15px 22px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 14px;
-    color: #64748b;
-    font-weight: 600;
+    gap: 16px;
+    color: #94a3b8;
+    font-weight: 500;
     font-size: 0.95rem;
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 16px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 /* Hover Effect for Glass Items */
 .s-nav-item:hover {
-    background: rgba(241, 245, 249, 0.8);
-    color: #1e293b;
-    transform: translateX(4px);
+    background: rgba(255, 255, 255, 0.08);
+    color: #f8fafc;
+    transform: translateX(6px);
 }
 
 /* The Active Floating Purple Card */
 .s-nav-item.active {
-    background: #ffffff;
-    color: #4f46e5 !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-    border: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #ffffff !important;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
     font-weight: 700;
+    border: none;
 }
 .s-nav-item.active span {
-    transform: scale(1.1);
+    transform: scale(1.15) rotate(5deg);
+    transition: transform 0.3s ease;
 }
 /* --- Sidebar Footer (Logout) --- */
 .s-sidebar-footer {
-    padding: 20px;
+    padding: 25px;
     margin-top: auto;
+    position: relative;
+}
+
+.s-sidebar-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 30px;
+    right: 30px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
 }
 
 .s-btn-logout {
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     font-size: 0.95rem;
-    background: white;
-    color: #ef4444;
-    border: 1px solid #fee2e2;
-    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 16px;
     cursor: pointer;
     font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .s-btn-logout:hover {
-    background: #fef2f2;
-    border-color: #f87171;
+    background: #ef4444;
+    border-color: #ef4444;
+    color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
 }
 /* --- Content Wrapper --- */
 .s-main-content {
