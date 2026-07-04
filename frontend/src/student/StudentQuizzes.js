@@ -229,6 +229,10 @@ const StudentQuizzes = ({ subjectName, user }) => {
         <div className="t-empty-state">
             <p>Error loading quizzes. The server response was invalid.</p>
         </div>
+    ) : contentList.length === 0 ? (
+        <div className="t-empty-state">
+            <p>No quizzes available for your class in this subject.</p>
+        </div>
     ) : (
         <div className="s-quiz-grid">
             {contentList.map((item, index) => {

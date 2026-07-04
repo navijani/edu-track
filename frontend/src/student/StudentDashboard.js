@@ -73,7 +73,7 @@ const StudentDashboard = ({ user, onLogout }) => {
                 if (subjectName) {
                     // We only have the name in the URL, but the components expect a subject object.
                     // For now, we'll restore the state if possible or keep it as a partial object.
-                    setSelectedSubject({ name: decodeURIComponent(subjectName) });
+                    setSelectedSubject({ title: decodeURIComponent(subjectName) });
                 }
             } else {
                 setSelectedSubject(null);
@@ -95,7 +95,7 @@ const StudentDashboard = ({ user, onLogout }) => {
     const updateHash = (tab, subject = null) => {
         let newHash = `#/${tab}`;
         if (subject && tab === 'subjects') {
-            newHash += `/details?name=${encodeURIComponent(subject.name)}`;
+            newHash += `/details?name=${encodeURIComponent(subject.title)}`;
         }
         window.location.hash = newHash;
     };

@@ -261,7 +261,15 @@ const StudentVideos = ({ subjectName, user }) => {
         );
     }
 
-    return loading ? <p className="t-empty-state">Loading Cinema...</p> : (
+    return loading ? <p className="t-empty-state">Loading Cinema...</p> : !Array.isArray(contentList) ? (
+        <div className="t-empty-state">
+            <p>Error loading videos. The server response was invalid.</p>
+        </div>
+    ) : contentList.length === 0 ? (
+        <div className="t-empty-state">
+            <p>No videos available for your class in this subject.</p>
+        </div>
+    ) : (
         <div className="s-video-grid">
             {contentList.map((item, index) => {
                 const progress = videoProgress[item.id] || { watchedPercentage: 0, watchedSeconds: 0, answeredCount: 0 };

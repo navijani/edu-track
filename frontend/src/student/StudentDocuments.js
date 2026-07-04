@@ -163,7 +163,15 @@ const StudentDocuments = ({ subjectName, user }) => {
         );
     }
 
-    return loading ? <p className="t-empty-state">Loading Library...</p> : (
+    return loading ? <p className="t-empty-state">Loading library...</p> : !Array.isArray(contentList) ? (
+        <div className="t-empty-state">
+            <p>Error loading documents. The server response was invalid.</p>
+        </div>
+    ) : contentList.length === 0 ? (
+        <div className="t-empty-state">
+            <p>No documents available for your class in this subject.</p>
+        </div>
+    ) : (
         <div className="s-doc-grid">
             {contentList.map((item, index) => {
                 const progress = documentProgress[item.id] || { watchedPercentage: 0, answeredCount: 0 };
