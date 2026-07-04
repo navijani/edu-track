@@ -83,12 +83,12 @@ const TeacherDashboardHome = ({ user }) => {
                             <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                 <defs>
                                     <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#60a5fa" />
-                                        <stop offset="100%" stopColor="#3b82f6" />
+                                        <stop offset="0%" stopColor="#3F83F8" />
+                                        <stop offset="100%" stopColor="#1A56DB" />
                                     </linearGradient>
                                     <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#c084fc" />
-                                        <stop offset="100%" stopColor="#9333ea" />
+                                        <stop offset="0%" stopColor="#a855f7" />
+                                        <stop offset="100%" stopColor="#7e22ce" />
                                     </linearGradient>
                                     <linearGradient id="emeraldGradient" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="0%" stopColor="#34d399" />
