@@ -51,7 +51,7 @@ function App() {
       } else if (hash.startsWith('dashboard')) {
         // If user is logged in, show dashboard. Otherwise, redirect to intro.
         const savedUser = localStorage.getItem('eduUser');
-        if (currentUser || savedUser) {
+        if (currentUser || (savedUser && savedUser !== 'null')) {
           setScreen('dashboard');
         } else {
           navigate('intro');
@@ -151,13 +151,13 @@ function App() {
       {/* --- DASHBOARD ROUTING --- */}
       {screen === 'dashboard' && (
         <>
-          {userRole.toUpperCase() === 'TEACHER' ? (
+          {(userRole || '').toUpperCase() === 'TEACHER' ? (
             <TeacherDashboard user={currentUser} onLogout={handleLogout} />
-          ) : userRole.toUpperCase() === 'STUDENT' ? (
+          ) : (userRole || '').toUpperCase() === 'STUDENT' ? (
             <StudentDashboard user={currentUser} onLogout={handleLogout} />
-          ) : userRole.toUpperCase() === 'PARENT' ? (
+          ) : (userRole || '').toUpperCase() === 'PARENT' ? (
             <ParentDashboard user={currentUser} onLogout={handleLogout} />
-          ) : userRole.toUpperCase() === 'ADMIN' ? (
+          ) : (userRole || '').toUpperCase() === 'ADMIN' ? (
             <AdminDashboard onLogout={handleLogout} />
           ) : (
             <Dashboard role={userRole} user={currentUser} onLogout={handleLogout} />

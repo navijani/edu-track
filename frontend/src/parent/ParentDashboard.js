@@ -43,7 +43,7 @@ const ParentDashboard = ({ user, onLogout }) => {
             <nav className="p-navbar">
                 <h2 style={{ margin: 0 }}>👪 EduTrack <span>Parent</span></h2>
                 <div>
-                    <span style={{ marginRight: '20px', fontSize: '14px' }}>Welcome, Parent <strong> {user.name}</strong></span>
+                    <span style={{ marginRight: '20px', fontSize: '14px' }}>Welcome, Parent <strong> {user?.name || ''}</strong></span>
                     <button onClick={onLogout} className="t-btn-glass-purple" style={{ padding: '8px 18px', background: '#e74c3c', borderColor: '#e74c3c', color: 'white' }}>Logout</button>
                 </div>
             </nav>

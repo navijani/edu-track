@@ -39,8 +39,8 @@ const StudentForum = ({ user }) => {
         if (!newMsg.trim()) return;
         try {
             await axios.post('https://edu-track-c6ml.onrender.com/api/forum', {
-                name: user.name, 
-                role: user.role.toLowerCase(), 
+                name: user?.name || 'Student', 
+                role: (user?.role || 'student').toLowerCase(), 
                 subject: selectedSubject, 
                 message: newMsg,
                 parentId: replyingTo ? replyingTo.id : null 

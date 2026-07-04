@@ -27,7 +27,7 @@ const DashboardHome = ({ user }) => {
     return (
         <div className="s-dash-container">
             <h2 className="s-welcome-text">
-            Welcome , <span>{user.name.split(' ')[0]}!</span> 👋
+            Welcome , <span>{user?.name ? user.name.split(' ')[0] : 'Student'}!</span> 👋
         </h2>
         
         <p style={{ color: '#64748b', marginBottom: '30px' }}>

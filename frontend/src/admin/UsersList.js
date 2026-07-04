@@ -29,9 +29,9 @@ const UsersList = () => {
   const filteredUsers = users.filter((user) => {
     const term = searchTerm.toLowerCase();
     return (
-      user.name.toLowerCase().includes(term) ||
-      user.id.toLowerCase().includes(term) ||
-      user.role.toLowerCase().includes(term)
+      (user?.name || '').toLowerCase().includes(term) ||
+      (user?.id || '').toLowerCase().includes(term) ||
+      (user?.role || '').toLowerCase().includes(term)
     );
   });
 
@@ -218,7 +218,7 @@ const UsersList = () => {
               filteredUsers.map((user) => (
                 <tr key={user.id} className="table-row">
                   <td className="user-id-cell">{user.id}</td>
-                  <td className="user-name-cell">{user.name}</td>
+                  <td className="user-name-cell">{user?.name}</td>
                   <td>
                     <span className={`role-tag ${getRoleBadge(user.role)}`}>
                       {user.role}

@@ -25,7 +25,7 @@ const TeacherZoomSchedule = ({ user }) => {
         e.preventDefault();
         const data = {
             topic, meetingLink, meetingDate, meetingTime, endTime,
-            subject: user.subject, teacher: user.name, teacherId: user.id
+            subject: user?.subject || '', teacher: user?.name || 'Teacher', teacherId: user?.id || ''
         };
 
         try {

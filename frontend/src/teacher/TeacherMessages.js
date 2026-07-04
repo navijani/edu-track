@@ -21,9 +21,9 @@ const TeacherMessages = ({ user }) => {
         if (!newMsg.trim()) return;
         try {
             await axios.post('https://edu-track-c6ml.onrender.com/api/forum', {
-                name: user.name, 
+                name: user?.name || 'Teacher', 
                 role: 'teacher', 
-                subject: user.subject, 
+                subject: user?.subject || '', 
                 message: newMsg,
                 parentId: replyingTo ? replyingTo.id : null
             });
