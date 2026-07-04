@@ -27,19 +27,20 @@
 }
 
 .s-stat-card h3 {
-    font-size: 2rem;
-    font-weight: 800;
+    font-size: 2.4rem;
+    font-weight: 900;
     margin: 0;
     color: #1e293b;
+    letter-spacing: -1px;
 }
 
 .s-stat-card p {
     margin: 5px 0 0 0;
     color: #64748b;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
 }
 
 /* --- Glass Panels --- */
@@ -83,6 +84,7 @@
     background-image: radial-gradient(circle at 15% 50%, rgba(240, 243, 255, 1), transparent 30%),
                       radial-gradient(circle at 85% 30%, rgba(245, 235, 255, 1), transparent 30%);
     text-align: left;
+    font-family: 'Outfit', sans-serif;
 }
 
 /* --- The Beautiful Glass Sidebar --- */
@@ -94,14 +96,16 @@
     position: sticky;
     top: 0;
     
-    background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%); /* Deep rich indigo/purple */
+    background: linear-gradient(180deg, rgba(30, 27, 75, 0.75) 0%, rgba(49, 46, 129, 0.85) 100%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     color: #cbd5e1;
     display: flex;
     flex-direction: column;
     z-index: 1000;
     overflow-y: auto;
-    box-shadow: 10px 0 30px rgba(30, 27, 75, 0.15);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 10px 0 30px rgba(30, 27, 75, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* --- Sidebar Header --- */
@@ -124,28 +128,21 @@
 .s-logo-text {
     margin: 0;
     font-weight: 900;
-    font-size: 2rem;
-    background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+    font-size: 2.2rem;
+    background: linear-gradient(135deg, #a855f7 0%, #4f46e5 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -1px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    letter-spacing: -1.5px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
 
 .s-sidebar-header p {
-    color: #818cf8 !important;
-    letter-spacing: 1.5px;
-    margin-top: 5px !important;
-}
-
-.s-logo-text {
-    margin: 0;
-    font-weight: 800;
-    font-size: 1.8rem;
-    background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -0.8px;
+    color: #c7d2fe !important;
+    letter-spacing: 3px;
+    margin-top: 8px !important;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
 }
 
 /* --- Navigation Items --- */
@@ -160,18 +157,19 @@
 }
 
 .s-nav-item {
-    padding: 15px 22px;
+    padding: 16px 24px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 18px;
     color: #94a3b8;
-    font-weight: 500;
-    font-size: 0.95rem;
+    font-weight: 600;
+    font-size: 1.05rem;
     border-radius: 16px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    letter-spacing: -0.2px;
 }
 
 /* Hover Effect for Glass Items */
@@ -212,19 +210,20 @@
 
 .s-btn-logout {
     width: 100%;
-    padding: 15px;
-    font-size: 0.95rem;
-    background: rgba(239, 68, 68, 0.1);
+    padding: 16px;
+    font-size: 1rem;
+    background: rgba(239, 68, 68, 0.08);
     color: #fca5a5;
     border: 1px solid rgba(239, 68, 68, 0.2);
     border-radius: 16px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.5px;
 }
 
 .s-btn-logout:hover {
@@ -243,10 +242,10 @@
 
 .s-welcome-text {
     color: #0f172a; 
-    font-weight: 800;
-    font-size: 2.2rem;
+    font-weight: 900;
+    font-size: 2.8rem;
     margin-bottom: 8px;
-    letter-spacing: -0.5px;
+    letter-spacing: -1.2px;
 }
 
 .s-welcome-text span {
