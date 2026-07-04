@@ -85,119 +85,126 @@ const TeacherAddQuiz = ({ user }) => {
   };
 
   return (
-    <div className="t-contents-wrapper animated-fade-in">
+    <div className="t-contents-wrapper animated-fade-in" style={{ paddingBottom: '100px' }}>
       {/* 1. Header Card */}
-      <div className="t-addquiz-header-card glass-card">
-        <h4>Create Interactive <span>Quiz</span></h4>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className="t-addquiz-header-card">
+          <h4>✨ Create Interactive <span>Quiz</span></h4>
+        </div>
       </div>
 
       {status && (
-        <div style={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold', color: status.includes('✅') ? '#059669' : '#dc2626' }}>
+        <div style={{ textAlign: 'center', marginBottom: '25px', fontWeight: 'bold', fontSize: '1.1rem', color: status.includes('✅') ? '#059669' : '#dc2626', animation: 'slideUpFade 0.3s ease' }}>
           {status}
         </div>
       )}
 
-      {/* 2. Settings Area */}
+      {/* 2. Settings Area (Grid Layout) */}
       <div className="t-addquiz-settings-box">
-        <select 
-          value={targetClass} 
-          onChange={(e) => setTargetClass(e.target.value)} 
-          className="t-addquiz-input" 
-          style={{ marginBottom: '15px' }}
-          required
-        >
-          <option value="">Select Target Class</option>
-          <option value="Kindergarten">Kindergarten</option>
-          {[...Array(12)].map((_, i) => (
-            <option key={`Grade ${i + 1}`} value={`Grade ${i + 1}`}>Grade {i + 1}</option>
-          ))}
-        </select>
-
-        <input 
-          type="text" 
-          placeholder="Quiz Title (e.g., Midterm)" 
-          className="t-addquiz-input" 
-          style={{ marginBottom: '15px' }}
-          value={title} onChange={(e) => setTitle(e.target.value)} 
-        />
-        <div style={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
-          <input type="number" placeholder="Duration(Minutes)" className="t-addquiz-input" value={duration} onChange={(e) => setDuration(e.target.value)} />
-          <input type="number" placeholder="Total Marks" className="t-addquiz-input" value={totalMarks} onChange={(e) => setTotalMarks(e.target.value)} />
-        </div>
-        <div style={{ display: 'flex', gap: '15px' }}>
-          <div style={{ flex: 1 }}>
-            <label style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981' }}>Start Date:</label>
-            <input 
-              type="datetime-local" 
-              className="t-addquiz-input" 
-              value={scheduledDate} 
-              min={new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
-              onChange={(e) => setScheduledDate(e.target.value)} 
-            />
+        <div className="t-addquiz-settings-grid">
+          <div className="t-input-group">
+            <label className="t-input-label">📝 Quiz Title</label>
+            <input type="text" placeholder="e.g., Final Term Exam" className="t-addquiz-input" value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
-          <div style={{ flex: 1 }}>
-            <label style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981' }}>Deadline:</label>
-            <input 
-              type="datetime-local" 
-              className="t-addquiz-input" 
-              value={deadline} 
-              min={scheduledDate || new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
-              onChange={(e) => setDeadline(e.target.value)} 
-            />
+
+          <div className="t-input-group">
+            <label className="t-input-label">🎯 Target Class</label>
+            <select value={targetClass} onChange={(e) => setTargetClass(e.target.value)} className="t-addquiz-input" required>
+              <option value="">Select Target Class</option>
+              <option value="Kindergarten">Kindergarten</option>
+              {[...Array(12)].map((_, i) => (
+                <option key={`Grade ${i + 1}`} value={`Grade ${i + 1}`}>Grade {i + 1}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="t-input-group">
+            <label className="t-input-label">⏱️ Duration (Minutes)</label>
+            <input type="number" placeholder="e.g., 45" className="t-addquiz-input" value={duration} onChange={(e) => setDuration(e.target.value)} />
+          </div>
+
+          <div className="t-input-group">
+            <label className="t-input-label">🏆 Total Marks</label>
+            <input type="number" placeholder="e.g., 100" className="t-addquiz-input" value={totalMarks} onChange={(e) => setTotalMarks(e.target.value)} />
+          </div>
+
+          <div className="t-input-group">
+            <label className="t-input-label">📅 Start Date & Time</label>
+            <input type="datetime-local" className="t-addquiz-input" value={scheduledDate} min={new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)} onChange={(e) => setScheduledDate(e.target.value)} />
+          </div>
+
+          <div className="t-input-group">
+            <label className="t-input-label">⏰ Deadline</label>
+            <input type="datetime-local" className="t-addquiz-input" value={deadline} min={scheduledDate || new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)} onChange={(e) => setDeadline(e.target.value)} />
           </div>
         </div>
       </div>
 
       {/* 3. Questions Section */}
-      <div className="t-questions-accent-area" style={{ borderLeft: '5px solid #10b981', paddingLeft: '20px' }}>
-        <h3 style={{ color: '#10b981', fontWeight: '800', marginBottom: '20px' }}>QUIZ QUESTIONS</h3>
-
+      <div className="t-questions-accent-area">
         {questions.map((q, qIndex) => (
           <div key={qIndex} className="t-addquiz-question-card">
-            <h5 style={{ color: '#10b981', margin: '0 0 15px 0' }}>QUESTION {qIndex + 1}</h5>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+              <div style={{ background: '#10b981', color: 'white', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                {qIndex + 1}
+              </div>
+              <h5 style={{ color: '#0f172a', margin: 0, fontSize: '1.2rem', fontWeight: '700' }}>Question Content</h5>
+            </div>
             
-            <input 
-              type="text" placeholder="Enter Question..." 
-              className="t-addquiz-input" style={{ marginBottom: '10px' }}
-              value={q.question} onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)} 
-            />
+            <div className="t-input-group">
+              <input type="text" placeholder="Type your question here..." className="t-addquiz-input" style={{ fontSize: '1.1rem', padding: '16px 20px' }} value={q.question} onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)} />
+            </div>
 
-            <input
-              type="text" placeholder="Optional Image URL (.jpg, .png)"
-              className="t-addquiz-input" style={{ marginBottom: '10px' }}
-              value={q.imageUrl} onChange={(e) => handleQuestionChange(qIndex, 'imageUrl', e.target.value)}
-            />
+            <div className="t-input-group" style={{ marginTop: '15px' }}>
+              <input type="text" placeholder="🖼️ Optional Image URL (.jpg, .png)" className="t-addquiz-input" value={q.imageUrl} onChange={(e) => handleQuestionChange(qIndex, 'imageUrl', e.target.value)} />
+            </div>
 
             {q.imageUrl && (
               <div className="t-addquiz-img-preview">
-                <span style={{ fontSize: '10px', color: '#64748b' }}>IMAGE PREVIEW:</span>
+                <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px' }}>Image Preview</span>
                 <img src={q.imageUrl} alt="Preview" onError={(e) => e.target.src='https://via.placeholder.com/150?text=Invalid+Link'} />
               </div>
             )}
 
-            <h6 style={{ margin: '20px 0 10px 0', color: '#64748b' }}>Options:</h6>
-            {q.options.map((opt, optIndex) => (
-              <div key={optIndex} style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
-                <input type="text" placeholder={`Option ${optIndex + 1}`} className="t-addquiz-input" value={opt} onChange={(e) => handleOptionChange(qIndex, optIndex, e.target.value)} />
-                {q.options.length > 2 && <button onClick={() => handleRemoveOption(qIndex, optIndex)} style={{ background: '#ef4444', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', padding: '0 10px' }}>✕</button>}
-              </div>
-            ))}
-            <button onClick={() => handleAddOption(qIndex)} style={{ color: '#10b981', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>+ Add Option</button>
+            <div style={{ marginTop: '30px' }}>
+              <label className="t-input-label" style={{ marginBottom: '10px', color: '#334155' }}>Options</label>
+              {q.options.map((opt, optIndex) => (
+                <div key={optIndex} className="t-option-row">
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', border: '2px solid #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: '0.8rem', fontWeight: 'bold', flexShrink: 0 }}>
+                    {String.fromCharCode(65 + optIndex)}
+                  </div>
+                  <input type="text" placeholder={`Option ${optIndex + 1}`} className="t-addquiz-input" value={opt} onChange={(e) => handleOptionChange(qIndex, optIndex, e.target.value)} />
+                  {q.options.length > 2 && (
+                    <button onClick={() => handleRemoveOption(qIndex, optIndex)} className="t-btn-remove-opt" title="Remove Option">✕</button>
+                  )}
+                </div>
+              ))}
+              <button onClick={() => handleAddOption(qIndex)} className="t-btn-add-opt">
+                <span style={{ fontSize: '1.2rem' }}>+</span> Add Option
+              </button>
+            </div>
 
             <div className="t-addquiz-dropdown-area">
-              <label style={{ fontWeight: 'bold' }}>Correct Answer:</label>
-              <select className="t-addquiz-input" style={{ width: 'auto' }} value={q.correctAnswer} onChange={(e) => handleQuestionChange(qIndex, 'correctAnswer', e.target.value)}>
-                <option value="">-- Choose --</option>
-                {q.options.map((opt, i) => opt.trim() !== '' && <option key={i} value={opt}>{opt}</option>)}
+              <label>✅ Correct Answer:</label>
+              <select className="t-addquiz-input" style={{ width: 'auto', minWidth: '200px', margin: 0 }} value={q.correctAnswer} onChange={(e) => handleQuestionChange(qIndex, 'correctAnswer', e.target.value)}>
+                <option value="">-- Choose Correct Option --</option>
+                {q.options.map((opt, i) => opt.trim() !== '' && <option key={i} value={opt}>Option {String.fromCharCode(65 + i)}: {opt}</option>)}
               </select>
             </div>
           </div>
         ))}
 
-        <button onClick={handleAddQuestion} style={{ marginTop: '20px', background: '#10b981', color: 'white', padding: '10px 20px', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold' }}>+ Add New Question</button>
+        <button onClick={handleAddQuestion} className="t-btn-add-q">
+          <span>➕</span> Add Another Question
+        </button>
       </div>
 
-      <button onClick={handleSaveQuiz} className="t-btn-save-quiz">Save Complete Quiz to Database</button>
+      {/* 4. Sticky Save Action Bar */}
+      <div className="t-save-action-bar">
+        <button onClick={handleSaveQuiz} className="t-btn-save-quiz">
+          <span>💾</span> Publish Quiz to Database
+        </button>
+      </div>
     </div>
   );
 };
