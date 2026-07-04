@@ -261,7 +261,7 @@ const StudentVideos = ({ subjectName, user }) => {
         );
     }
 
-    return loading ? <p className="t-empty-state">Loading Cinema...</p> : !Array.isArray(contentList) ? (
+    return loading ? <Loader text="Loading Cinema..." /> : !Array.isArray(contentList) ? (
         <div className="t-empty-state">
             <p>Error loading videos. The server response was invalid.</p>
         </div>

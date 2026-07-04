@@ -185,10 +185,7 @@ const UserProfile = ({ user }) => {
         return (
             <div className="up-center">
                 {/* up-big-spinner is a CSS-only rotating ring (see Students.css) */}
-                <div className="up-big-spinner" />
-                <p style={{ color: '#94a3b8', marginTop: '16px', fontWeight: 600 }}>
-                    Loading profile…
-                </p>
+                <Loader text="Loading profile…" />
             </div>
         );
     }

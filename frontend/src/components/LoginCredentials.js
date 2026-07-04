@@ -80,7 +80,7 @@ const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // A
           {error && <div className="login-error-msg">⚠️ {error}</div>}
 
           <button type="submit" className="login-primary-btn" disabled={loading}>
-            {loading ? 'Authenticating...' : 'Sign In'}
+            {loading ? <Loader type="inline" text="Authenticating..." /> : "Sign In"}
           </button>
         </form>
 

@@ -146,7 +146,7 @@ const AddUser = () => {
           </div>
 
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Processing...' : 'Register User'}
+            {loading ? <Loader type="inline" text="Processing..." /> : "Register User"}
           </button>
         </form>
       </div>

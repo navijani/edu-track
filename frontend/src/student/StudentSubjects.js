@@ -19,7 +19,7 @@ const StudentSubjects = ({ onSelectSubject }) => {
         setLoading(false);
     };
 
-    if (loading) return <div className="t-empty-state"><p>Loading your curriculum...</p></div>;
+    if (loading) return <Loader text="Loading your curriculum..." />;
 
     return (
         <div className="s-dash-container">

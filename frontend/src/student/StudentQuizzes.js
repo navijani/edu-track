@@ -236,7 +236,7 @@ const StudentQuizzes = ({ subjectName, user }) => {
         );
     }
 
-    return loading ? <p className="t-empty-state">Loading Exams...</p> : !Array.isArray(contentList) ? (
+    return loading ? <Loader text="Loading Exams..." /> : !Array.isArray(contentList) ? (
         <div className="t-empty-state">
             <p>Error loading quizzes. The server response was invalid.</p>
         </div>

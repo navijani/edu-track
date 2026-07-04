@@ -163,7 +163,7 @@ const StudentDocuments = ({ subjectName, user }) => {
         );
     }
 
-    return loading ? <p className="t-empty-state">Loading library...</p> : !Array.isArray(contentList) ? (
+    return loading ? <Loader text="Loading library..." /> : !Array.isArray(contentList) ? (
         <div className="t-empty-state">
             <p>Error loading documents. The server response was invalid.</p>
         </div>

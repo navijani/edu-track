@@ -54,7 +54,7 @@ const AddSubject = () => {
           </div>
 
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Adding...' : 'Create Subject'}
+            {loading ? <Loader type="inline" text="Adding..." /> : "Create Subject"}
           </button>
         </form>
       </div>

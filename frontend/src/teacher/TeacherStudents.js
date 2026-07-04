@@ -80,7 +80,7 @@ const TeacherStudents = ({ user }) => {
                         </div>
                     </div>
                 ) : loadingDetails ? (
-                    <div className="t-empty-state"><p>Loading analytics...</p></div>
+                    <Loader text="Loading analytics..." />
                 ) : (
                     <div className="t-student-details-inner">
                         <div className="t-details-header" style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '30px' }}>

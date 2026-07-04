@@ -23,7 +23,7 @@ const StudentProgress = ({ user }) => {
         setLoading(false);
     };
 
-    if (loading) return <p>Loading your analytics...</p>;
+    if (loading) return <Loader text="Loading your analytics..." />;
 
     if (data.length === 0) return (
         <div style={{ padding: '30px', textAlign: 'center', backgroundColor: '#f9f9f9', borderRadius: '8px' }}>

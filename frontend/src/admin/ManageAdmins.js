@@ -111,10 +111,7 @@ const ManageAdmins = () => {
 
       <div className="admin-table-wrapper">
         {loading ? (
-          <div className="admin-loading-state">
-            <div className="spinner"></div>
-            <p>Loading administrators...</p>
-          </div>
+          <Loader text="Loading administrators..." />
         ) : admins.length === 0 ? (
           <div className="admin-empty-state">
             <p>No admins found in the system.</p>

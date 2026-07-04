@@ -52,7 +52,7 @@ const ParentDashboard = ({ user, onLogout }) => {
                 {error ? (
                     <div className="t-status-pill error" style={{ marginTop: '50px' }}>{error}</div>
                 ) : !data ? (
-                    <div className="t-empty-state">Loading Academic Records...</div>
+                    <Loader text="Loading Academic Records..." />
                 ) : (
                     <>
                         {/* Profile Header */}

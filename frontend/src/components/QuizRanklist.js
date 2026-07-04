@@ -67,7 +67,7 @@ const QuizRanklist = ({ quizId, quizTitle, totalMarks, currentUserId, onClose })
             </div>
 
             {loading ? (
-                <p style={{ textAlign: 'center', color: '#94a3b8', padding: '40px 0' }}>Loading ranklist...</p>
+                <Loader text="Loading ranklist..." />
             ) : ranklist.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '60px 20px' }}>
                     <div style={{ fontSize: '50px', marginBottom: '15px' }}>📋</div>
