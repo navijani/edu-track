@@ -17,10 +17,8 @@ const TeacherDashboard = ({ user, onLogout }) => {
     return (
         <div className="teacher-glass-wrapper">
 
-            {/* Decorative background orbs */}
-            <div className="t-orb t-orb-1"></div>
-            <div className="t-orb t-orb-2"></div>
-
+            {/* Background elements removed for professional layout */}
+            
             <div className="teacher-layout">
 
                 {/* ── SIDEBAR (always visible, shrinks to icons on small screens) ── */}

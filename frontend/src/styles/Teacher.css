@@ -2,24 +2,14 @@
 .teacher-glass-wrapper {
   height: 100vh;           /* Exactly the viewport — no page-level scroll */
   width: 100vw;
-  background: linear-gradient(135deg, #e2e6ec 0%, #e4e8ff 100%);
+  background: #f8fafc;     /* Clean slate-50 background */
   display: flex;
   position: relative;
   overflow: hidden;        /* Prevents page scroll — only main area scrolls */
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
-
-.t-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(50px);
-  opacity: 0.10;
-  z-index: 1;
-  pointer-events: none;
-}
-.t-orb-1 { width: 600px; height: 500px; background: #4aaae5; top: -10%; right: -5%; }
-.t-orb-2 { width: 600px; height: 400px; background: #b56ff7; bottom: -10%; left: -5%; }
+/* Background elements removed */
 
 
 /* --- Layout: full-height flex (same as student portal) --- */
@@ -33,7 +23,7 @@
 }
 
 
-/* --- Sidebar: Glassmorphism (same as student portal) --- */
+/* --- Sidebar: Professional Solid --- */
 .teacher-sidebar {
   width: 260px;
   min-width: 260px;
@@ -42,18 +32,16 @@
   position: sticky;
   top: 0;
 
-  /* Glass effect matching student sidebar */
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35) 0%, rgba(86, 166, 241, 0.35) 100%);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  background: #ffffff;
+  box-shadow: 1px 0 10px rgba(0, 0, 0, 0.03);
 
-  color: #4c3fa0;
+  color: #334155;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid #e2e8f0;
   z-index: 1000;
-  overflow-y: auto;   /* sidebar scrolls if content is taller than screen */
-  scrollbar-width: none; /* hide scrollbar visually */
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 .teacher-sidebar::-webkit-scrollbar { display: none; }
 
@@ -63,15 +51,15 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 35px 20px 25px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding: 30px 20px 20px 20px;
+  border-bottom: 1px solid #f1f5f9;
   margin-bottom: 10px;
   flex-shrink: 0;
 }
 
-.t-logo-icon { font-size: 1.8rem; }
-.t-sidebar-header h2 { color: #4834d4; font-size: 1.1rem; letter-spacing: -0.5px; font-weight: 800; margin: 0; }
-.t-sidebar-header h2 span { color: #818cf8; font-weight: 300; }
+.t-logo-icon { font-size: 1.6rem; }
+.t-sidebar-header h2 { color: #0f172a; font-size: 1.15rem; letter-spacing: -0.3px; font-weight: 700; margin: 0; }
+.t-sidebar-header h2 span { color: #3b82f6; font-weight: 500; }
 
 
 /* --- Nav Menu --- */
@@ -84,29 +72,30 @@
 
 .t-sidebar-menu li {
   padding: 12px 18px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #737199;
-  font-weight: 700;
-  border-radius: 14px;
-  font-size: 15px;
-  transition: all 0.3s ease;
+  color: #64748b;
+  font-weight: 600;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
 }
 
 .t-sidebar-menu li:hover {
-  background: rgba(217, 223, 228, 0.6);
-  color: #4834d4;
-  transform: translateX(3px);
+  background: #f8fafc;
+  color: #0f172a;
 }
 
-/* Active: floating purple gradient pill — same as student portal */
+/* Active: Clean enterprise style */
 .t-sidebar-menu li.active {
-  background: linear-gradient(135deg, #7c5dfa 0%, #a855f7 100%);
-  color: white !important;
-  box-shadow: 0 10px 20px rgba(124, 93, 250, 0.25);
+  background: #eff6ff;
+  color: #2563eb !important;
+  border-left: 3px solid #3b82f6;
+  border-radius: 0 8px 8px 0;
 }
 
 
@@ -129,45 +118,44 @@
   margin-bottom: 30px;
 }
 
-.t-welcome h1 { color: rgb(58, 73, 158); font-size: 1.8rem; }
-.t-welcome h1 span { color: #818cf8; font-weight: 400; }
+.t-welcome h1 { color: #0f172a; font-size: 1.6rem; font-weight: 700; }
+.t-welcome h1 span { color: #3b82f6; font-weight: 600; }
 .t-welcome p { color: #64748b; font-size: 0.9rem; margin-top: 4px; }
 
 .t-status-tag {
-  background: rgba(129, 140, 248, 0.1); 
-  color: #818cf8; 
-  padding: 6px 16px;
-  border-radius: 20px;
+  background: #eff6ff; 
+  color: #2563eb; 
+  padding: 6px 14px;
+  border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
-  border: 1px solid rgba(129, 140, 248, 0.2);
+  border: 1px solid #bfdbfe;
 }
 
 .t-content-body {
   flex-grow: 1;
-  background: rgba(255, 255, 255, 0.01);
-  border-radius: 20px;
+  background: transparent;
 }
 
 /* --- Sidebar Footer & Logout Button --- */
 .t-sidebar-footer {
   padding: 20px;
-  flex-shrink: 0;          /* Never compress — logout is always visible */
-  border-top: 1px solid rgba(255,255,255,0.2);
-  margin-top: auto;        /* Pushes footer to the very bottom */
+  flex-shrink: 0;
+  border-top: 1px solid #f1f5f9;
+  margin-top: auto;
   text-align: center;
 }
 
 .t-logout-btn {
   width: 100%;
-  padding: 12px;
-  font-size: 15px;
-  background: rgba(203, 151, 151, 0.3);
-  color: #b43324;
-  border: 2px solid #dc584c;
-  border-radius: 18px;
+  padding: 10px;
+  font-size: 14px;
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 800;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -176,9 +164,9 @@
 }
 
 .t-logout-btn:hover {
-  background: #ed3d3d;
-  border-color: #c22a19;
-  color: white;
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
 }
 
 /* ================================================================
@@ -345,36 +333,42 @@
     padding: 10px;
 }
 
-/* Glass Card Base */
+/* Glass Card Base -> Modern Enterprise Cards */
+.dashboard-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    padding: 25px;
-    backdrop-filter: blur(50px);
+    /* Legacy override for other components that might still use it */
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 /* Banner */
 .t-welcome-banner {
-    width: 80%;       /* Or a fixed width like 600px */
-   /* margin: 0 auto;   /* 0 for top/bottom, auto for left/right */
-   /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);*/
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /*background: linear-gradient(90deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);*/
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(222, 222, 229, 0.1) 100%);
+    background: #ffffff;
+    border-left: 4px solid #3b82f6;
 }
-.banner-text h2 { color: rgb(95, 93, 156); margin: 0; font-size: 1.6rem; }
-.banner-text p { color: #94a3b8; margin: 5px 0 0 0; }
+.banner-text h2 { color: #0f172a; margin: 0; font-size: 1.4rem; font-weight: 700; }
+.banner-text p { color: #64748b; margin: 5px 0 0 0; font-size: 0.95rem; }
 .banner-badge {
-    background: rgba(129, 140, 248, 0.2);
-    color: #818cf8;
-    padding: 8px 15px;
-    border-radius: 12px;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 6px 14px;
+    border-radius: 6px;
     font-weight: 600;
     font-size: 0.8rem;
-    border: 1px solid rgba(129, 140, 248, 0.3);
+    border: 1px solid #e2e8f0;
 }
 
 /* Stats Grid */
@@ -387,18 +381,29 @@
 .t-stat-card {
     display: flex;
     align-items: center;
-    gap: 20px;
-    transition: transform 0.3s ease;
+    gap: 16px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
-.t-stat-card:hover { transform: translateY(-5px); }
-.stat-icon { font-size: 2rem; }
-.stat-info h3 { color: rgb(98, 82, 142); font-size: 1.8rem; margin: 0; }
-.stat-info p { color: #64748b; margin: 0; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+.t-stat-card:hover { 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+    transform: translateY(-2px);
+}
 
-/* Glow Effects */
-.purple-glow { border-bottom: 3px solid #a855f7; }
-.blue-glow { border-bottom: 3px solid #6366f1; }
-.teal-glow { border-bottom: 3px solid #2dd4bf; }
+.stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+.student-icon { background: #eff6ff; color: #3b82f6; }
+.material-icon { background: #f8fafc; color: #64748b; }
+.calendar-icon { background: #ecfdf5; color: #10b981; }
+
+.stat-info h3 { color: #0f172a; font-size: 1.6rem; font-weight: 700; margin: 0; }
+.stat-info p { color: #64748b; margin: 0; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* Main Section */
 .t-dashboard-main {
@@ -407,33 +412,45 @@
     gap: 25px;
 }
 
+.t-chart-section h3, .t-meetings-section h3 {
+    color: #0f172a;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
 /* Meetings List */
 .meeting-list {
-    margin-top: 15px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 .meeting-item {
     display: flex;
     align-items: center;
     gap: 15px;
     padding: 12px;
-    background: rgba(255,255,255,0.02);
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.05);
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    transition: background 0.2s ease;
+}
+.meeting-item:hover {
+    background: #f1f5f9;
 }
 .meeting-date-box {
-    background: rgba(99, 102, 241, 0.15);
-    color: #818cf8;
-    padding: 10px;
-    border-radius: 10px;
-    font-weight: bold;
+    background: #ffffff;
+    color: #3b82f6;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 700;
     font-size: 0.8rem;
+    border: 1px solid #e2e8f0;
 }
-.meeting-details h4 { color: #4c688d; margin: 0; font-size: 0.95rem; }
+.meeting-details h4 { color: #0f172a; margin: 0; font-size: 0.95rem; font-weight: 600; }
 .meeting-details p { color: #64748b; margin: 2px 0 0 0; font-size: 0.8rem; }
-.no-data { color: #475569; font-style: italic; text-align: center; padding: 20px; }
+.no-data { color: #94a3b8; font-style: italic; text-align: center; padding: 20px; font-size: 0.9rem; }
 
 /* Container Layout */
 .t-contents-wrapper {
