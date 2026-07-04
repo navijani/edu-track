@@ -96,16 +96,16 @@
     position: sticky;
     top: 0;
     
-    background: linear-gradient(180deg, rgba(30, 27, 75, 0.75) 0%, rgba(49, 46, 129, 0.85) 100%);
+    background: linear-gradient(135deg, rgba(184, 77, 234, 0.4) 0%, rgba(86, 166, 241, 0.4) 100%);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    color: #cbd5e1;
+    color: #5d5a88;
     display: flex;
     flex-direction: column;
     z-index: 1000;
     overflow-y: auto;
-    box-shadow: 10px 0 30px rgba(30, 27, 75, 0.2);
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 10px 0 30px rgba(184, 77, 234, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* --- Sidebar Header --- */
@@ -122,22 +122,20 @@
     left: 30px;
     right: 30px;
     height: 1px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(90deg, rgba(255,255,255,0.4), transparent);
 }
 
 .s-logo-text {
     margin: 0;
     font-weight: 900;
     font-size: 2.2rem;
-    background: linear-gradient(135deg, #a855f7 0%, #4f46e5 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #4834d4;
     letter-spacing: -1.5px;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
 }
 
 .s-sidebar-header p {
-    color: #c7d2fe !important;
+    color: #5d5a88 !important;
     letter-spacing: 3px;
     margin-top: 8px !important;
     font-weight: 700;
@@ -162,7 +160,7 @@
     display: flex;
     align-items: center;
     gap: 18px;
-    color: #94a3b8;
+    color: #737199;
     font-weight: 600;
     font-size: 1.05rem;
     border-radius: 16px;
@@ -174,16 +172,16 @@
 
 /* Hover Effect for Glass Items */
 .s-nav-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #f8fafc;
+    background: rgba(217, 223, 228, 0.6);
+    color: #4834d4;
     transform: translateX(6px);
 }
 
 /* The Active Floating Purple Card */
 .s-nav-item.active {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    background: linear-gradient(135deg, #7c5dfa 0%, #a855f7 100%);
     color: #ffffff !important;
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(124, 93, 250, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
     font-weight: 700;
     border: none;
 }
@@ -205,16 +203,16 @@
     left: 30px;
     right: 30px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
 }
 
 .s-btn-logout {
     width: 100%;
     padding: 16px;
     font-size: 1rem;
-    background: rgba(239, 68, 68, 0.08);
-    color: #fca5a5;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    background: rgba(203, 151, 151, 0.3);
+    color: #b43324;
+    border: 1px solid #dc584c;
     border-radius: 16px;
     cursor: pointer;
     font-weight: 700;
@@ -227,11 +225,11 @@
 }
 
 .s-btn-logout:hover {
-    background: #ef4444;
-    border-color: #ef4444;
+    background: #ed3d3d;
+    border-color: #c22a19;
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 8px 20px rgba(237, 61, 61, 0.3);
 }
 /* --- Content Wrapper --- */
 .s-main-content {
