@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import Loader from '../components/Loader';
 
 const StudentProgress = ({ user }) => {
     const [data, setData] = useState([]);
