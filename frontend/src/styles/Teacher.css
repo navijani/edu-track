@@ -1148,10 +1148,6 @@
     cursor: pointer;
 }
 
-/* Container that only wraps the Questions area */
-.t-questions-accent-area {
-    border-left: 5px solid #3498db; 
-    padding: 20px 30px;             
 /* ==========================================================================
    QUIZ CREATION UI - PREMIUM REDESIGN
    ========================================================================== */
