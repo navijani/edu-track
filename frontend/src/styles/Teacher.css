@@ -581,34 +581,52 @@
 }
 
 /* Grid Cards */
+.t-loader-container {
+    grid-column: 1 / -1; /* Spans across all columns in grid */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 40vh;
+}
+
 .t-content-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 25px;
 }
 
+/* Beautiful True Glassmorphism for Item Cards */
 .t-item-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
     text-align: center;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 30px 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .t-item-card:hover {
     transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.4);
 }
 
 /* --- VIDEOS: Blue Theme --- */
-.t-item-card.videos-theme { border-top: 4px solid #3b82f6; }
-.t-item-card.videos-theme:hover { box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255,255,255,0.9); }
+.t-item-card.videos-theme { border-top: 3px solid rgba(59, 130, 246, 0.7); border-bottom: 3px solid transparent; }
+.t-item-card.videos-theme:hover { border-bottom: 3px solid rgba(59, 130, 246, 0.7); box-shadow: 0 15px 35px rgba(59, 130, 246, 0.2), inset 0 0 15px rgba(255,255,255,0.5); }
 
 /* --- QUIZZES: Purple Theme --- */
-.t-item-card.quizzes-theme { border-top: 4px solid #8b5cf6; }
-.t-item-card.quizzes-theme:hover { box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255,255,255,0.9); }
+.t-item-card.quizzes-theme { border-top: 3px solid rgba(139, 92, 246, 0.7); border-bottom: 3px solid transparent; }
+.t-item-card.quizzes-theme:hover { border-bottom: 3px solid rgba(139, 92, 246, 0.7); box-shadow: 0 15px 35px rgba(139, 92, 246, 0.2), inset 0 0 15px rgba(255,255,255,0.5); }
 
 /* --- DOCUMENTS: Emerald/Green Theme --- */
-.t-item-card.documents-theme { border-top: 4px solid #10b981; }
-.t-item-card.documents-theme:hover { box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255,255,255,0.9); }
+.t-item-card.documents-theme { border-top: 3px solid rgba(16, 185, 129, 0.7); border-bottom: 3px solid transparent; }
+.t-item-card.documents-theme:hover { border-bottom: 3px solid rgba(16, 185, 129, 0.7); box-shadow: 0 15px 35px rgba(16, 185, 129, 0.2), inset 0 0 15px rgba(255,255,255,0.5); }
 
 .t-card-icon { font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
 .t-item-card h4 { color: #1e293b; font-size: 1.2rem; margin: 0 0 10px 0; font-weight: 800; }

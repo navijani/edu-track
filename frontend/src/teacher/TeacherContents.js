@@ -78,7 +78,9 @@ const TeacherContents = ({ user }) => {
       {!selectedItem ? (
         <div className="t-content-grid">
           {loading ? (
-            <Loader text="Refreshing gallery..." />
+            <div className="t-loader-container">
+                <Loader text="Refreshing gallery..." />
+            </div>
           ) : contentList.length === 0 ? (
             <div className="t-empty-state premium-glass-card">
               <p>No {activeTab} uploads found.</p>
