@@ -530,7 +530,7 @@
   padding: 10px;
   min-height: 80vh; 
   display: flex;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .t-contents-header {
@@ -541,206 +541,167 @@
   width: 100%;
 }
 
-.t-content-banner.glass-card {
+.t-content-banner {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(222, 222, 229, 0.1) 100%);
 }
-.content-banner-text h2 { color: rgb(95, 93, 156); margin: 1px 0 0 0; font-size: 1.6rem; }  
-.content-banner-text p { color: #94a3b8; margin: 5px 0 0 0; }
 
-/* Tabs */
+/* Tabs: Premium Segmented Control */
 .t-tab-navigation {
-  padding: 15px;
-  border-radius: 12px;
-  width: auto;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 6px;
+  border-radius: 16px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .t-tab-navigation button {
-  background: white;
-  border: #c4c9d9 solid 2px;
-  color: #8294ad;
-  padding: 15px 20px;
-  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  padding: 12px 24px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 1.05rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1rem;
   font-weight: 700;
 }
 
+.t-tab-navigation button:hover {
+  background: rgba(255, 255, 255, 0.8);
+  color: #1e293b;
+}
+
 .t-tab-navigation button.active {
-  background: #6264e1;
-  color: white;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  background: #ffffff;
+  color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 /* Grid Cards */
 .t-content-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
 }
 
-.t-item-card.light-glass {
-    backdrop-filter: blur(8px);
-    
-    /* 3. Fixing the Shadow */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
-    
-    /* Layout styling */
-    border-radius: 20px;
-    padding: 30px 20px;
+.t-item-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
 }
-
-
-
-/* Make it look "active" or glow slightly on hover */
-.t-item-card.light-glass:hover {
+.t-item-card:hover {
     transform: translateY(-5px);
 }
 
 /* --- VIDEOS: Blue Theme --- */
-.t-item-card.light-glass.videos-theme {
-    border: 2px solid #3b82f6; 
-    background: rgba(59, 130, 246, 0.05);
-}
-.t-item-card.light-glass.videos-theme:hover {
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-    background: rgba(59, 130, 246, 0.1);
-}
+.t-item-card.videos-theme { border-top: 4px solid #3b82f6; }
+.t-item-card.videos-theme:hover { box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15), inset 0 1px 0 rgba(255,255,255,0.9); }
 
 /* --- QUIZZES: Purple Theme --- */
-.t-item-card.light-glass.quizzes-theme {
-    border: 2px solid #10b981; /* Fresh Green */
-    background: rgba(16, 185, 129, 0.05);
-}
-.t-item-card.light-glass.quizzes-theme:hover {
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-    background: rgba(16, 185, 129, 0.1);
-}
+.t-item-card.quizzes-theme { border-top: 4px solid #8b5cf6; }
+.t-item-card.quizzes-theme:hover { box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255,255,255,0.9); }
 
 /* --- DOCUMENTS: Emerald/Green Theme --- */
-.t-item-card.light-glass.documents-theme {
-    border: 2px solid #9f52c6; 
-    background: rgba(209, 24, 218, 0.05);
-}
-.t-item-card.light-glass.documents-theme:hover {
-    box-shadow: 0 8px 25px rgba(140, 68, 208, 0.3);
-    background: rgba(175, 46, 182, 0.05);
-}
+.t-item-card.documents-theme { border-top: 4px solid #10b981; }
+.t-item-card.documents-theme:hover { box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255,255,255,0.9); }
 
-.t-card-icon { font-size: 2.5rem; margin-bottom: 15px; }
-.t-item-card h4 { color: rgb(107, 122, 203); margin: 0 0 10px 0; }
+.t-card-icon { font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+.t-item-card h4 { color: #1e293b; font-size: 1.2rem; margin: 0 0 10px 0; font-weight: 800; }
 .t-card-stats { color: #64748b; font-size: 0.8rem; margin-bottom: 20px; }
-.t-open-btn {
-  background: rgba(129, 140, 248, 0.1);
- /* color: #818cf8;*/
-  color: #3c6fb5;
-  border: 1px solid rgba(129, 140, 248, 0.3);
-  width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  font-weight: 600;
-}
 
 /* Detail View Layout */
-.t-detail-layout {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr; /* Video large on left, Questions on right */
-  gap: 30px;
-  padding: 30px;
-  margin-top: 20px;
-  height: calc(100vh - 250px); /* Fixed height for scrolling questions */
+.t-wide-detail-container {
+    padding: 10px;
 }
 
-.t-detail-primary { overflow-y: auto; padding-right: 15px; }
-.t-detail-secondary { 
-  background: rgba(0,0,0,0.2); 
-  border-radius: 15px; 
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
+.t-wide-content-box {
+    margin-top: 20px;
 }
 
-.t-resource-title { color: white; margin-bottom: 20px; border-left: 4px solid #6366f1; padding-left: 15px; }
+.t-wide-title { color: #1e293b; font-size: 2rem; margin-bottom: 30px; font-weight: 800; }
+.t-wide-title.quiz-accent {
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
 /* Fixed Dimensions for YouTube */
-.t-video-frame {
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  background: #000;
-}
-
-/* Question Styling */
-.t-question-list { overflow-y: auto; flex-grow: 1; padding-right: 10px; }
-.t-q-bubble {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 15px;
-}
-
-.q-label { font-size: 0.7rem; color: #818cf8; font-weight: 800; margin-bottom: 5px; }
-.q-body { color: #e2e8f0; font-size: 0.95rem; margin-bottom: 10px; }
-.q-answer span { color: #10b981; font-weight: bold; }
-.q-options span { display: block; font-size: 0.85rem; color: #94a3b8; }
-.q-options span.correct { color: #10b981; font-weight: bold; }
-.q-img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
-
-/* Control Buttons */
-.t-detail-nav { display: flex; justify-content: space-between; }
-.t-back-btn { background: none; border: none; color: #818cf8; cursor: pointer; font-weight: 600; }
-.t-danger-btn { background: #f43f5e; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
-
-/* Glass Buttons */
-.t-btn-glass-primary {
-  background: rgba(99, 102, 241, 0.1);
-  color: #6366f1;
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  padding: 10px 20px;
-  border-radius: 50px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.t-btn-glass-primary:hover {
-  background: #6366f1;
-  color: white;
-  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
-}
-
-.t-btn-glass-purple {
-  background: rgba(168, 85, 247, 0.1);
-  color: #a855f7;
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  padding: 12px 30px;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: 600;
-  display: inline-block;
-}
-
-/* Wide Content Layout */
 .t-video-container-wide {
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
   margin-bottom: 40px;
+  border: 1px solid rgba(255,255,255,0.8);
+}
+.t-video-container-wide iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* Control Buttons */
+.t-detail-nav { display: flex; justify-content: space-between; align-items: center; }
+
+/* Glass Buttons */
+.t-btn-glass-primary {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+}
+.t-btn-glass-primary:hover {
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+
+.t-btn-glass-purple {
+  background: linear-gradient(135deg, #a855f7, #9333ea);
+  color: white;
+  border: none;
+  padding: 14px 35px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);
+  transition: all 0.3s ease;
+}
+.t-btn-glass-purple:hover {
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Red Delete Button (was t-btn-delete-pill but doesn't exist, styling it anyway) */
+.t-btn-delete-pill {
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.t-btn-delete-pill:hover {
+  background: #fee2e2;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
 .t-video-container-wide iframe {
@@ -757,14 +718,17 @@
 }
 
 .meta-tile {
-  background: white;
-  padding: 15px 25px;
-  border-radius: 15px;
-  border: 1px solid #a8c0df;
+  background: rgba(255,255,255,0.8);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
   flex: 1;
   min-width: 150px;
   text-align: center;
+  transition: transform 0.3s ease;
 }
+.meta-tile:hover { transform: translateY(-3px); }
 
 .meta-tile.wide {
   flex: 2;
@@ -773,63 +737,66 @@
 
 .meta-tile span {
   display: block;
-  font-size: 0.75rem;
-  color: #94a3b8;
+  font-size: 0.8rem;
+  color: #64748b;
   text-transform: uppercase;
-  margin-bottom: 5px;
-  font-weight: 800;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.meta-tile strong {
+  font-size: 1.1rem;
+  color: #1e293b;
 }
 
 /* Wide Questions */
+.t-questions-section .question-set-header {
+    color: #1e293b;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
 .t-q-stack {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/*.t-q-card-wide {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid #f1f5f9;
-  position: relative;
-}*/
 .t-q-card-wide {
-    /* 90-degree light blue gradient mix */
-    background: linear-gradient(90deg, rgba(209, 221, 235, 0.4) 0%, rgba(245, 247, 248, 0.6) 100%);
-    
-    /* Soft border to define the card edges */
-    border: 1px solid rgba(59, 130, 246, 0.2);
-
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 15px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 0;
     position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03); /* Subtle shadow */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Add a hover effect to make the gradient "glow" */
 .t-q-card-wide:hover {
-    background: linear-gradient(90deg, rgba(245, 246, 248, 0.6) 0%, rgba(191, 219, 254, 0.8) 100%);
-    transform: translateX(5px); /* Slight shift to the right */
-    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
 }
 
 .q-badge {
   position: absolute;
-  top: 15px;
-  right: 20px;
-  background: #f1f5f9;
-  padding: 4px 12px;
-  border-radius: 50px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #64748b;
+  top: -12px;
+  left: 25px;
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: white;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
 }
 
 .q-body-text {
   font-size: 1.15rem;
+  font-weight: 500;
   color: #1e293b;
+  margin-top: 10px;
   margin-bottom: 20px;
 }
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/Teacher.css';
 import QuizRanklist from '../components/QuizRanklist';
+import Loader from '../components/Loader';
 
 const TeacherContents = ({ user }) => {
   const [activeTab, setActiveTab] = useState('videos');
@@ -60,9 +61,9 @@ const TeacherContents = ({ user }) => {
   return (
     <div className="t-contents-wrapper light-theme">
       <div className="t-contents-header">
-        <div className="t-content-banner glass-card">
+        <div className="t-content-banner premium-glass-card">
                 <div className="content-banner-text">
-                    <h2> Subject <span>Materials </span></h2>
+                    <h2 className="gradient-text"> Subject <span>Materials </span></h2>
                     <p>Managing <strong>{user.subject}</strong> resources.</p>
                 </div>
           </div>
@@ -77,18 +78,18 @@ const TeacherContents = ({ user }) => {
       {!selectedItem ? (
         <div className="t-content-grid">
           {loading ? (
-            <div className="t-loader">Refreshing gallery...</div>
+            <Loader text="Refreshing gallery..." />
           ) : contentList.length === 0 ? (
-            <div className="t-empty-state light-glass">
+            <div className="t-empty-state premium-glass-card">
               <p>No {activeTab} uploads found.</p>
             </div>
           ) : !Array.isArray(contentList) ? (
-            <div className="t-empty-state light-glass">
+            <div className="t-empty-state premium-glass-card">
               <p>Error loading {activeTab}. The server response was invalid.</p>
             </div>
           ) : (
             contentList.map((item, index) => (
-              <div key={index} className={`t-item-card light-glass ${activeTab}-theme`}>
+              <div key={index} className={`t-item-card premium-glass-card ${activeTab}-theme`}>
                 {/* Updated Icon Logic */}
                 <div className="t-card-icon">
                   {activeTab === 'videos' ? '▶️' : activeTab === 'quizzes' ? '📝' : '📄'}
@@ -123,7 +124,7 @@ const TeacherContents = ({ user }) => {
             </button>
           </div>
 
-          <div className="t-wide-content-box light-glass">
+          <div className="t-wide-content-box premium-glass-card">
             {/* Conditional Color for Quiz Title */}
             <h2 className={`t-wide-title ${activeTab === 'quizzes' ? 'quiz-accent' : ''}`}>
                 {selectedItem.title}
