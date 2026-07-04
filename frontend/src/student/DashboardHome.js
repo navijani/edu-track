@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import Loader from '../components/Loader';
 import '../styles/Students.css';
 
 const DashboardHome = ({ user }) => {
     const [data, setData] = useState(null);
+    const [goalProgress, setGoalProgress] = useState(60); // Mock data for goal tracker
+
+    const handleUpdateGoal = () => {
+        setGoalProgress(prev => (prev >= 100 ? 0 : prev + 20));
+    };
 
     useEffect(() => {
         const fetchDashboard = async () => {
@@ -54,31 +59,47 @@ const DashboardHome = ({ user }) => {
                 <div className="s-glass-panel" style={{ background: 'white', borderRadius: '20px', border: '1px solid #f1f5f9', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' }}>
                     <h3 style={{ marginBottom: '25px', color: '#1e293b', fontSize: '1.2rem', fontWeight: '800' }}>Subject Completion Analytics</h3>
                     <ResponsiveContainer width="100%" height={280}>
-                        <LineChart data={data.growthData}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                        <AreaChart data={data.growthData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                            <defs>
+                                <linearGradient id="colorQuiz" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
+                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                                </linearGradient>
+                                <linearGradient id="colorVideo" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
+                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                                </linearGradient>
+                                <linearGradient id="colorDoc" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.4}/>
+                                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                             <XAxis 
                                 dataKey="subject" 
-                                tick={{ fontSize: 11, fontWeight: '700', fill: '#64748b' }} 
+                                tick={{ fontSize: 12, fontWeight: '600', fill: '#94a3b8' }} 
                                 axisLine={false}
                                 tickLine={false}
+                                dy={10}
                             />
                             <YAxis 
                                 unit="%" 
                                 domain={[0, 100]} 
-                                tick={{ fontSize: 11, fill: '#64748b' }} 
+                                tick={{ fontSize: 12, fontWeight: '600', fill: '#94a3b8' }} 
                                 axisLine={false}
                                 tickLine={false}
                             />
                             <Tooltip 
-                                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', fontWeight: '600', color: '#1e293b' }}
+                                contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', fontWeight: '600', color: '#1e293b', padding: '12px 20px' }}
+                                itemStyle={{ fontWeight: '700' }}
                                 formatter={(value) => [`${value}%`]} 
                             />
-                            <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px', fontSize: '12px', fontWeight: '700', color: '#475569' }} />
+                            <Legend iconType="circle" wrapperStyle={{ paddingTop: '15px', fontSize: '13px', fontWeight: '700', color: '#475569' }} />
                             
-                            <Line type="monotone" dataKey="quiz" name="Quiz Scores" stroke="#10b981" strokeWidth={4} dot={{ r: 0 }} activeDot={{ r: 6, strokeWidth: 0 }} />
-                            <Line type="monotone" dataKey="video" name="Video Progress" stroke="#3b82f6" strokeWidth={4} dot={{ r: 0 }} activeDot={{ r: 6, strokeWidth: 0 }} />
-                            <Line type="monotone" dataKey="doc" name="Reading Progress" stroke="#8b5cf6" strokeWidth={4} dot={{ r: 0 }} activeDot={{ r: 6, strokeWidth: 0 }} />
-                        </LineChart>
+                            <Area type="monotone" dataKey="quiz" name="Quiz Scores" stroke="#10b981" fillOpacity={1} fill="url(#colorQuiz)" strokeWidth={3} activeDot={{ r: 6, strokeWidth: 0, fill: '#10b981' }} />
+                            <Area type="monotone" dataKey="video" name="Video Progress" stroke="#3b82f6" fillOpacity={1} fill="url(#colorVideo)" strokeWidth={3} activeDot={{ r: 6, strokeWidth: 0, fill: '#3b82f6' }} />
+                            <Area type="monotone" dataKey="doc" name="Reading Progress" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorDoc)" strokeWidth={3} activeDot={{ r: 6, strokeWidth: 0, fill: '#8b5cf6' }} />
+                        </AreaChart>
                     </ResponsiveContainer>
                 </div>
 
@@ -102,6 +123,62 @@ const DashboardHome = ({ user }) => {
                         )}
                     </div>
                 </div>
+            </div>
+
+            {/* NEW WIDGETS ROW */}
+            <div className="s-features-grid">
+                
+                {/* 1. Goal Tracker */}
+                <div className="s-feature-card">
+                    <h3>🎯 Weekly Study Goal</h3>
+                    <p style={{ color: '#64748b', fontSize: '0.85rem', margin: 0 }}>Target: Complete 5 materials this week</p>
+                    
+                    <div className="s-goal-circle-wrap">
+                        <div className="s-goal-circle" style={{ '--progress': `${goalProgress * 3.6}deg` }}>
+                            <span className="s-goal-text">{goalProgress}%</span>
+                        </div>
+                    </div>
+                    
+                    <button className="s-btn-update-goal" onClick={handleUpdateGoal}>
+                        {goalProgress >= 100 ? 'Goal Met! 🎉' : 'Update Progress +'}
+                    </button>
+                </div>
+
+                {/* 2. Upcoming Deadlines */}
+                <div className="s-feature-card">
+                    <h3>📅 Upcoming Deadlines</h3>
+                    <ul className="s-task-list">
+                        <li className="s-task-item">
+                            <span className="s-task-title">Math Mid-term Quiz</span>
+                            <span className="s-task-tag urgent">Tomorrow</span>
+                        </li>
+                        <li className="s-task-item">
+                            <span className="s-task-title">Physics Lab Report</span>
+                            <span className="s-task-tag soon">In 2 days</span>
+                        </li>
+                        <li className="s-task-item">
+                            <span className="s-task-title">Biology Zoom Class</span>
+                            <span className="s-task-tag soon">Thursday</span>
+                        </li>
+                    </ul>
+                </div>
+
+                {/* 3. Daily Inspiration & Quick Links */}
+                <div className="s-feature-card">
+                    <h3>💡 Daily Inspiration</h3>
+                    <p className="s-quote-text">
+                        "Success is the sum of small efforts, repeated day in and day out."
+                    </p>
+                    <p className="s-quote-author">- Robert Collier</p>
+                    
+                    <h4 style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '10px' }}>Quick Links</h4>
+                    <div className="s-quick-links">
+                        <a href="#/messages" className="s-quick-btn">💬 Forum</a>
+                        <a href="#/live" className="s-quick-btn">🎥 Zoom</a>
+                        <a href="#/progress" className="s-quick-btn">📈 Analytics</a>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
