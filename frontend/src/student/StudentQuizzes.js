@@ -225,7 +225,11 @@ const StudentQuizzes = ({ subjectName, user }) => {
         );
     }
 
-    return loading ? <p className="t-empty-state">Loading Exams...</p> : (
+    return loading ? <p className="t-empty-state">Loading Exams...</p> : !Array.isArray(contentList) ? (
+        <div className="t-empty-state">
+            <p>Error loading quizzes. The server response was invalid.</p>
+        </div>
+    ) : (
         <div className="s-quiz-grid">
             {contentList.map((item, index) => {
                 const now = new Date();

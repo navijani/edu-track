@@ -82,6 +82,10 @@ const TeacherContents = ({ user }) => {
             <div className="t-empty-state light-glass">
               <p>No {activeTab} uploads found.</p>
             </div>
+          ) : !Array.isArray(contentList) ? (
+            <div className="t-empty-state light-glass">
+              <p>Error loading {activeTab}. The server response was invalid.</p>
+            </div>
           ) : (
             contentList.map((item, index) => (
               <div key={index} className={`t-item-card light-glass ${activeTab}-theme`}>
