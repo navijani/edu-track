@@ -73,7 +73,7 @@
   position: sticky;
   top: 0;
 
-  background: rgba(15, 23, 42, 0.85); /* Deep Slate/Black */
+  background: rgba(11, 25, 60, 0.95); /* Sharp Dark Blue (Midnight Navy) */
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
@@ -81,7 +81,7 @@
   color: #f1f5f9;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   z-index: 1000;
   overflow-y: auto;
   scrollbar-width: none;
@@ -674,39 +674,50 @@
 
 /* Glass Buttons */
 .t-btn-glass-primary {
-  background: linear-gradient(135deg, #4f46e5, #4338ca);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 50px;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #1A56DB; /* Deep professional blue */
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 10px 24px;
+  border-radius: 14px; /* Squircle shape */
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 .t-btn-glass-primary:hover {
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 25px rgba(26, 86, 219, 0.15);
+  transform: translateY(-2px) scale(1.02);
+  color: #1e3a8a;
 }
 
 .t-btn-glass-purple {
-  background: linear-gradient(135deg, #a855f7, #9333ea);
-  color: white;
-  border: none;
-  padding: 14px 35px;
-  border-radius: 50px;
+  background: rgba(168, 85, 247, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #7e22ce;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  padding: 12px 30px;
+  border-radius: 14px;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .t-btn-glass-purple:hover {
-  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
-  transform: translateY(-2px);
+  background: rgba(168, 85, 247, 0.3);
+  border-color: rgba(168, 85, 247, 0.6);
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.2);
+  transform: translateY(-2px) scale(1.02);
+  color: #581c87;
 }
 
 /* Red Delete Button (was t-btn-delete-pill but doesn't exist, styling it anyway) */
@@ -2293,6 +2304,150 @@
   .q-options-container {
     grid-template-columns: 1fr;
   }
+}
+
+/* --- Quick Actions Hub --- */
+.t-quick-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+.t-quick-btn {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #1e293b;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+.t-quick-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+}
+
+/* --- To-Do List Widget --- */
+.t-todo-section {
+    padding: 25px;
+}
+.t-todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.t-todo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(255,255,255,0.4);
+}
+.t-todo-item:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+.t-todo-item.completed {
+    opacity: 0.6;
+}
+.t-todo-item.completed .t-task-text {
+    text-decoration: line-through;
+}
+.t-checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: white;
+}
+.t-todo-item.completed .t-checkbox {
+    background: #10b981;
+    border-color: #10b981;
+}
+.t-task-text {
+    font-weight: 600;
+    color: #334155;
+    font-size: 0.95rem;
+}
+.t-todo-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+.t-todo-form input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.8);
+    font-weight: 500;
+}
+.t-todo-form button {
+    background: #1A56DB;
+    color: white;
+    border: none;
+    width: 40px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* --- Student Insight Badges --- */
+.t-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.top-badge {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.warn-badge {
+    background: rgba(245, 158, 11, 0.15);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* --- Export Button --- */
+.t-btn-export {
+    background: linear-gradient(135deg, #1A56DB, #3F83F8);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 10px rgba(26, 86, 219, 0.2);
+}
+.t-btn-export:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(26, 86, 219, 0.3);
 }
 
 /* For very small devices */

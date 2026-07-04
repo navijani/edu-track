@@ -6,6 +6,20 @@ import Loader from '../components/Loader';
 
 const TeacherDashboardHome = ({ user }) => {
     const [stats, setStats] = useState(null);
+    const [tasks, setTasks] = useState([
+        { id: 1, text: "Grade pending assignments", completed: false },
+        { id: 2, text: "Prepare slides for Chapter 4", completed: true },
+        { id: 3, text: "Review student progress reports", completed: false }
+    ]);
+    const [newTask, setNewTask] = useState('');
+
+    const toggleTask = (id) => setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+    const addTask = (e) => {
+        e.preventDefault();
+        if (!newTask.trim()) return;
+        setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
+        setNewTask('');
+    };
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -39,6 +53,14 @@ const TeacherDashboardHome = ({ user }) => {
                     <p>Your <strong>{user.subject}</strong> overview looks great today.</p>
                 </div>
                 <div className="banner-badge">{user.subject} Department</div>
+            </div>
+
+            {/* --- QUICK ACTION HUB --- */}
+            <div className="t-quick-actions">
+                <button className="t-quick-btn q-videos"><span className="btn-icon">▶️</span> New Video</button>
+                <button className="t-quick-btn q-quizzes"><span className="btn-icon">📝</span> Create Quiz</button>
+                <button className="t-quick-btn q-docs"><span className="btn-icon">📄</span> Add Document</button>
+                <button className="t-quick-btn q-zoom"><span className="btn-icon">📅</span> Schedule Class</button>
             </div>
 
             {/* --- TOP STATS CARDS --- */}
@@ -133,6 +155,28 @@ const TeacherDashboardHome = ({ user }) => {
                             ))
                         )}
                     </div>
+                </div>
+                
+                {/* --- TO-DO LIST WIDGET --- */}
+                <div className="t-todo-section premium-glass-card" style={{ gridColumn: '1 / -1', marginTop: '25px' }}>
+                    <h3>✅ My Tasks</h3>
+                    <div className="t-todo-list">
+                        {tasks.map(task => (
+                            <div key={task.id} className={`t-todo-item ${task.completed ? 'completed' : ''}`} onClick={() => toggleTask(task.id)}>
+                                <div className="t-checkbox">{task.completed ? '✓' : ''}</div>
+                                <span className="t-task-text">{task.text}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <form className="t-todo-form" onSubmit={addTask}>
+                        <input 
+                            type="text" 
+                            placeholder="Add a new task..." 
+                            value={newTask} 
+                            onChange={(e) => setNewTask(e.target.value)} 
+                        />
+                        <button type="submit">+</button>
+                    </form>
                 </div>
             </div>
         </div>

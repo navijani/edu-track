@@ -40,19 +40,25 @@ const TeacherStudents = ({ user }) => {
         <div className="t-students-container">
             {/* LEFT SIDE: Student List */}
             <div className="t-students-left">
-                <div className="t-header-mini">
-                    <h2 style={{ color: '#1e293b', marginBottom: '10px' }}>My Students</h2>
+                <div className="t-header-mini" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                    <h2 style={{ color: '#1e293b', margin: 0 }}>My Students</h2>
+                    <button className="t-btn-export" onClick={() => alert("Simulating export of student progress to CSV...")}>
+                        📥 Export CSV
+                    </button>
+                </div>
+                <div style={{ marginBottom: '15px' }}>
                     <input 
                         type="text" 
                         placeholder="🔍 Search name or email..." 
                         className="t-students-search"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
 
                 <div className="t-student-list-scroll">
-                    {filteredStudents.map((student) => (
+                    {filteredStudents.map((student, index) => (
                         <div 
                             key={student.id} 
                             onClick={() => setSelectedStudent(student)}
@@ -61,8 +67,12 @@ const TeacherStudents = ({ user }) => {
                             <div className="t-student-avatar">
                                 {student.name.charAt(0).toUpperCase()}
                             </div>
-                            <div className="t-student-info">
-                                <h4 style={{ margin: 0, fontSize: '15px' }}>{student.name}</h4>
+                            <div className="t-student-info" style={{ flexGrow: 1 }}>
+                                <h4 style={{ margin: 0, fontSize: '15px', display: 'flex', justifyContent: 'space-between' }}>
+                                    {student.name}
+                                    {index % 4 === 0 && <span className="t-badge top-badge">🏆 Top</span>}
+                                    {index % 5 === 0 && index % 4 !== 0 && <span className="t-badge warn-badge">⚠️ Focus</span>}
+                                </h4>
                                 <p style={{ margin: 0, color: '#64748b', fontSize: '12px' }}>{student.email}</p>
                             </div>
                         </div>
