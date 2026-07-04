@@ -23,9 +23,9 @@ const TeacherDashboardHome = ({ user }) => {
     if (!stats) return <Loader text="Initializing Teacher Portal..." />;
 
     const chartData = [
-        { name: 'Videos', count: stats.totalVideos, color: '#3b82f6' },   /* Professional blue */
-        { name: 'Docs', count: stats.totalDocs, color: '#64748b' },      /* Slate gray */
-        { name: 'Quizzes', count: stats.totalQuizzes, color: '#10b981' } /* Emerald green */
+        { name: 'Videos', count: stats.totalVideos, color: 'url(#blueGradient)' },
+        { name: 'Docs', count: stats.totalDocs, color: 'url(#purpleGradient)' },
+        { name: 'Quizzes', count: stats.totalQuizzes, color: 'url(#emeraldGradient)' }
     ];
 
     const totalMaterials = stats.totalVideos + stats.totalDocs + stats.totalQuizzes;
@@ -33,9 +33,9 @@ const TeacherDashboardHome = ({ user }) => {
     return (
         <div className="t-home-container">
             {/* --- WELCOME BANNER --- */}
-            <div className="t-welcome-banner dashboard-card">
+            <div className="t-welcome-banner premium-glass-card">
                 <div className="banner-text">
-                    <h2>Welcome back, {user.name.split(' ')[0]}! </h2>
+                    <h2 className="gradient-text">Welcome back, {user.name.split(' ')[0]}! </h2>
                     <p>Your <strong>{user.subject}</strong> overview looks great today.</p>
                 </div>
                 <div className="banner-badge">{user.subject} Department</div>
@@ -43,7 +43,7 @@ const TeacherDashboardHome = ({ user }) => {
 
             {/* --- TOP STATS CARDS --- */}
             <div className="t-stats-grid">
-                <div className="t-stat-card dashboard-card">
+                <div className="t-stat-card premium-glass-card">
                     <div className="stat-icon-wrapper student-icon">
                         <span className="stat-icon">👥</span>
                     </div>
@@ -53,7 +53,7 @@ const TeacherDashboardHome = ({ user }) => {
                     </div>
                 </div>
 
-                <div className="t-stat-card dashboard-card">
+                <div className="t-stat-card premium-glass-card">
                     <div className="stat-icon-wrapper material-icon">
                         <span className="stat-icon">📚</span>
                     </div>
@@ -63,7 +63,7 @@ const TeacherDashboardHome = ({ user }) => {
                     </div>
                 </div>
 
-                <div className="t-stat-card dashboard-card">
+                <div className="t-stat-card premium-glass-card">
                     <div className="stat-icon-wrapper calendar-icon">
                         <span className="stat-icon">📅</span>
                     </div>
@@ -76,19 +76,33 @@ const TeacherDashboardHome = ({ user }) => {
 
             <div className="t-dashboard-main">
                 {/* --- CHART SECTION --- */}
-                <div className="t-chart-section dashboard-card">
+                <div className="t-chart-section premium-glass-card">
                     <h3>Content Distribution</h3>
                     <div className="chart-wrapper">
                         <ResponsiveContainer width="100%" height={250}>
                             <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                                <defs>
+                                    <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#60a5fa" />
+                                        <stop offset="100%" stopColor="#3b82f6" />
+                                    </linearGradient>
+                                    <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#c084fc" />
+                                        <stop offset="100%" stopColor="#9333ea" />
+                                    </linearGradient>
+                                    <linearGradient id="emeraldGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#34d399" />
+                                        <stop offset="100%" stopColor="#10b981" />
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
                                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
                                 <Tooltip 
-                                    contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-                                    cursor={{fill: '#f8fafc'}}
+                                    contentStyle={{ backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.5)', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}
+                                    cursor={{fill: 'rgba(0,0,0,0.02)'}}
                                 />
-                                <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+                                <Bar dataKey="count" radius={[8, 8, 0, 0]}>
                                     {chartData.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={entry.color} />
                                     ))}
@@ -99,7 +113,7 @@ const TeacherDashboardHome = ({ user }) => {
                 </div>
 
                 {/* --- UPCOMING MEETINGS --- */}
-                <div className="t-meetings-section dashboard-card">
+                <div className="t-meetings-section premium-glass-card">
                     <h3>📅 Upcoming Schedule</h3>
                     <div className="meeting-list">
                         {stats.upcomingMeetings.length === 0 ? (

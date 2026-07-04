@@ -17,7 +17,10 @@ const TeacherDashboard = ({ user, onLogout }) => {
     return (
         <div className="teacher-glass-wrapper">
 
-            {/* Background elements removed for professional layout */}
+            {/* Beautiful Ambient Mesh Gradient Orbs */}
+            <div className="mesh-orb mesh-orb-1"></div>
+            <div className="mesh-orb mesh-orb-2"></div>
+            <div className="mesh-orb mesh-orb-3"></div>
             
             <div className="teacher-layout">
 
