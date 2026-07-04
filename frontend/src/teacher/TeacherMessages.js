@@ -10,7 +10,7 @@ const TeacherMessages = ({ user }) => {
         if (!user.subject) return;
         try {
             const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/forum?subject=${encodeURIComponent(user.subject)}`);
-            setPosts(res.data);
+            setPosts(Array.isArray(res.data) ? res.data : []);
         } catch (err) { console.error(err); }
     }, [user.subject]);
 
@@ -99,7 +99,7 @@ const TeacherMessages = ({ user }) => {
                                                 {isTeacher ? 'Teacher' : 'Student'}
                                             </span>
                                             <small style={{ marginLeft: 'auto', color: '#94a3b8' }}>
-                                                {new Date(post.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {post.date ? new Date(post.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                                             </small>
                                         </div>
                                         <p style={{ margin: '12px 0', lineHeight: '1.6', color: '#334155', whiteSpace: 'pre-wrap' }}>

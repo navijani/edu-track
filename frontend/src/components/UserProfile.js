@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ChangePassword from './ChangePassword';
+import Loader from './Loader';
 
 /**
  * UserProfile – Unified "My Profile" page used by all three dashboard roles.

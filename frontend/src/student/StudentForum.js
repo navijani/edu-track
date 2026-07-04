@@ -25,7 +25,7 @@ const StudentForum = ({ user }) => {
         if (!selectedSubject) return;
         try {
             const res = await axios.get(`https://edu-track-c6ml.onrender.com/api/forum?subject=${selectedSubject}`);
-            setPosts(res.data);
+            setPosts(Array.isArray(res.data) ? res.data : []);
         } catch (err) { console.error(err); }
     };
 
