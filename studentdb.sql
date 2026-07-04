@@ -99,6 +99,8 @@ CREATE TABLE `quizzes` (
   `title` varchar(255) DEFAULT NULL,
   `duration_minutes` int(11) DEFAULT NULL,
   `scheduled_date` varchar(50) DEFAULT NULL,
+  `deadline` varchar(50) DEFAULT NULL,
+  `target_class` varchar(50) DEFAULT NULL,
   `total_marks` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
