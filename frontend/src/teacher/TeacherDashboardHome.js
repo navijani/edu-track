@@ -37,20 +37,20 @@ const TeacherDashboardHome = ({ user }) => {
     if (!stats) return <Loader text="Initializing Teacher Portal..." />;
 
     const chartData = [
-        { name: 'Videos', count: stats.totalVideos, color: 'url(#blueGradient)' },
-        { name: 'Docs', count: stats.totalDocs, color: 'url(#purpleGradient)' },
-        { name: 'Quizzes', count: stats.totalQuizzes, color: 'url(#emeraldGradient)' }
+        { name: 'Videos', count: stats?.totalVideos || 0, color: 'url(#blueGradient)' },
+        { name: 'Docs', count: stats?.totalDocs || 0, color: 'url(#purpleGradient)' },
+        { name: 'Quizzes', count: stats?.totalQuizzes || 0, color: 'url(#emeraldGradient)' }
     ];
 
-    const totalMaterials = stats.totalVideos + stats.totalDocs + stats.totalQuizzes;
+    const totalMaterials = (stats?.totalVideos || 0) + (stats?.totalDocs || 0) + (stats?.totalQuizzes || 0);
 
     return (
         <div className="t-home-container">
             {/* --- WELCOME BANNER --- */}
             <div className="t-welcome-banner premium-glass-card">
                 <div className="banner-text">
-                    <h2 className="gradient-text">Welcome back, {user.name.split(' ')[0]}! </h2>
-                    <p>Your <strong>{user.subject}</strong> overview looks great today.</p>
+                    <h2 className="gradient-text">Welcome back, {user?.name?.split(' ')[0] || 'Professor'}! </h2>
+                    <p>Your <strong>{user?.subject || 'Course'}</strong> overview looks great today.</p>
                 </div>
                 <div className="banner-badge">{user.subject} Department</div>
             </div>
@@ -90,7 +90,7 @@ const TeacherDashboardHome = ({ user }) => {
                         <span className="stat-icon">📅</span>
                     </div>
                     <div className="stat-info">
-                        <h3>{stats.upcomingMeetings.length}</h3>
+                        <h3>{stats?.upcomingMeetings?.length || 0}</h3>
                         <p>Next Sessions</p>
                     </div>
                 </div>
@@ -138,7 +138,7 @@ const TeacherDashboardHome = ({ user }) => {
                 <div className="t-meetings-section premium-glass-card">
                     <h3>📅 Upcoming Schedule</h3>
                     <div className="meeting-list">
-                        {stats.upcomingMeetings.length === 0 ? (
+                        {!stats?.upcomingMeetings || stats.upcomingMeetings.length === 0 ? (
                             <div className="no-data">No classes scheduled</div>
                         ) : (
                             stats.upcomingMeetings.map((meeting, i) => (
