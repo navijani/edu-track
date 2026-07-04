@@ -110,7 +110,7 @@ public class QuizHandler extends BaseHandler {
                     for (String block : questionsPart.split("},\\{")) {
                         String q       = block.split("\"question\":\"")[1].split("\"")[0];
                         String imgUrl  = block.contains("\"imageUrl\":\"") ? block.split("\"imageUrl\":\"")[1].split("\"")[0] : "";
-                        String options = "[" + block.split("\"options\":\\[")[1].split("\\]")[0] + "]";
+                        String options = block.split("\"options\":")[1].split(",\"correctAnswer\":")[0];
                         String correct = block.split("\"correctAnswer\":\"")[1].split("\"")[0];
                         questionList.add(new QuizQuestion(q, imgUrl, options, correct));
                     }

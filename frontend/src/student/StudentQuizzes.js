@@ -30,7 +30,18 @@ const StudentQuizzes = ({ subjectName, user }) => {
         setLoading(true);
         try {
             const response = await axios.get(`https://edu-track-c6ml.onrender.com/api/contents/quiz?subject=${encodeURIComponent(subjectName)}&targetClass=${encodeURIComponent(user.studentClass)}`);
-            setContentList(response.data);
+            let data = response.data;
+            if (typeof data === 'string') {
+                try {
+                    // Legacy backend bug caused options like "(0,1]" to truncate the closing bracket/quote.
+                    // This heuristic fixes the syntax error safely by checking if the closing quote is missing.
+                    const fixedString = data.replace(/([^"])\]?,"correctAnswer":/g, '$1"],"correctAnswer":');
+                    data = JSON.parse(fixedString);
+                } catch (e) {
+                    console.error("Failed to parse corrupted server response:", e);
+                }
+            }
+            setContentList(data);
         } catch (error) { setContentList([]); }
         setLoading(false);
     };

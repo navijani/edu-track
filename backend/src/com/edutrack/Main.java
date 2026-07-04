@@ -60,6 +60,20 @@ public class Main {
 
         server.createContext("/api/chat", new ChatHandler());
 
+        server.createContext("/api/fix-db", exchange -> {
+            try (java.sql.Connection conn = com.edutrack.dao.DBConnection.getConnection();
+                 java.sql.Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("DELETE FROM quiz_questions WHERE quiz_id = 5");
+                stmt.executeUpdate("DELETE FROM quizzes WHERE id = 5");
+                String response = "Fixed!";
+                exchange.sendResponseHeaders(200, response.length());
+                exchange.getResponseBody().write(response.getBytes());
+                exchange.getResponseBody().close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
         server.createContext("/api/parent/teachers", new ParentTeachersHandler());
 
         server.createContext("/api/teacher/parents", new TeacherParentHandler());

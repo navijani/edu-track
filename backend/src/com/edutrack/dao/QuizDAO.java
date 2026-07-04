@@ -145,10 +145,23 @@ public class QuizDAO {
                 while (rsQuestion.next()) {
                     if (!firstQuestion) json.append(",");
                     
+                    String opts = rsQuestion.getString("options_json");
+                    if (opts == null || opts.trim().isEmpty()) {
+                        opts = "[]";
+                    } else {
+                        opts = opts.trim();
+                        // Heuristic fix for legacy corrupted data (e.g. missing trailing quote/bracket)
+                        if (!opts.startsWith("[")) opts = "[" + opts;
+                        if (!opts.endsWith("]") && !opts.endsWith("\"]")) opts = opts + "\"]";
+                        else if (opts.endsWith("]") && !opts.endsWith("\"]") && !opts.endsWith("}]") && !opts.equals("[]")) {
+                            opts = opts.substring(0, opts.length() - 1) + "\"]";
+                        }
+                    }
+
                     json.append("{")
                         .append("\"question\":\"").append(escapeJson(rsQuestion.getString("question"))).append("\",")
                         .append("\"imageUrl\":\"").append(escapeJson(rsQuestion.getString("image_url"))).append("\",")
-                        .append("\"options\":").append(rsQuestion.getString("options_json") != null ? rsQuestion.getString("options_json") : "[]").append(",")
+                        .append("\"options\":").append(opts).append(",")
                         .append("\"correctAnswer\":\"").append(escapeJson(rsQuestion.getString("correct_answer"))).append("\"")
                         .append("}");
                     firstQuestion = false;
