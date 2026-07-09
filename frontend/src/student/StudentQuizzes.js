@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import QuizRanklist from '../components/QuizRanklist';
+import Loader from '../components/Loader';
 
 const StudentQuizzes = ({ subjectName, user }) => {
     const [contentList, setContentList] = useState([]);

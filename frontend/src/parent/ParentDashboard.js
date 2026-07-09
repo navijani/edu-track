@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Loader from '../components/Loader';
 import ChatWindow from '../components/ChatWindow';
 import UserProfile from '../components/UserProfile';
 import QuizRanklist from '../components/QuizRanklist';

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import Loader from '../components/Loader';
 
 const StudentVideos = ({ subjectName, user }) => {
     const [contentList, setContentList] = useState([]);

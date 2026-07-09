@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Loader from '../components/Loader';
 import '../styles/Admin.css'; // Utilizing your global admin styles
 
 const AddSubject = () => {
