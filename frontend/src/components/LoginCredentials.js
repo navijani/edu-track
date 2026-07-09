@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Loader from './Loader';
 import '../styles/RoleSelection.css';
 
 const LoginCredentials = ({ role, onBack, onSuccess, onContactClick }) => { // Added onContactClick prop
